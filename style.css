@@ -1,25 +1,30 @@
+@import 'https://fonts.googleapis.com/css?family=Prata';
 body {
     margin: 0;
     font-family: arial, Helvetica, sans-serif;
-    font-size: 16pt;
+    font-size: 12pt;
 }
 header h1 {
     display: block;
     margin: auto;
-    width: 5em;
-    height: 5em;
-    font-size: 8em;
-    line-height: 5em;
+    width: 4em;
+    height: 4em;
+    font-size: 6em;
+    line-height: 4em;
     border: 0.1em solid black;
-    border-radius: 5em;
-    padding: 0;
+    border-radius: 4em;
+    padding: 0.2em;
     text-indent: 0;
 }
 header h2 {
-    font-size: 4em;
+    font-size: 2em;
+}
+header h2 span {
+    font-family: 'Prata', serif;
+    letter-spacing: 0.1em;
 }
 header h3 {
-    font-size: 2em;
+    font-size: 1.2em;
     color: #666;
 }
 header {
@@ -46,25 +51,25 @@ header {
     vertical-align: text-top;
 }
 
-#nav a {
+#nav a, ul a {
     text-decoration: none;
     display: inline-block;
     color: black;
     padding: 0.3em;
     border-radius: 0.2em;
     border: 0.1em solid black;
-    margin: 0 0.3em;
+    margin: 0.3em;
     transition: background-color 100ms;
 }
-#nav a:hover {
+#nav a:hover, ul a:hover {
     background-color: #ddd;
 }
 
-#nav a:active {
-    animation-name: shake;
-    animation-duration: 300ms;
-    animation-iteration-count: 3;
-    animation-timing-function: linear;
+.comingsoon:hover {
+    color: #aaa;
+    border-color: #aaa;
+    background-color: #fff;
+    cursor: no-drop;
 }
 
 @keyframes shake {
@@ -80,4 +85,13 @@ header {
     100% {
         transform: rotate(0deg);
     }
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+li {
+    display: inline-block;
 }
