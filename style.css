@@ -14,7 +14,7 @@ header h1 {
     border: 0.1em solid black;
     border-radius: 4em;
     padding: 0.2em;
-    text-indent: 0;
+    text-indent: -0.1em;
 }
 header h2 {
     font-size: 2em;
@@ -94,4 +94,46 @@ ul {
 }
 li {
     display: inline-block;
+}
+
+.imageView {
+    width: 100%;
+    background-color: black;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 1em;
+    transition: background-image 600ms;
+}
+
+.imageTokenContainer {
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    border-radius: 1em 0 1em 0;
+}
+
+.imageToken {
+    float: left;
+    width: 1em;
+    height: 1em;
+    border-radius: 1em;
+    border: 0.3em solid rgba(255, 255, 255, 0.5);
+    margin: 0.3em;
+    bottom: 0;
+    transition: border-radius 300ms, background-color 300ms;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0);
+}
+
+.imageToken:hover {
+    border-color: rgba(255, 255, 255, 1);
+}
+.selected:hover {
+    background-color: rgba(255, 255, 255, 1);
+    border-color: rgba(255, 255, 255, 0);
 }
