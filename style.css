@@ -62,29 +62,14 @@ header {
     transition: background-color 100ms;
 }
 #nav a:hover, ul a:hover {
-    background-color: #ddd;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .comingsoon:hover {
     color: #aaa;
     border-color: #aaa;
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0);
     cursor: no-drop;
-}
-
-@keyframes shake {
-    0% {
-        transform: rotate(0deg);
-    }
-    25% {
-        transform: rotate(10deg);
-    }
-    75% {
-        transform: rotate(-10deg);
-    }
-    100% {
-        transform: rotate(0deg);
-    }
 }
 
 ul {
@@ -94,6 +79,10 @@ ul {
 }
 li {
     display: inline-block;
+}
+
+#wrapper img {
+    max-width: 100%;
 }
 
 .imageView {
@@ -136,4 +125,59 @@ li {
 .selected:hover {
     background-color: rgba(255, 255, 255, 1);
     border-color: rgba(255, 255, 255, 0);
+}
+
+footer {
+    text-align: center;
+}
+
+footer span {
+    color: red;
+    cursor: pointer;
+}
+
+.shake {
+    animation-name: shake;
+    animation-iteration-count: 147;
+    animation-duration: 0.94s;
+    animation-delay: 5.44s;
+    animation-timing-function: ease-in-out;
+}
+
+.bgshake {
+    animation-name: merica;
+    animation-iteration-count: 147;
+    animation-duration:  0.94s;
+    animation-delay: 5.44s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes shake {
+    0% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(-10deg);
+    }
+    100% {
+        transform: rotate(10deg);
+    }
+}
+
+@keyframes merica {
+    0% {
+        background-color: pink;
+    }
+    25% {
+        background-color: white;
+    }
+    50% {
+        background-color: lightblue;
+    }
+    75% {
+        background-color: white;
+    }
+    100% {
+        background-color: pink;
+    }
 }

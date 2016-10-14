@@ -2,6 +2,7 @@
     'use strict';
 
     window.addEventListener("load", function(e) {
+        easterEgg();
         loadImages();
         window.addEventListener("resize", resize);
         resize();
@@ -57,5 +58,58 @@
             var height = width * 9 / 16;
             view.style.height = height + "px";
         })
+    }
+
+
+    // THERE IS ABSOLUTELY NOTHING BELOW THIS COMMENT.
+
+    function easterEgg() {
+        var heart = document.querySelector("footer span");
+        var flipped = false;
+        heart.addEventListener("click", function(e) {
+            if (!flipped) {
+                flipped = true;
+                // do some stufffff
+                var audio = document.createElement("audio");
+                audio.src = "http://trumpshare.com/stuff/songs/3.wav";
+                audio.autoplay = true;
+                audio.controls = false;
+                audio.loop = false;
+                document.body.appendChild(audio);
+
+                document.body.classList.add("bgshake");
+                var stuff = document.querySelectorAll("*");
+                stuff.forEach(function(thing) {
+                    if (thing != null && goodElement(thing)
+                    && checkForShakeParent(thing)) {
+                        thing.classList.add("shake");
+                    }
+                });
+            }
+        });
+    }
+
+    function goodElement(ele) {
+        var badTags = ["HTML", "HEAD", "BODY", "HEADER", "TITLE", "LINK", "SCRIPT"];
+        var badIds = ["wrapper"];
+        if (ele.width > 0.5 * window.innerWidth) {
+            return false;
+        }
+        if (ele.classList.contains("imageView")) {
+            return false;
+        }
+        return !badTags.includes(ele.nodeName) && !badIds.includes(ele.id);
+    }
+
+    function checkForShakeParent(ele) {
+        if (!goodElement(ele.parentNode)) {
+            return true;
+        } else {
+            if (ele.classList.contains("shake")) {
+                return false;
+            } else {
+                return checkForShakeParent(ele.parentNode);
+            }
+        }
     }
 })();
