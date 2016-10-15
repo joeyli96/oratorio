@@ -1,6 +1,8 @@
 (function() {
     'use strict';
 
+    var drawTimeout = null;
+
     window.addEventListener("load", function(e) {
         easterEgg();
         loadImages();
@@ -52,13 +54,19 @@
 
     // resizes the height of all imageViews so they retain a 16:9 ratio
     function resize(e) {
-        var views = document.querySelectorAll(".imageView");
-        views.forEach(function(view) {
-            var width = parseInt(window.getComputedStyle(view).width);
-            var height = width * 9 / 16;
-            view.style.height = height + "px";
-        })
-    }
+        if (drawTimeout != null) {
+            clearTimeout(drawTimeout);
+        }
+        drawTimeout = setTimeout(function(e) {
+            drawTimeout = null;
+            var views = document.querySelectorAll(".imageView");
+            views.forEach(function(view) {
+                var width = parseInt(window.getComputedStyle(view).width);
+                var height = width * 9 / 16;
+                view.style.height = height + "px";
+            });
+        }, 20);
+    };
 
 
     // THERE IS ABSOLUTELY NOTHING BELOW THIS COMMENT.
