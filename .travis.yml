@@ -12,7 +12,7 @@ notifications:
   slack:
     rooms:
       - oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
-    on-success: never
+    on-success: change
     on-failure: always
   email:
     recipients:
