@@ -9,5 +9,8 @@ script:
   cd oratorio/tests
   python -m unittest dummy-test
 
+notifications:
+  slack: oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
+
 matrix:
     fast_finish: true
