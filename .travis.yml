@@ -2,8 +2,8 @@ language: python
 python:
   - 3.5
 
-install:
-  - pip install django=1.10
+env:
+  - DJANGO_VERSION=1.10
 
 script:
   - ./runtests.sh
