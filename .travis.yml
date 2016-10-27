@@ -6,8 +6,7 @@ install:
   - pip install Django
 
 script:
-  - cd oratorio/tests
-  - python -m unittest dummy-test
+  - ./runtests.sh
 
 notifications:
   slack:
