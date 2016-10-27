@@ -1,9 +1,9 @@
 language: python
 python:
-    - 3.5
+  - 3.5
 
 install:
-    pip install Django
+  pip install Django
 
 script:
   cd oratorio/tests
@@ -11,6 +11,7 @@ script:
 
 notifications:
   slack: oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
-
-matrix:
-    fast_finish: true
+  email:
+    recipients: oratorio-cse403@googlegroups.com
+    on-failure: always
+    on-success: never
