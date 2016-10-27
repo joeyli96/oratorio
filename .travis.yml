@@ -11,6 +11,8 @@ script:
 
 notifications:
   slack: oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
+    on-failure: always
+    on-success: never
   email:
     recipients:
       - cse403-oratorio@googlegroups.com
