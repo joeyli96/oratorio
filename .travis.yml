@@ -10,7 +10,9 @@ script:
   - python -m unittest dummy-test
 
 notifications:
-  slack: oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
+  slack:
+    rooms:
+      - oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
     on-failure: always
     on-success: never
   email:
