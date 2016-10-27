@@ -12,11 +12,10 @@ notifications:
   slack:
     rooms:
       - oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
-    on-failure: always
     on-success: never
+    on-failure: always
   email:
     recipients:
       - cse403-oratorio@googlegroups.com
-      - haohu94@gmail.com
-    on-failure: always
     on-success: never
+    on-failure: always
