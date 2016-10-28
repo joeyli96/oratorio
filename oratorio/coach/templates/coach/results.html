@@ -3,6 +3,7 @@
   <head>
 	  <link rel="stylesheet" href="styles.css"/>
     <script src="sidebar.js"></script>
+    <script src="wordFrequency.js"></script>
   </head>
   <body>
     <div id="Sidebar">
@@ -62,22 +63,26 @@
 
       <p>Tail pork loin chuck kevin, short loin tongue brisket cow jerky kielbasa capicola ball tip. Landjaeger t-bone turducken turkey, tri-tip ground round hamburger ribeye boudin leberkas ball tip. Hamburger salami t-bone swine, burgdoggen turducken pancetta landjaeger ribeye andouille brisket shank chuck. Short ribs ground round flank jerky.</p>
     </div>
-    <div id="stats">
-      <h2><span>Pace:</span> (words per minute)</h2>
-      <h2><span>Hesitations:</span> (per minute)</h2>
-      <h2><span>General Tone:</span></h2>
-      <div class="tones">
-        <h3>Happiness</h3>
-        <h3>Sadness</h3>
-        <h3>Fear</h3>
-        <h3>Anger</h3>
-        <h3>Neutrality</h3>
-      </div>
-      <h2><span>Frequently Used Words:</span></h2>
-      <div class="words">
-        <h3>
-          Ut: 24
-        </h3>
+    <div id="statsContainer">
+      <div id="stats">
+        <h2><span>Pace:</span> (words per minute)</h2>
+        <h2><span>Hesitations:</span> (per minute)</h2>
+        <h2><span>General Tone:</span></h2>
+        <div class="tones">
+          <h3>Happiness</h3>
+          <h3>Sadness</h3>
+          <h3>Fear</h3>
+          <h3>Anger</h3>
+          <h3>Neutrality</h3>
+        </div>
+        <h2><span>Frequently Used Words:</span></h2>
+        <div class="words">
+          <h3>
+            <a href="javascript:wordFrequency('cow')">
+              cow
+            </a>
+          </h3>
+        </div>
       </div>
     </div>
   </body>

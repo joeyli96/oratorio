@@ -246,7 +246,12 @@ body {
   overflow-y: scroll;
 }
 
-#stats {
+#transcript span {
+  color: orange;
+  font-weight: bold;
+}
+
+#statsContainer {
   display: inline-block;
   position: absolute;
   right: 0;

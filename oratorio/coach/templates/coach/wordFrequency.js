@@ -11,9 +11,16 @@ var savedText = "";
 function wordFrequency(word) {
   saveAndRestore();
   $$("#transcript p").forEach(function(p) {
-    p.innerHTML.split(" ").forEach(function(word) {
-
+    var line = "";
+    var re = /\b/;
+    p.innerHTML.split(re).forEach(function(transWord) {
+      if (transWord.toLowerCase() == word.toLowerCase()) {
+        line += "<span>" + transWord + "</span> ";
+      } else {
+        line += transWord + " " ;
+      }
     });
+    p.innerHTML = line.trim();
   });
 }
 
@@ -22,5 +29,4 @@ function saveAndRestore() {
     savedText = $("#transcript").innerHTML;
   }
   $("#transcript").innerHTML = savedText;
-  
 }
