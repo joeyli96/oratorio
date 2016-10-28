@@ -9,11 +9,6 @@ function $$(ele) {
 var recorder;
 
 window.addEventListener("load", function(){
-    $('#MenuButton').addEventListener('click', function(e){
-	        $('#MenuButton').classList.toggle('open');
-			$("#Sidebar").classList.toggle('open');
-	});
-
 	$('#MainButton').addEventListener("click", buttonToggle);
 	$(".SideButton.left").addEventListener("click", leftToggle);
 	$(".SideButton.right").addEventListener("click", rightToggle);
@@ -151,8 +146,4 @@ function resize(e) {
 		widthMargin - smallButtonScale + circleOffset) + "px";
 	rightButton.style.left = Math.round(
 		widthMargin  + buttonScale - circleOffset) + "px";
-	
-
-	// side bar height
-	$("#Sidebar").style.height = h + "px";
 }

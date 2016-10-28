@@ -7,6 +7,7 @@ body {
   --hover-color: rgba(100, 100, 100, 0.7);
   margin: 0;
   overflow: hidden;
+  font-family: roboto;
 }
 
 /*Sidebar*/
@@ -24,7 +25,6 @@ body {
   margin-left: calc(-30% - 5pt);
   transition: margin-left 0.5s;
   --sidebar-title-height: 45pt;
-  font-family: roboto;
   overflow-y: scroll;
 }
 
@@ -219,7 +219,6 @@ body {
   border-width: 2pt;
   border-radius: 5pt;
   border-style: solid;
-  font-family: roboto;
   padding: 5pt;
   margin: 5pt;
   font-size: 18pt;
