@@ -335,3 +335,21 @@ body {
   font-size: 18pt;
   padding: 5pt;
 }
+
+#recordAnother {
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 5pt;
+  background-color: rgb(153, 47, 35);
+  padding: 5pt;
+  color: var(--foreground-color);
+  border-color: var(--foreground-color);
+  border-radius: 5pt;
+  border-style: solid;
+  border-width: 2pt;
+  font-size: 18pt;
+  cursor:pointer;
+  text-decoration: none;
+}
