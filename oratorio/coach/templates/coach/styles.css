@@ -4,6 +4,7 @@ body {
   --background-color: #474747;
   background-color: var(--background-color);
   --foreground-color: #cbcbcb;
+  --hover-color: rgba(100, 100, 100, 0.7);
   margin: 0;
   overflow: hidden;
 }
@@ -65,13 +66,7 @@ body {
   position: absolute;
   display: inline-block;
   margin: 5pt 0 0 4pt;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
   transform: rotate(0deg);
-  -webkit-transition: .5s ease-in-out;
-  -moz-transition: .5s ease-in-out;
-  -o-transition: .5s ease-in-out;
   transition: .5s ease-in-out;
   cursor: pointer;
 }
@@ -86,18 +81,12 @@ body {
   border-radius: 4pt;
   opacity: 1;
   left: 0;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
   transform: rotate(0deg);
-  -webkit-transition: .25s ease-in-out;
-  -moz-transition: .25s ease-in-out;
-  -o-transition: .25s ease-in-out;
   transition: .25s ease-in-out;
 }
 
 #MenuButton:hover span {
-  background: rgba(100, 100, 100, 0.7);
+  background: var(--hover-color);
 }
 
 #MenuButton.open span {
@@ -128,16 +117,10 @@ body {
 }
 
 #MenuButton.open span:nth-child(2) {
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 
 #MenuButton.open span:nth-child(3) {
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
 
@@ -228,4 +211,21 @@ body {
   height: 105px;
 }
 
-
+.button {
+  float: right;
+  top: 0;
+  color: var(--foreground-color);
+  border-color: var(--foreground-color);
+  border-width: 2pt;
+  border-radius: 5pt;
+  border-style: solid;
+  font-family: roboto;
+  padding: 5pt;
+  margin: 5pt;
+  font-size: 18pt;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.button:hover {
+  background-color: var(--hover-color);
+}
