@@ -103,7 +103,7 @@ function newRecorder() {
 			s.innerHTML = "RECORD";
 			left.classList.add("hide");
 			right.classList.add("hide");
-			window.location = "results.html";
+			window.location = "result";
 		});
 		resolve(r);
 		}).catch(function(err) {
