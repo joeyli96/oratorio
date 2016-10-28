@@ -6,7 +6,8 @@ install:
   - pip install django==1.10
 
 script:
-  - ./runtests.sh
+  - cd oratorio
+  - python manage.py test
 
 notifications:
   slack:
