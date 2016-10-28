@@ -288,6 +288,7 @@ body {
   padding: 0 1em 0 1em;
   font-family: "Roboto";
   color: var(--background-color);
+  overflow-y: scroll;
 }
 
 #stats h2 {
@@ -301,15 +302,35 @@ body {
   font-weight: bold;
 }
 
-#stats .tones h3 {
+#stats .tones > div {
   float: left;
-  display: block;
   width: 48%;
   margin: 1%;
-  border: 1px solid black;
-  border-width: 0 0 3pt 0;
 }
 
-#stats .words h3 {
-  font-weight: 400;
+.slider {
+  width: 100%;
+  height: 12pt;
+  --red-to-green: linear-gradient(90deg, #e75d36, #e0c418, #34bd8e);
+  background: var(--red-to-green);
+  border-radius: 12pt;
+}
+.slider > div {
+  height: 6pt;
+  width: 6pt;
+  border: 3pt solid var(--background-color);
+  border-radius: 50%;
+}
+
+.pace {
+  background: linear-gradient(90deg, #e75d36, #e0c418, #34bd8e, #e0c418, #e75d36)
+}
+
+
+#stats .words a {
+  text-decoration: none;
+  color: var(--background-color);
+  display: block;
+  font-size: 18pt;
+  padding: 5pt;
 }
