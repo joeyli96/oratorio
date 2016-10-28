@@ -17,7 +17,9 @@ body {
   --sidebar-fg-color: rgb(192, 191, 189);
   background: var(--sidebar-bg-color);
   display: inline-block;
+  position: absolute;
   left: 0px;
+  top: 0px;
   width: var(--sidebar-width);
   border: 5px solid #8c8b89;
   border-width: 0 5px 0 0;
@@ -26,6 +28,7 @@ body {
   transition: margin-left 0.5s;
   --sidebar-title-height: 45pt;
   overflow-y: scroll;
+  z-index: 100;
 }
 
 #Sidebar.open {
@@ -64,11 +67,14 @@ body {
   width: 60px;
   height: 45px; 
   position: absolute;
+  left: 0;
+  top: 0;
   display: inline-block;
   margin: 5pt 0 0 4pt;
   transform: rotate(0deg);
-  transition: .5s ease-in-out;
+  transition: .5s ease-in-out, 0.5s left;
   cursor: pointer;
+  z-index: 99;
 }
 
 #MenuButton span {
@@ -87,6 +93,10 @@ body {
 
 #MenuButton:hover span {
   background: var(--hover-color);
+}
+
+#MenuButton.open {
+  left: 30%;
 }
 
 #MenuButton.open span {
