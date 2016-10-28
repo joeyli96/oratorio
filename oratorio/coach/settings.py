@@ -19,6 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
+# Try to get the SECRET_KEY from secret_settings.py. If that fails, check if it
+# exists as an enviromental variable.
 try:
     from coach.secret_settings import SECRET_KEY
 except ImportError:
