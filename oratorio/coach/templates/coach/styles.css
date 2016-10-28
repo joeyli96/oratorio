@@ -163,6 +163,7 @@ body {
   top: 5%;
   width: var(--profile-panel-width);
   height: 85%;
+  overflow: hidden;
 }
 
 #ProfileTitle {
