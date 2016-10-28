@@ -5,6 +5,9 @@ body {
   background-color: var(--background-color);
   --foreground-color: #cbcbcb;
   --hover-color: rgba(100, 100, 100, 0.7);
+  --sidebar-bg-color: rgb(140, 139, 137);
+  --sidebar-fg-color: rgb(192, 191, 189);
+  --sidebar-title-height: 45pt;
   margin: 0;
   overflow: hidden;
   font-family: roboto;
@@ -13,8 +16,6 @@ body {
 /*Sidebar*/
 #Sidebar {
   --sidebar-width: 30%;
-  --sidebar-bg-color: rgb(140, 139, 137);
-  --sidebar-fg-color: rgb(192, 191, 189);
   background: var(--sidebar-bg-color);
   display: inline-block;
   position: absolute;
@@ -23,10 +24,8 @@ body {
   width: var(--sidebar-width);
   border: 5px solid #8c8b89;
   border-width: 0 5px 0 0;
-  --foreground-color: var(--foreground-color);
   margin-left: calc(-30% - 5pt);
   transition: margin-left 0.5s;
-  --sidebar-title-height: 45pt;
   overflow-y: scroll;
   z-index: 100;
 }
@@ -56,6 +55,7 @@ body {
   color: #419bf9;
   font-size: 16pt;
   font-style: normal;
+  text-decoration: none;
 }
 
 .itemName span {
@@ -147,11 +147,6 @@ body {
   border-style: solid;
   border-radius: 10px;
   background-color: rgb(192, 191, 189);
-  position: absolute;
-  left: 1643px;
-  top: 350px;
-  width: 1090px;
-  height: 1340px;
 }
 
 /*Profile*/
@@ -237,4 +232,54 @@ body {
 }
 .button:hover {
   background-color: var(--hover-color);
+}
+
+#transcript {
+  clear: both;
+  display: inline-block;
+  color: var(--foreground-color);
+  font-size: 16pt;
+  width: calc(100% - 300pt);
+  top: var(--sidebar-title-height);
+  position: absolute;
+  height: calc(100% - var(--sidebar-title-height) * 2);
+  overflow-y: scroll;
+}
+
+#stats {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  background: var(--sidebar-fg-color);
+  width: 280pt;
+  top: calc(var(--sidebar-title-height) - 10pt);
+  height: calc(100% - var(--sidebar-title-height) - 20pt);
+  border-radius: 10pt;
+  border: 3pt solid var(--sidebar-bg-color);
+  margin: 10pt;
+  padding-top: 10pt;
+}
+
+#stats h2 {
+  font-size: 16pt;
+  font-weight: normal;
+  clear: both;
+}
+
+#stats h2 span {
+  font-size: 18pt;
+  font-weight: bold;
+}
+
+#stats .tones h3 {
+  float: left;
+  display: block;
+  width: 48%;
+  margin: 1%;
+  border: 1px solid black;
+  border-width: 0 0 3pt 0;
+}
+
+#stats .words h3 {
+  font-weight: 400;
 }
