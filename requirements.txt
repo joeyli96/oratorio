@@ -1,2 +1,2 @@
 Django==1.10.2
-Python==3.5
+python_version > 3.4
