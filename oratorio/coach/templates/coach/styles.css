@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed');
 
 body {
-  background-color: #474747;
+  --background-color: #474747;
+  background-color: var(--background-color);
   --foreground-color: #cbcbcb;
   margin: 0;
   overflow: hidden;
@@ -10,16 +11,20 @@ body {
 /*Sidebar*/
 #Sidebar {
   --sidebar-width: 30%;
-  background-color: rgb(192, 191, 189);
+  --sidebar-bg-color: rgb(140, 139, 137);
+  --sidebar-fg-color: rgb(192, 191, 189);
+  background: var(--sidebar-bg-color);
   display: inline-block;
   left: 0px;
   width: var(--sidebar-width);
   border: 5px solid #8c8b89;
   border-width: 0 5px 0 0;
-  --foreground-color: #474747;
+  --foreground-color: var(--foreground-color);
   margin-left: calc(-30% - 5pt);
   transition: margin-left 0.5s;
-  --sidebar-title-height: 36pt;
+  --sidebar-title-height: 45pt;
+  font-family: roboto;
+  overflow-y: scroll;
 }
 
 #Sidebar.open {
@@ -27,9 +32,29 @@ body {
 }
 
 #SidebarTitle {
-  background-color: rgb(140, 139, 137);
   width: 100%;
   height: var(--sidebar-title-height);
+  color: var(--background-color);
+  font-size: calc( var(--sidebar-title-height) / 2);
+  padding: 5pt -5pt 5pt 5pt;
+}
+
+.menuItem {
+  background: var(--sidebar-fg-color);
+  margin: 0 0 5pt 0;
+  font-size: 10pt;
+  color: var(--background-color);
+  font-style: italic;
+}
+
+.itemName {
+  color: #419bf9;
+  font-size: 16pt;
+  font-style: normal;
+}
+
+.itemName span {
+  font-weight: 900;
 }
 
 /*Sidebar navigation button*/
@@ -38,7 +63,7 @@ body {
   height: 45px; 
   position: absolute;
   display: inline-block;
-  margin: 0 0 0 4pt;
+  margin: 5pt 0 0 4pt;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
@@ -53,10 +78,11 @@ body {
 #MenuButton span {
   display: block;
   position: absolute;
-  height: 5pt;
+  height: 8pt;
   width: 100%;
-  background: var(--foreground-color);
-  border-radius: 9px;
+  /*background: var(--foreground-color);*/
+  border: var(--foreground-color) 2pt solid;
+  border-radius: 4pt;
   opacity: 1;
   left: 0;
   -webkit-transform: rotate(0deg);
@@ -69,12 +95,17 @@ body {
   transition: .25s ease-in-out;
 }
 
+#MenuButton:hover span {
+  background: rgba(100, 100, 100, 0.7);
+}
+
 #MenuButton.open {
-  margin-left: -70pt;
+  margin-left: -25pt;
 }
 
 #MenuButton.open span {
   background-color: #c43e33;
+  border-width: 0;
 }
 
 #MenuButton span:nth-child(1) {
