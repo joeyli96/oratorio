@@ -45,6 +45,7 @@ body {
   font-size: 10pt;
   color: var(--background-color);
   font-style: italic;
+  padding: 5pt;
 }
 
 .itemName {
@@ -99,8 +100,8 @@ body {
   background: rgba(100, 100, 100, 0.7);
 }
 
-#MenuButton.open {
-  margin-left: -25pt;
+#MenuButton.open span {
+  width: 75%;
 }
 
 #MenuButton.open span {
@@ -189,6 +190,7 @@ body {
   line-height: 3em;
   color: rgb(153, 47, 35);
   font-family: 'Roboto Condensed';
+  cursor: pointer;
 }
 .SideButton {
   border-width: 10px;
@@ -201,6 +203,7 @@ body {
   text-align: center;
   font-family: "roboto condensed";
   transition: opacity 1s, border-color 1s, color 1s, background-color 1s;
+  cursor: pointer;
 }
 .SideRedButton {
   border-color: rgb(153, 47, 35);
@@ -209,6 +212,7 @@ body {
 }
 .hide {
   opacity: 0;
+  cursor: default;
 }
 
 .SquareButton {

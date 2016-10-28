@@ -35,15 +35,12 @@ function buttonToggle(e) {
 		switch (recorder.state) {
 			case "inactive":
 				recorder.start();
-				console.log("Start");
 				break;
 			case "recording":
 				recorder.stop();
-				console.log("Stopped");
 				break;
 			case "paused":
 				recorder.resume();
-				console.log("Recording");
 				break;
 		}
 	}
@@ -54,7 +51,11 @@ function leftToggle(e) {
 	if (recorder != null) {
 		switch (recorder.state) {
 			case "paused":
-				console.log("RESTART");
+				// RESTART
+				newRecorder().then(function(record) {
+					recorder.stop();
+					recorder = record;
+				});
 				break;
 		}
 	}
@@ -65,9 +66,11 @@ function rightToggle(e) {
 	if (recorder != null) {
 		switch (recorder.state) {
 			case "recording":
+				// PAUSE
 				recorder.pause();
 				break;
 			case "paused":
+				// STOP
 				recorder.stop();
 				break;
 		}
