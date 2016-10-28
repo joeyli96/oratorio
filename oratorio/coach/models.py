@@ -23,6 +23,7 @@ class Recording(models.Model):
     audio_dir = models.CharField(max_length=255)
     audio_length = models.IntegerField()
     transcript = models.TextField()
+    hesitations = models.IntegerField()
     neutrality = models.IntegerField()
     happiness = models.IntegerField()
     sadness = models.IntegerField()
