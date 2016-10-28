@@ -5,6 +5,9 @@ python:
 install:
   - pip install django==1.10
 
+env:
+  - SECRET_KEY=oratorio
+
 script:
   - cd oratorio
   - python manage.py test
