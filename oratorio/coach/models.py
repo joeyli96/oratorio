@@ -1,3 +1,7 @@
+# Django models for Coach
+# Whether we have separate classes that mirror our class diagram is still up for
+# debate
+
 from django.db import models
 
 class User(models.Model):
