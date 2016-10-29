@@ -5,19 +5,20 @@ through analysis of pacing, tone, volume, gestures, and machine learning.
 Project progress can be tracked [here](https://potatotank.github.io/oratorio/
 "Orator.io Project Page").
 
-### Requirements and installation
+### Requirements
 
 Currently only the UW CSE Linux home VM (CentOS) is supported.
 
-This project uses Python 2.7 and Django 1.10. Python 2.7 is pre-installed in the
-UW CSE Linux home VM.
+This project uses Python 2.7 (pre-installed in the home VM) and Django 1.10.
 
-To install pip and django
+To install Django
 
 ~~~
 sudo yum install python-pip
-sudo pip install django
+sudo pip install django==1.10
 ~~~
+
+### Installation
 
 Download the latest release version of oratorio from Releases.
 
@@ -25,17 +26,22 @@ Or clone this repository to obtain the latest development version of oratorio.
 
 ### Usage
 
-To run the test suite
+Firstly, set up your database with
 
-`python manage.py test`
+`python manage.py migrate`
 
-To run a development server on 127.0.0.1:8000
+Then you can run a development server on 127.0.0.1:8000 with
 
 `python manage.py runserver`
 
+You can also run the test suite with
+
+`python manage.py test`
+
+
 ### Deploy to production
 
-TODO
+Detailed instructions forthcoming.
 
 ### Directory structure
 
