@@ -72,6 +72,6 @@ release through Github’s Releases feature. Detailed instructions
 
 ### Bug tracking
 
-All bugs and issues should be reported to
-https://github.com/PotatoTank/oratorio/issues. Please follow the issue template
-and be as informative as possible.
+All bugs and issues should be reported to the [issue
+tracker](https://github.com/PotatoTank/oratorio/issues). Please follow the issue
+template and be as informative as possible.
