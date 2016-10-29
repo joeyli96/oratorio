@@ -9,27 +9,33 @@ Project progress can be tracked [here](https://potatotank.github.io/oratorio/
 
 Currently only the UW CSE Linux home VM (CentOS) is supported.
 
-Install Python 3.5
+This project uses Python 2.7 and Django 1.10. Python 2.7 is pre-installed in the
+UW CSE Linux home VM.
 
-TODO
+To install pip and django
 
-Install Django
+~~~
+sudo yum install python-pip
+sudo pip install django
+~~~
 
-TODO
+Download the latest release version of oratorio from Releases.
 
-Download the latest release version of from Releases.
-
-Or clone this repository to obtain the latest development version.
+Or clone this repository to obtain the latest development version of oratorio.
 
 ### Usage
 
-To run the test suite:
+To run the test suite
 
 `python manage.py test`
 
-To run a development server on 127.0.0.1:8000:
+To run a development server on 127.0.0.1:8000
 
 `python manage.py runserver`
+
+### Deploy to production
+
+TODO
 
 ### Directory structure
 
