@@ -336,6 +336,17 @@ body {
   padding: 5pt;
 }
 
+#userdocumentation {
+  clear: both;
+  display: inline-block;
+  color: var(--foreground-color);
+  font-size: 16pt;
+  top: var(--sidebar-title-height);
+  position: absolute;
+  height: calc(100% - var(--sidebar-title-height) * 2);
+  overflow-y: scroll;
+}
+
 #recordAnother {
   display: inline-block;
   position: absolute;
