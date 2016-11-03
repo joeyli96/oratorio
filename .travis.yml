@@ -10,6 +10,7 @@ env:
 
 script:
   - cd oratorio
+  - python manage.py makemigrations
   - python manage.py test
 
 notifications:
