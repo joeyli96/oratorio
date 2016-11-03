@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from coach import secret_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +19,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
-SECRET_KEY = secret_settings.SECRET_KEY
+# Try to get the SECRET_KEY from secret_settings.py. If that fails, check if it
+# exists as an enviromental variable.
+try:
+    from coach import secret_settings
+    SECRET_KEY = secret_settings.SECRET_KEY
+    ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
+except ImportError:
+    try:
+        temp = os.environ["SECRET_KEY"]
+    except KeyError:
+        print("Please specify SECRET_KEY either as an enviroment variable or in secret_settings.py")
+    SECRET_KEY = temp
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

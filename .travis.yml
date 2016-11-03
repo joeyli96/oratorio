@@ -1,0 +1,26 @@
+language: python
+python:
+  - 2.7
+
+install:
+  - pip install django==1.10
+
+env:
+  - SECRET_KEY=oratorio
+
+script:
+  - cd oratorio
+  - python manage.py makemigrations
+  - python manage.py test
+
+notifications:
+  slack:
+    rooms:
+      - oratorio-cse403:JjtLhql5ybLqIzcwRzrSPtu6
+    on-success: change
+    on-failure: always
+  email:
+    recipients:
+      - cse403-oratorio@googlegroups.com
+    on-success: never
+    on-failure: always
