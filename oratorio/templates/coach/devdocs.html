@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <link rel="stylesheet" href="static/styles.css"/>
+    <script src="static/sidebar.js"></script>
+    <script src="static/wordFrequency.js"></script>
+  </head>
+  <body>
+    <div id="Sidebar">
+      <div id="SidebarTitle">
+        Previous Speeches
+      </div>
+
+      <div class="menuItem">
+			<a class="itemName" href="result">
+          <span>Speech 1</span>
+          (5 recordings)
+        </a>
+        <div>
+          (Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
+        </div>
+      </div>
+
+      <div class="menuItem">
+        <a class="itemName" href="result">
+          <span>Speech 1</span>
+          (5 recordings)
+        </a>
+        <div>
+          (Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
+        </div>
+      </div>
+
+
+    </div>
+    
+    <div id="MenuButton">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    </div>
+
+    <a href="">
+      <div class="button">
+        Logout
+      </div>
+    </a>
+    <a href="profile">
+      <div class="button">
+        User Profile
+      </div>
+    </a>
+
+    <div id="devdocumentation">
+      <h1>Developer documentation for Oratorio</h1>
+      <h2>How can I find the source code?</h2>
+      <p>Click on <a href="https://github.com/PotatoTank/oratorio/releases">releases</a> to download the latest release version of oratorio.
+        Or clone the repository to obtain the latest development version of oratorio.
+      </p>
+      <h2>How to build the software</h2>
+      <p>Install Python 3.5 and Django 1.10.</p>
+      <h2>How to test the software</h2>
+      <p>Run the testsuite by running python manage.py test. <br/>
+         Run a development server by running python manage.py runserver.
+      </p>
+      <h2>The layout of the directory structure</h2>
+      <p>oratorio/ - Project directory<br/>
+	&emsp;manage.py - Django's admin utility file<br/>
+	&emsp;coach/ - Main application directory<br/>
+	&emsp;&emsp;tests/ - Tests for main application<br/>
+	&emsp;&emsp;settings.py - Settings for the main application<br/>
+	&emsp;&emsp;models.py<br/>
+	&emsp;&emsp;views.py<br/>
+	&emsp;&emsp;urls.py<br/>
+	&emsp;templates/ - HTML templates for the whole project<br/>
+	&emsp;static/ - Images, css and other static files for the whole project
+      </p>
+      <h2>How to set up an automated daily (or more frequent) build and test</h2>
+      <p>Set up Travis CI by following the <a href="https://travis-ci.org/getting_started">getting started guide.</a> </p>
+      <h2>How to release a new version of your software</h2>
+      <p>To release a new version, package the code in a tar file and create a new release through Github's Releases feature. Detailed instructions <a href="https://help.github.com/articles/creating-releases/">here.</a>  <br/>
+	Our project is open source so there will not be any private releases. If a developer only release is needed, a commit can be tagged to signify that release.
+      </p>
+      <h2>How to access the list of outstanding bugs and the list of resolved bugs, and how to resolve a bug</h2>
+      <p>All bugs and issues should be reported <a href="https://github.com/PotatoTank/oratorio/issues">here.</a> </br>
+      Please follow the issue template and be as informative as possible. </p>
+  </body>
+</html>

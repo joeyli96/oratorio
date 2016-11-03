@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <link rel="stylesheet" href="static/styles.css"/>
+    <script src="static/sidebar.js"></script>
+    <script src="static/wordFrequency.js"></script>
+  </head>
+  <body>
+    <div id="Sidebar">
+      <div id="SidebarTitle">
+        Previous Speeches
+      </div>
+
+      <div class="menuItem">
+			<a class="itemName" href="result">
+          <span>Speech 1</span>
+          (5 recordings)
+        </a>
+        <div>
+          (Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
+        </div>
+      </div>
+
+      <div class="menuItem">
+        <a class="itemName" href="result">
+          <span>Speech 1</span>
+          (5 recordings)
+        </a>
+        <div>
+          (Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
+        </div>
+      </div>
+
+
+    </div>
+    
+    <div id="MenuButton">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    </div>
+
+    <a href="">
+      <div class="button">
+        Logout
+      </div>
+    </a>
+    <a href="profile">
+      <div class="button">
+        User Profile
+      </div>
+    </a>
+	<a href="static/userdocs.html">
+		<div class="button">
+			User Docs
+		</div>
+	</a>
+	<a href="https://github.com/PotatoTank/oratorio" target="_blank">
+		<div class="button">
+			Dev Docs
+		</div>
+	</a>
+
+    <div id="transcript">
+      <p>Bacon ipsum dolor amet ball tip t-bone andouille tail. Doner short loin prosciutto bresaola short ribs boudin frankfurter venison brisket strip steak. Short loin short ribs sirloin chicken shankle, drumstick cupim tri-tip pastrami tongue andouille pork pancetta. Frankfurter t-bone sirloin ham hock bresaola sausage spare ribs boudin.</p>
+      
+      <p>Meatloaf shoulder tail, flank pork rump ribeye porchetta ham. Chuck flank t-bone, rump porchetta cow beef ribs doner andouille biltong brisket. Ham hock ball tip beef brisket chicken jowl pancetta capicola ham beef ribs tri-tip shankle pork filet mignon. Jowl pork chop jerky porchetta. Cow strip steak tongue ham, hamburger pork loin beef jerky beef ribs bresaola meatloaf sirloin alcatra porchetta shankle. Swine pork loin pork belly flank alcatra. Meatball chuck tenderloin ball tip, cupim tongue venison short loin turkey.</p>
+      
+      <p>Sausage cow tail alcatra boudin, chicken tenderloin jerky beef drumstick burgdoggen spare ribs rump brisket corned beef. Andouille meatloaf ham, frankfurter short ribs salami cow pork belly pig picanha. Meatball chuck shank pork belly kielbasa pork chop, salami tenderloin cow flank frankfurter pancetta. Frankfurter short loin biltong beef ribs cow.</p>
+
+      <p>Pork chop jowl bresaola ham hock chuck hamburger. Swine fatback shoulder jerky doner bacon bresaola filet mignon corned beef beef ribs tri-tip alcatra ham pastrami. Chuck ball tip pork belly rump, bresaola pork loin pig drumstick. Pastrami meatball pancetta ham hock spare ribs ham chicken shoulder tongue strip steak.</p>
+
+      <p>Tail pork loin chuck kevin, short loin tongue brisket cow jerky kielbasa capicola ball tip. Landjaeger t-bone turducken turkey, tri-tip ground round hamburger ribeye boudin leberkas ball tip. Hamburger salami t-bone swine, burgdoggen turducken pancetta landjaeger ribeye andouille brisket shank chuck. Short ribs ground round flank jerky.</p>
+    </div>
+    <a href="/">
+      <div id="recordAnother">
+        Record Another Speech?
+      </div>
+    </a>
+
+    <div id="statsContainer">
+      <div id="stats">
+        <h2><span>Pace:</span> (words per minute)</h2>
+        <div class = "slider pace"><div></div></div>
+        <h2><span>Hesitations:</span> (per minute)</h2>
+        <div class = "slider hesitations"><div></div></div>
+        <h2><span>General Tone:</span></h2>
+        <div class="tones">
+          <div>
+            <h3>Happiness</h3>
+            <div class = "slider"><div></div></div>
+          </div>
+          <div>
+            <h3>Sadness</h3>
+            <div class = "slider"><div></div></div>
+          </div>
+          <div>
+            <h3>Fear</h3>
+            <div class = "slider"><div></div></div>
+          </div>
+          <div>
+            <h3>Anger</h3>
+            <div class = "slider"><div></div></div>
+          </div>
+          <div>
+            <h3>Neautrality</h3>
+            <div class = "slider"><div></div></div>
+          </div>
+        </div>
+        <h2><span>Frequently Used Words:</span></h2>
+        <div class="words">
+          <a href="javascript:wordFrequency('cow')">
+            cow: 7
+          </a>
+          <a href="javascript:wordFrequency('jerky')">
+            jerky: 6
+          </a>
+          <a href="javascript:wordFrequency('bacon')">
+            bacon: 2
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
