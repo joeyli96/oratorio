@@ -33,7 +33,14 @@ except ImportError:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
+
 ROOT_URLCONF = 'coach.urls'
+
+INSTALLED_APPS = [
+    'coach.apps.CoachConfig',
+    'django.contrib.staticfiles',
+]
 
 TEMPLATES = [
     {
@@ -42,6 +49,8 @@ TEMPLATES = [
         'APP_DIRS': True,
     },
 ]
+
+WSGI_APPLICATION = 'coach.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -56,5 +65,6 @@ DATABASES = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = os.path.join(BASE_DIR, "static/")
+STATIC_URL = 'static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
