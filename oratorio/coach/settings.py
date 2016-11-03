@@ -25,6 +25,8 @@ SECRET_KEY = secret_settings.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
+
 ROOT_URLCONF = 'coach.urls'
 
 TEMPLATES = [
@@ -34,6 +36,8 @@ TEMPLATES = [
         'APP_DIRS': True,
     },
 ]
+
+WSGI_APPLICATION = 'coach.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
