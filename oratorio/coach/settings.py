@@ -22,7 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Try to get the SECRET_KEY from secret_settings.py. If that fails, check if it
 # exists as an enviromental variable.
 try:
-    from coach.secret_settings import SECRET_KEY
+    from coach import secret_settings
+    SECRET_KEY = secret_settings.SECRET_KEY
+    ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
 except ImportError:
     try:
         temp = os.environ["SECRET_KEY"]
@@ -32,8 +34,6 @@ except ImportError:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
 
 ROOT_URLCONF = 'coach.urls'
 
