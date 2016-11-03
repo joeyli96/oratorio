@@ -29,6 +29,8 @@ ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
 
 ROOT_URLCONF = 'coach.urls'
 
+INSTALLED_APPS = ['django.contrib.staticfiles']
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -54,10 +56,4 @@ DATABASES = {
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIR = [
-    os.path.join(BASE_DIR, "/static/"),
-]
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
-INSTALLED_APPS = ['django.contrib.staticfiles']
