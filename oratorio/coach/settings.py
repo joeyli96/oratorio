@@ -35,8 +35,6 @@ except ImportError:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
-
 ROOT_URLCONF = 'coach.urls'
 
 INSTALLED_APPS = [
