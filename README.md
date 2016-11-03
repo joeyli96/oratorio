@@ -28,7 +28,7 @@ Or clone this repository to obtain the latest development version of oratorio.
 
 Firstly, set up your database with
 
-`python manage.py migrate`
+`python manage.py makemigrations && python manage.py migrate`
 
 Then you can run a development server on 127.0.0.1:8000 with
 
