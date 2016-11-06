@@ -40,6 +40,8 @@ ROOT_URLCONF = 'coach.urls'
 INSTALLED_APPS = [
     'coach.apps.CoachConfig',
     'django.contrib.staticfiles',
+
+    'django.contrib.contenttypes',
 ]
 
 TEMPLATES = [
