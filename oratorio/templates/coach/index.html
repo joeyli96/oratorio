@@ -1,50 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<link rel="stylesheet" href="static/styles.css"/>
-	<script src="static/sidebar.js"></script>
-	<script src="static/scripts.js"></script>
+{% extends "coach\base.html" %}
 
-	<meta name="google-signin-client_id" content=829611170519-u2fu8nis9unm4nvlmfdcuhiqod9rsbuh.apps.googleusercontent.com>
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	</script>
-</head>
-
-<body>
-	<div id="Sidebar">
-		<div id="SidebarTitle">
-			Previous Speeches
-		</div>
-
-		<div class="menuItem">
-			<a class="itemName" href="result">
-				<span>Speech 1</span>
-				(5 recordings)
-			</a>
-			<div>
-				(Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
-			</div>
-		</div>
-
-		<div class="menuItem">
-			<a class="itemName" href="result">
-				<span>Speech 1</span>
-				(5 recordings)
-			</a>
-			<div>
-				(Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
-			</div>
-		</div>
-
-
-	</div>
-	<div id="MenuButton">
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-	</div>
-
+{% block body_block %}
 	<div id="MainButton">
 		RECORD
 	</div>
@@ -54,28 +10,4 @@
 	<div class="SideButton right hide">
 		PAUSE
 	</div>
-
-	<a href="">
-		<div class="button">
-				<div class="g-signin2" data-onsuccess="onSignIn"></div>
-				Logout
-		</div>
-	</a>
-	<a href="profile">
-		<div class="button">
-				User Profile
-		</div>
-	</a>
-	<a href="static/userdocs.html">
-		<div class="button">
-			User Docs
-		</div>
-	</a>
-	<a href="https://github.com/PotatoTank/oratorio" target="_blank">
-		<div class="button">
-			Dev Docs
-		</div>
-	</a>
-</body>
-
-</html>
+{% endblock %}
