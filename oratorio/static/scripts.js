@@ -26,6 +26,25 @@ function onSignIn(googleUser) {
   console.log('Email: ' + profile.getEmail());
   var id_token = googleUser.getAuthResponse().id_token;
   console.log('ID Token: ' + id_token);
+
+  var button = $(".g-signin2");
+  button.parentElement.parentElement.removeChild(button.parentElement);
+
+	var btn = document.createElement("LogoutButton");        // Create a <button> element
+	var t = document.createTextNode("Logout");       // Create a text node
+	btn.appendChild(t);                                // Append the text to <button>
+	document.body.appendChild(btn);                    // Append <button> to <body>
+	btn.setAttribute("class", "button");
+  //button.style.visibility = 'hidden';
+  /*
+  var xhr = new XMLHttpRequest();
+xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.onload = function() {
+  console.log('Signed in as: ' + xhr.responseText);
+};
+xhr.send('idtoken=' + id_token);
+*/
 }
 
 function buttonToggle(e) {

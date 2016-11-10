@@ -37,38 +37,47 @@
 					(Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
 				</div>
 			</div>
-	</div>
-
-	<div id="MenuButton">
-		<span></span>
-		<span></span>
-		<span></span>
-		<span></span>
-	</div>
-	
-	<div class="button">
-		<div class="g-signin2" data-onsuccess="onSignIn"></div>
-	</div>
-
-	<a href="profile">
-		<div class="button">
-			User Profile
 		</div>
-	</a>
 
-	<a href="static/userdocs.html">
-		<div class="button">
-			User Docs
+		<div id="MenuButton">
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
 		</div>
-	</a>
+		
+		<div class="LoginButton">
+					<div class="g-signin2" data-onsuccess="onSignIn"></div>
+				</div>
+		<ul>
+			<li style="float:right">
+				<a href="https://github.com/PotatoTank/oratorio" target="_blank">
+					Dev Docs
+				</a>
+			</li>
+			<li style="float:right">
+				<a href="static/userdocs.html">
+					User Docs
+				</a>
+			</li>
+			<li style="float:right">
+				<a href="profile">
+					User Profile
+				</a>
+			</li>
+			<li style="float:right">
+				
+			</li>
+		</ul>
+		
 
-	<a href="https://github.com/PotatoTank/oratorio" target="_blank">
-		<div class="button">
-			Dev Docs
-		</div>
-	</a>
+		
 
-    {% block body_block %}{% endblock %}
+		
+
+		
+
+	    {% block body_block %}{% endblock %}
 
     </body>
 </html>
