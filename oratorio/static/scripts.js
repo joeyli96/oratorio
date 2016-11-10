@@ -17,19 +17,50 @@ window.addEventListener("load", function(){
 	resize();
 });
 
+function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
+function upload(blob){
+        var csrftoken = getCookie('csrftoken');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'upload', true);
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    
+        // need to get user id here
+        xhr.setRequestHeader("UserHeader", "User ID needed");
+    
+        // the default type is video/webm, is audio/wav supported?
+        // also how to convert the blob to .wav file?
+        var file = new File([blob], 'video.webm', {type: 'video/webm', lastModified: Date.now()});
+        xhr.send(file);
+}
+
+// temporary
+var timeInterval = 60 * 1000;
 
 function buttonToggle(e) {
 	var button = $("#MainButton");
 	if (recorder == null) {
 		newRecorder().then(function(record) {
 		recorder = record;
-		recorder.start();
+		recorder.start(timeInterval);
 		});
 	} else {
 		switch (recorder.state) {
 			case "inactive":
-				recorder.start();
+				recorder.start(timeInterval);
 				break;
 			case "recording":
 				recorder.stop();
@@ -72,11 +103,14 @@ function rightToggle(e) {
 	}
 }
 
-
 function newRecorder() {
 	return new Promise(function(resolve, reject) {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function(mediaStream) {
 		var r = new MediaRecorder(mediaStream);
+		r.ondataavailable = function(e) {
+		    upload(e.data);
+		};
+		    
 		var s = $("#MainButton");
 		var left = $(".SideButton.left");
 		var right = $(".SideButton.right");
