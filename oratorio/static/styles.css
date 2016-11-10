@@ -88,8 +88,8 @@ li a:hover {
 
 /*Sidebar navigation button*/
 #MenuButton {
-  width: 60px;
-  height: 45px; 
+  width: 50px;
+  height: 25px; 
   position: absolute;
   left: 0;
   top: 46px;
@@ -247,7 +247,7 @@ li a:hover {
 }
 
 .g-signin2 {
-  top: 100px;
+
 }
 
 .SquareButton {
@@ -271,6 +271,19 @@ li a:hover {
   padding: 5pt;
   margin: 5pt;
   cursor: pointer;
+}
+.LogoutButton {
+  display: none;
+  float: right;
+  top: 0;
+  color: #F6F6F6;
+  background-color: #3B3738;
+  border-style: solid;
+  padding: 5pt;
+  margin: 5pt;
+  font-size: 16pt;
+  cursor: pointer;
+  transition: 0.5s;
 }
 .button {
   float: right;

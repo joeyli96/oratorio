@@ -12,10 +12,24 @@ window.addEventListener("load", function(){
 	$('#MainButton').addEventListener("click", buttonToggle);
 	$(".SideButton.left").addEventListener("click", leftToggle);
 	$(".SideButton.right").addEventListener("click", rightToggle);
+	$(".LogoutButton").addEventListener("click", logOut);
 
 	window.addEventListener("resize", resize);
 	resize();
 });
+
+function logOut() {
+	  var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+    var button = $(".g-signin2");
+  //button.parentElement.parentElement.removeChild(button.parentElement);
+  button.style.display = "block";
+
+  var btn_logout = $(".LogoutButton");
+  btn_logout.style.display = "none";
+}
 
 function onSignIn(googleUser) {
 	console.log("hi");
@@ -28,13 +42,19 @@ function onSignIn(googleUser) {
   console.log('ID Token: ' + id_token);
 
   var button = $(".g-signin2");
-  button.parentElement.parentElement.removeChild(button.parentElement);
+  //button.parentElement.parentElement.removeChild(button.parentElement);
+  button.style.display = "none";
 
-	var btn = document.createElement("LogoutButton");        // Create a <button> element
-	var t = document.createTextNode("Logout");       // Create a text node
-	btn.appendChild(t);                                // Append the text to <button>
-	document.body.appendChild(btn);                    // Append <button> to <body>
-	btn.setAttribute("class", "button");
+  var btn_logout = $(".LogoutButton");
+  btn_logout.style.display = "block";
+	//var btn = document.createElement("button");        // Create a <button> element
+	//var t = document.createTextNode("Log Out");       // Create a text node
+	//btn.appendChild(t);                    
+	//var list = document.getElementById("ul");
+	//list.appendChild(btn);            // Append the text to <button>
+	//document.body.appendChild(btn);                    // Append <button> to <body>
+	//btn.setAttribute("class", "LogoutButton");
+	
   //button.style.visibility = 'hidden';
   /*
   var xhr = new XMLHttpRequest();
