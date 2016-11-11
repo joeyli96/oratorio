@@ -1,3 +1,5 @@
+*.wav
+oratorio/coach/migrations
 *.sqlite3
 *.pyc
 oratorio/coach/secret_settings.py

@@ -12,4 +12,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^profile$', views.profile, name='profile'),
     url(r'^result$', views.result, name='result'),
+    url(r'^upload$', views.upload, name='upload'),
+    url(r'^userdocs$', views.userdocs, name='userdocs'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
