@@ -11,3 +11,4 @@ urlpatterns = [
     url(r'^result$', views.result, name='result'),
     url(r'^upload$', views.upload, name='upload'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
