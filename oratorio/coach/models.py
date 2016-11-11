@@ -51,7 +51,7 @@ class Recording(models.Model):
         return recording
 
     def __str__(self):
-        return "Recording " + self.id + " from speech " + self.speech.name
+        return "Recording " + str(self.id) + " from speech " + self.speech.name
 
     def get_transcript_text(self):
         """Returns the textual representation of the transcript (does not return the start and end time of each word)"""
