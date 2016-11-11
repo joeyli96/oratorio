@@ -30,7 +30,8 @@ except ImportError:
     try:
         temp = os.environ["SECRET_KEY"]
     except KeyError:
-        print("Please specify SECRET_KEY either as an enviroment variable or in secret_settings.py")
+        print("Please specify SECRET_KEY either as an enviroment variable" +
+              "or in secret_settings.py")
     SECRET_KEY = temp
 
 # Key for Google authentication

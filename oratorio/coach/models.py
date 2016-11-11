@@ -1,8 +1,11 @@
 # Django models for Coach
-# Whether we have separate classes that mirror our class diagram is still up for
-# debate
+# This class contains the models used to hold data and as a schema
+# for the django database.
+#
+# TODO: Separate classes that mirror class diagram?
 
 from django.db import models
+
 
 class User(models.Model):
     name = models.CharField(max_length=100)
@@ -11,12 +14,14 @@ class User(models.Model):
     def __str__(self):
         return "User " + self.name + ", email " + self.email
 
+
 class Speech(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return "Speech " + self.name + " by user " + self.user.name
+
 
 class Recording(models.Model):
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
