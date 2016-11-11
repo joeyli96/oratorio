@@ -140,7 +140,7 @@ function rightToggle(e) {
 				break;
 		}
 	}
-=======
+}
 /**
  * Called when the user clicks the "Log Out" button.
  * Signs the user out and enbales the "Sign In" button.
