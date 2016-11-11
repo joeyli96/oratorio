@@ -37,6 +37,12 @@ li a:hover {
     background-color: #111;
 }
 
+a[target="_blank"]:after {
+    /*
+    Add a link to the "external" icon. Example below using the Wikipedia one (blue).    
+    content:url(http://upload.wikimedia.org/wikipedia/commons/6/64/Icon_External_Link.png); */
+}
+
 /*Sidebar*/
 #Sidebar {
   --sidebar-width: 30%;
@@ -184,7 +190,7 @@ li a:hover {
   border-style: solid;
   position: absolute;
   left: 20%;
-  top: 5%;
+  top: 10%;
   width: var(--profile-panel-width);
   height: 85%;
   overflow: hidden;
@@ -208,8 +214,8 @@ li a:hover {
 
 /*Buttons*/
 #MainButton {
-  /*border-color: rgb(153, 47, 35);
-  border-style: solid;*/
+  border-color: rgb(153, 47, 35);
+  border-style: solid;
   border-radius: 50%;
   background-color: #C63D0F;
   position: absolute;
@@ -385,15 +391,20 @@ li a:hover {
   padding: 5pt;
 }
 
-#userdocumentation {
-  clear: both;
-  display: inline-block;
-  color: var(--foreground-color);
+#userDocumentation {
+  /*clear: both;*/
+  /*display: inline-block;*/
+  color: #3B3738;
   font-size: 16pt;
   top: var(--sidebar-title-height);
   position: absolute;
-  height: calc(100% - var(--sidebar-title-height) * 2);
-  overflow-y: scroll;
+  height: 90%;
+  overflow-y: auto;
+  padding: 0 80px;
+}
+
+#userDocumentation p {
+  padding-left: 30px;
 }
 
 #recordAnother {

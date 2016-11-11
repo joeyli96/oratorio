@@ -7,6 +7,7 @@ function $$(ele) {
 }
 
 var recorder;
+var profile;
 
 window.addEventListener("load", function(){
     $('#MainButton').addEventListener("click", buttonToggle);
@@ -161,20 +162,22 @@ function logOut() {
  * @param  {googleUser} Represents the Google User.
  */
 function onSignIn(googleUser) {
-    console.log("hi");
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    profile = googleUser.getBasicProfile();
+    //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
+    //console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail());
     var id_token = googleUser.getAuthResponse().id_token;
-    console.log('ID Token: ' + id_token);
+    //console.log('ID Token: ' + id_token);
 
     var buttonLogin = $(".g-signin2");
     buttonLogin.style.display = "none";
 
     var buttonLogout = $(".LogoutButton");
     buttonLogout.style.display = "block";
+
+    var userName = document.getElementById("UserName");
+    userName.innerHTML = profile.getName();
 
     // This code is sends the user's token to our backend.
     /* 
