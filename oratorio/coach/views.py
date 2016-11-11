@@ -7,6 +7,9 @@ from .settings import MEDIA_ROOT
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from tempfile import TemporaryFile
+from .models import User, Speech, Recording
+from .analyzer import Analyzer
+import json
 
 def upload(request):
     if request.method == 'POST':
@@ -19,6 +22,14 @@ def upload(request):
         filename = fs.save("testfile.wav", file)
         uploaded_file_url = MEDIA_ROOT + "/" + filename
         tempfile.close()
+        user = User.objects.filter(name="Joey")[0]
+        num_speeches = len(Speech.objects.all())
+        speech_name = "speech" + str(num_speeches + 1)
+        speech = Speech(user=user, name=speech_name)
+        speech.save()
+        recording = Analyzer.create_recording(audio_dir=uploaded_file_url, speech=speech)
+        recording.save()
+        print json.dumps(recording.transcript)
         return redirect('result')
     return redirect('index')
 
