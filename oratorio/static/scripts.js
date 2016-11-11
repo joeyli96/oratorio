@@ -17,94 +17,146 @@ window.addEventListener("load", function(){
 	resize();
 });
 
+function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
+function upload(blob){
+        var csrftoken = getCookie('csrftoken');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'upload', true);
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    
+        // need to get user id here
+        xhr.setRequestHeader("UserHeader", "User ID needed");
+    
+        // the default type is video/webm, is audio/wav supported?
+        // also how to convert the blob to .wav file?
+        // var file = new File([blob], 'video.webm', {type: 'video/webm', lastModified: Date.now()});
+        xhr.send(blob);
+}
+
+// temporary
+var timeInterval = 60 * 60 * 1000;
+
+function onStart(button, right) {
+	button.innerHTML = "STOP";
+	right.classList.remove("hide");
+	right.classList.remove("SideRedButton");
+	right.innerHTML = "PAUSE";
+}
+
+function onPause(button, left, right) {
+	button.innerHTML = "RESUME";
+	left.classList.remove("hide");
+	left.innerHTML = "RESTART";
+	right.innerHTML = "STOP";
+	right.classList.add("SideRedButton");
+}
+
+function onResume(button, left, right) {
+	button.innerHTML = "STOP";
+	left.classList.add("hide");
+	right.innerHTML = "PAUSE";
+	right.classList.remove("SideRedButton");
+}
+
+function onStop(button, left, right) {
+	button.innerHTML = "RECORD";
+	left.classList.add("hide");
+	right.classList.add("hide");
+	// window.location = "result";
+}
+
+function onRestart(button, left, right) {
+	button.innerHTML = "RECORD";
+	left.classList.add("hide");
+	right.classList.add("hide");
+	right.classList.remove("SideRedButton");
+}
 
 function buttonToggle(e) {
 	var button = $("#MainButton");
+	var left = $(".SideButton.left");
+	var right = $(".SideButton.right");
 	if (recorder == null) {
 		newRecorder().then(function(record) {
 		recorder = record;
-		recorder.start();
+		recorder.start(timeInterval);
+		onStart(button, right);
 		});
 	} else {
-		switch (recorder.state) {
-			case "inactive":
-				recorder.start();
+		switch (button.innerHTML) {
+			case "RECORD":
+				recorder.start(timeInterval);
+				onStart(button, right);
 				break;
-			case "recording":
+			case "STOP":
 				recorder.stop();
+				onStop(button, left, right);
 				break;
-			case "paused":
+			case "RESUME":
 				recorder.resume();
+				onResume(button, left, right);
 				break;
 		}
 	}
 }
 
 function leftToggle(e) {
-	var button = $(".SideButton.left");
+	var button = $("#MainButton");
+	var left = $(".SideButton.left");
+	var right = $(".SideButton.right");
 	if (recorder != null) {
-		switch (recorder.state) {
-			case "paused":
-				// RESTART
-				newRecorder().then(function(record) {
-					recorder.stop();
-					recorder = record;
-				});
-				break;
-		}
+		newRecorder().then(function(record) {
+			recorder.stop();
+			recorder = record;
+		});
+		onRestart(button, left, right);
 	}
 }
 
 function rightToggle(e) {
-	var button = $(".SideButton.right");
+	var button = $("#MainButton");
+	var left = $(".SideButton.left");
+	var right = $(".SideButton.right");
 	if (recorder != null) {
-		switch (recorder.state) {
-			case "recording":
-				// PAUSE
+		switch (right.innerHTML) {
+			case "PAUSE":
 				recorder.pause();
+				onPause(button, left, right);
 				break;
-			case "paused":
-				// STOP
+			case "STOP":
 				recorder.stop();
+				onStop(button, left, right);
 				break;
 		}
 	}
 }
 
-
 function newRecorder() {
 	return new Promise(function(resolve, reject) {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function(mediaStream) {
-		var r = new MediaRecorder(mediaStream);
+		var r = new MediaStreamRecorder(mediaStream);
+		r.mimeType = 'audio/wav';
+		r.ondataavailable = function(blob) {
+		    upload(blob);
+		};
+		    
 		var s = $("#MainButton");
 		var left = $(".SideButton.left");
 		var right = $(".SideButton.right");
-		r.addEventListener("pause", function(e) {
-			s.innerHTML = "RESUME";
-			left.classList.remove("hide");
-			left.innerHTML = "RESTART";
-			right.innerHTML = "STOP";
-			right.classList.add("SideRedButton");
-		});
-		r.addEventListener("resume", function(e) {
-			s.innerHTML = "STOP";
-			left.classList.add("hide");
-			right.innerHTML = "PAUSE";
-			right.classList.remove("SideRedButton");
-		});
-		r.addEventListener("start", function(e) {
-			s.innerHTML = "STOP";
-			right.classList.remove("hide");
-			right.classList.remove("SideRedButton");
-			right.innerHTML = "PAUSE";
-		});
-		r.addEventListener("stop", function(e) {
-			s.innerHTML = "RECORD";
-			left.classList.add("hide");
-			right.classList.add("hide");
-			window.location = "result";
-		});
 		resolve(r);
 		}).catch(function(err) {
 		reject(err);

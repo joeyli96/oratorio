@@ -40,6 +40,8 @@ ROOT_URLCONF = 'coach.urls'
 INSTALLED_APPS = [
     'coach.apps.CoachConfig',
     'django.contrib.staticfiles',
+
+    'django.contrib.contenttypes',
 ]
 
 TEMPLATES = [
@@ -68,3 +70,7 @@ DATABASES = {
 STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
