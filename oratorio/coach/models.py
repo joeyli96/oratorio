@@ -72,3 +72,18 @@ class Recording(models.Model):
         Text API"""
         self.transcript = transcript
 
+    def get_recording_length(self):
+        """Returns the length of the recording in seconds"""
+        if not self.transcript:
+            return 0
+        last_sentence = self.transcript[-1]
+        last_sentence_words = last_sentence[1]
+        last_word = last_sentence_words[-1]
+        last_word_end_timestamps = last_word[2]
+
+        first_sentence = self.transcript[0]
+        first_sentence_words = first_sentence[1]
+        first_word = first_sentence_words[0]
+        first_sentence_start_timestamp = first_word[1]
+
+        return last_word_end_timestamps - first_sentence_start_timestamp
