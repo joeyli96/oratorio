@@ -7,7 +7,9 @@ from .settings import MEDIA_ROOT
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from tempfile import TemporaryFile
-import speech_recognition as sr
+from .models import User, Speech, Recording
+from .analyzer import Analyzer
+import json
 
 def upload(request):
     if request.method == 'POST':
@@ -21,21 +23,15 @@ def upload(request):
         uploaded_file_url = MEDIA_ROOT + "/" + filename
         tempfile.close()
         
-        # testing using google speech-to-text
-        test_with_google = True;
-        if test_with_google:
-            r = sr.Recognizer()
-            # feed file to speech-to-text APIs
-            # tested with Google Speech Recognition here
-            try:
-                with sr.AudioFile(uploaded_file_url) as source:
-                    audio = r.record(source)
-                print("You said: " + r.recognize_google(audio))
-            except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio")
-            except sr.RequestError as e:
-                print("Could not request results from Google Speech Recognition service; {0}".format(e))
-            return redirect('result')
+        user = User.objects.filter(name="Joey")[0]
+        num_speeches = len(Speech.objects.all())
+        speech_name = "speech" + str(num_speeches + 1)
+        speech = Speech(user=user, name=speech_name)
+        speech.save()
+        recording = Analyzer.create_recording(audio_dir=uploaded_file_url, speech=speech)
+        recording.save()
+        print json.dumps(recording.transcript)
+        return redirect('result')
     return redirect('index')
 
 def index(request):
