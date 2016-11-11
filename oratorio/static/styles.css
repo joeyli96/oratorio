@@ -413,3 +413,11 @@ li a:hover {
   cursor:pointer;
   text-decoration: none;
 }
+
+#spinner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: calc(50% - 15px);
+    left: calc(50% - 15px);
+}
