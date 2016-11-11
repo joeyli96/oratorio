@@ -7,7 +7,6 @@ from .settings import MEDIA_ROOT
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from tempfile import TemporaryFile
-import speech_recognition as sr
 
 def upload(request):
     if request.method == 'POST':

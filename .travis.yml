@@ -11,7 +11,7 @@ env:
 script:
   - cd oratorio
   - python manage.py makemigrations coach
-  - python manage.py migrate
+  - python manage.py migrate coach
   - python manage.py test
 
 notifications:
