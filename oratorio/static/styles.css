@@ -391,15 +391,20 @@ a[target="_blank"]:after {
   padding: 5pt;
 }
 
-#userdocumentation {
-  clear: both;
-  display: inline-block;
-  color: var(--foreground-color);
+#userDocumentation {
+  /*clear: both;*/
+  /*display: inline-block;*/
+  color: #3B3738;
   font-size: 16pt;
   top: var(--sidebar-title-height);
   position: absolute;
-  height: calc(100% - var(--sidebar-title-height) * 2);
-  overflow-y: scroll;
+  height: 90%;
+  overflow-y: auto;
+  padding: 0 80px;
+}
+
+#userDocumentation p {
+  padding-left: 50px;
 }
 
 #recordAnother {
