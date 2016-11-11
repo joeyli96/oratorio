@@ -4,12 +4,14 @@ python:
 
 install:
   - pip install django==1.10
+  - pip install watson-developer-cloud
 env:
   - SECRET_KEY=oratorio
 
 script:
   - cd oratorio
-  - python manage.py makemigrations
+  - python manage.py makemigrations coach
+  - python manage.py migrate
   - python manage.py test
 
 notifications:

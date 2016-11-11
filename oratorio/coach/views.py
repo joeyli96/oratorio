@@ -20,22 +20,7 @@ def upload(request):
         filename = fs.save("testfile.wav", file)
         uploaded_file_url = MEDIA_ROOT + "/" + filename
         tempfile.close()
-        
-        # testing using google speech-to-text
-        test_with_google = True;
-        if test_with_google:
-            r = sr.Recognizer()
-            # feed file to speech-to-text APIs
-            # tested with Google Speech Recognition here
-            try:
-                with sr.AudioFile(uploaded_file_url) as source:
-                    audio = r.record(source)
-                print("You said: " + r.recognize_google(audio))
-            except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio")
-            except sr.RequestError as e:
-                print("Could not request results from Google Speech Recognition service; {0}".format(e))
-            return redirect('result')
+        return redirect('result')
     return redirect('index')
 
 def index(request):
