@@ -52,3 +52,8 @@ def result(request):
     template = loader.get_template('coach/results.html')
     context = {}
     return HttpResponse(template.render(context, request))
+
+def userdocs(request):
+    template = loader.get_template('coach/userdocs.html')
+    context = {}
+    return HttpResponse(template.render(context, request))

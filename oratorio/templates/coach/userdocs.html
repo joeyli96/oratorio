@@ -1,64 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-	  <link rel="stylesheet" href="styles.css"/>
-    <script src="sidebar.js"></script>
-    <script src="wordFrequency.js"></script>
-  </head>
-  <body>
-    <div id="Sidebar">
-      <div id="SidebarTitle">
-        Previous Speeches
-      </div>
+{% extends "coach/base.html" %}
 
-      <div class="menuItem">
-			<a class="itemName" href="/result">
-          <span>Speech 1</span>
-          (5 recordings)
-        </a>
-        <div>
-          (Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
-        </div>
-      </div>
-
-      <div class="menuItem">
-        <a class="itemName" href="/result">
-          <span>Speech 1</span>
-          (5 recordings)
-        </a>
-        <div>
-          (Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
-        </div>
-      </div>
-
-
-    </div>
-    
-    <div id="MenuButton">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    </div>
-
-    <a href="">
-      <div class="button">
-        Logout
-      </div>
-    </a>
-    <a href="/profile">
-      <div class="button">
-        User Profile
-      </div>
-    </a>
-	<a href="https://github.com/PotatoTank/oratorio" target="_blank">
-		<div class="button">
-			Dev Docs
-		</div>
-	</a>
-
-    <div id="userdocumentation">
-      <h1>User documentation for Oratorio</h1>
+{% block body_block %}
+    <div id="userDocumentation">
+      <h1>User Documentation for Oratorio</h1>
       <h2>What is Oratorio?</h2>
       <p>Oratorio is your comprehensive online speech coach. It provides quick, accessible goals and feedback after analyzing your speech. Instead of hiring expensive personal, you can now simply just upload your speech to Oratorio the service will give instant speech analysis directly to your computer.</p>
       <h2>How do I use Oratorio?</h2>
@@ -75,10 +19,4 @@
 	Additional Information: it does not crash on safari<br/> </i>
       </p>
 	</div>
-	<a href="/">
-		<div id="recordAnother">
-				Record a Speech
-		</div>
-	</a>
-  </body>
-</html>
+{% endblock %}
