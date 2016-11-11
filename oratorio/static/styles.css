@@ -208,8 +208,8 @@ li a:hover {
 
 /*Buttons*/
 #MainButton {
-  /*border-color: rgb(153, 47, 35);
-  border-style: solid;*/
+  border-color: rgb(153, 47, 35);
+  border-style: solid;
   border-radius: 50%;
   background-color: #C63D0F;
   position: absolute;
