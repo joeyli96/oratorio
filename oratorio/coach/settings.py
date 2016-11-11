@@ -24,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 try:
     from coach import secret_settings
     SECRET_KEY = secret_settings.SECRET_KEY
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secret_settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
     ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
 except ImportError:
     try:
@@ -31,6 +32,17 @@ except ImportError:
     except KeyError:
         print("Please specify SECRET_KEY either as an enviroment variable or in secret_settings.py")
     SECRET_KEY = temp
+
+# Key for Google authentication
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '829611170519-u2fu8nis9unm4nvlmfdcuhiqod9rsbuh.apps.googleusercontent.com'
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.google.GoogleOAuth2',
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +52,9 @@ ROOT_URLCONF = 'coach.urls'
 INSTALLED_APPS = [
     'coach.apps.CoachConfig',
     'django.contrib.staticfiles',
+    'django.contrib.sessions',
+    #'social.apps.django_app.default',
+    #'django.contrib.contenttypes.models.ContentType',
 ]
 
 TEMPLATES = [

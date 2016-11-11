@@ -1,65 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<link rel="stylesheet" href="static/styles.css"/>
-	<script src="static/sidebar.js">
-	</script>
-</head>
+{% extends "coach\base.html" %}
 
-<body>
-	<div id="Sidebar">
-		<div id="SidebarTitle">
-			Previous Speeches
-		</div>
-
-		<div class="menuItem">
-			<div class="itemName">
-				<span>Speech 1</span>
-				(5 recordings)
-			</div>
-			<div>
-				(Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
-			</div>
-		</div>
-
-		<div class="menuItem">
-			<div class="itemName">
-				<span>Speech 1</span>
-				(5 recordings)
-			</div>
-			<div>
-				(Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
-			</div>
-		</div>
-
-
-	</div>
-	<div id="MenuButton">
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-	</div>
-	<a href="">
-		<div class="button">
-				Logout
-		</div>
-	</a>
-	<a href="static/userdocs.html">
-		<div class="button">
-			User Docs
-		</div>
-	</a>
-	<a href="https://github.com/PotatoTank/oratorio" target="_blank">
-		<div class="button">
-			Dev Docs
-		</div>
-	</a>
-	<a href = "javascript: window.history.back()" style="text-decoration:none">
-		<div class = "SquareButton">
-			Back
-		</div>
-	</a>
+{% block body_block %}
 	<div id="ProfilePanel">
 		<div id="ProfileTitle">
 			<span id="UserName">User Name<span>
@@ -100,7 +41,4 @@
 	          </a>
 	        </div>
       </div>
-	</div>
-</body>
-
-</html>
+{% endblock %}
