@@ -15,23 +15,19 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
-
-# Try to get the SECRET_KEY from secret_settings.py. If that fails, check if it
-# exists as an enviromental variable.
+# Try to get variables from secret_settings.py. If that fails, check if they
+# exist as enviromental variables.
 try:
-    from coach import secret_settings
-    SECRET_KEY = secret_settings.SECRET_KEY
-    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secret_settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
-    ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
+    from coach.secret_settings import *
 except ImportError:
     try:
-        temp = os.environ["SECRET_KEY"]
+        SECRET_KEY = os.environ["SECRET_KEY"]
+        ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"]
+        WATSON_USER_NAME = os.environ["WATSON_USER_NAME"]
+        WATSON_PASSWORD = os.environ["WATSON_PASSWORD"]
+        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
     except KeyError:
-        print("Please specify SECRET_KEY either as an enviroment variable or in secret_settings.py")
-    SECRET_KEY = temp
+        print("Please create a secret_settings.py file following instructions from secret_settings.py.template")
 
 # Key for Google authentication
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '829611170519-u2fu8nis9unm4nvlmfdcuhiqod9rsbuh.apps.googleusercontent.com'
