@@ -32,9 +32,14 @@ def upload(request):
     recording.save()
     print json.dumps(recording.transcript)
     template = loader.get_template('coach/results.html')
+    rec_len = recording.get_recording_length()
+    if rec_len != 0:
+        avg_pace = recording.get_word_count() / rec_len
+    else:
+        avg_pace = 0
     context = {
             'transcript': recording.get_transcript_text(),
-            'pace': 60 * recording.get_word_count() / recording.get_recording_length(),
+            'pace': 0,
     }
     return HttpResponse(template.render(context, request))
 
