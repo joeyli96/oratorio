@@ -39,6 +39,11 @@ function upload(blob){
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'upload', true);
         xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+        xhr.onload = function () {
+            console.log('DONE', xhr.readyState); // readyState will be 4
+            $('body').innerHTML = xhr.response;
+        };
    
         // need to get user id here?
         xhr.setRequestHeader("UserHeader", "User ID needed");

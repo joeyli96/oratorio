@@ -30,7 +30,9 @@ def upload(request):
         recording = Analyzer.create_recording(audio_dir=uploaded_file_url, speech=speech)
         recording.save()
         print json.dumps(recording.transcript)
-        return redirect('result')
+        template = loader.get_template('coach/results.html')
+        context = { 'transcript': recording.get_transcript_text(), }
+        return HttpResponse(template.render(context, request))
     return redirect('index')
 
 def index(request):
