@@ -39,12 +39,3 @@ class Analyzer:
         clean_transcript = Analyzer.clean_transcript(json_transcript)
         recording = Recording.create(speech=speech, audio_dir=audio_dir, transcript=clean_transcript)
         return recording
-
-    @staticmethod
-    def debug():
-        user = User(name="BadassMOFO", email="x@y.com")
-        user.save()
-        speech = Speech(user=user, name="fuckdjango")
-        speech.save()
-        recording = Analyzer.create_recording(audio_dir="/home/willbhot/Desktop/speech1.wav", speech=speech)
-        print json.dumps(recording.transcript)
