@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed');
 
 body {
-  --background-color: #474747;
+  --background-color: #F6F6F6;
   background-color: var(--background-color);
   --foreground-color: #cbcbcb;
   --hover-color: rgba(100, 100, 100, 0.7);
@@ -13,6 +13,30 @@ body {
   font-family: roboto;
 }
 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #3B3738;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
 /*Sidebar*/
 #Sidebar {
   --sidebar-width: 30%;
@@ -20,7 +44,7 @@ body {
   display: inline-block;
   position: absolute;
   left: 0px;
-  top: 0px;
+  top: 47px;
   width: var(--sidebar-width);
   border: 5px solid #8c8b89;
   border-width: 0 5px 0 0;
@@ -64,11 +88,11 @@ body {
 
 /*Sidebar navigation button*/
 #MenuButton {
-  width: 60px;
-  height: 45px; 
+  width: 50px;
+  height: 25px; 
   position: absolute;
   left: 0;
-  top: 0;
+  top: 46px;
   display: inline-block;
   margin: 5pt 0 0 4pt;
   transform: rotate(0deg);
@@ -184,10 +208,10 @@ body {
 
 /*Buttons*/
 #MainButton {
-  border-color: rgb(153, 47, 35);
-  border-style: solid;
+  /*border-color: rgb(153, 47, 35);
+  border-style: solid;*/
   border-radius: 50%;
-  background-color: rgb(198, 61, 45);
+  background-color: #C63D0F;
   position: absolute;
   display: inline-block;
   top: 0;
@@ -195,7 +219,7 @@ body {
   vertical-align: center;
   font-size: 10em;
   line-height: 3em;
-  color: rgb(153, 47, 35);
+  color: #F6F6F6;
   font-family: 'Roboto Condensed';
   cursor: pointer;
 }
@@ -222,6 +246,10 @@ body {
   cursor: default;
 }
 
+.g-signin2 {
+
+}
+
 .SquareButton {
   border-width: 3pt;
   border-color: rgb(153, 47, 35);
@@ -235,6 +263,27 @@ body {
   position: absolute;
   top: calc(90% + 18px);
   left: 10px;
+}
+.LoginButton {
+  float: right;
+  top: 0;
+  color: var(--foreground-color);
+  padding: 5pt;
+  margin: 5pt;
+  cursor: pointer;
+}
+.LogoutButton {
+  display: none;
+  float: right;
+  top: 0;
+  color: #F6F6F6;
+  background-color: #3B3738;
+  border-style: solid;
+  padding: 5pt;
+  margin: 5pt;
+  font-size: 16pt;
+  cursor: pointer;
+  transition: 0.5s;
 }
 .button {
   float: right;

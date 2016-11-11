@@ -1,20 +1,21 @@
 function $(ele) {
-	return document.querySelector(ele);
+    return document.querySelector(ele);
 } 
 
 function $$(ele) {
-	return document.querySelectorAll(ele);
+    return document.querySelectorAll(ele);
 }
 
 var recorder;
 
 window.addEventListener("load", function(){
-	$('#MainButton').addEventListener("click", buttonToggle);
-	$(".SideButton.left").addEventListener("click", leftToggle);
-	$(".SideButton.right").addEventListener("click", rightToggle);
+    $('#MainButton').addEventListener("click", buttonToggle);
+    $(".SideButton.left").addEventListener("click", leftToggle);
+    $(".SideButton.right").addEventListener("click", rightToggle);
+    $(".LogoutButton").addEventListener("click", logOut);
 
-	window.addEventListener("resize", resize);
-	resize();
+    window.addEventListener("resize", resize);
+    resize();
 });
 
 function getCookie(name) {
@@ -37,13 +38,9 @@ function upload(blob){
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'upload', true);
         xhr.setRequestHeader("X-CSRFToken", csrftoken);
-    
-        // need to get user id here
+   
+        // need to get user id here?
         xhr.setRequestHeader("UserHeader", "User ID needed");
-    
-        // the default type is video/webm, is audio/wav supported?
-        // also how to convert the blob to .wav file?
-        // var file = new File([blob], 'video.webm', {type: 'video/webm', lastModified: Date.now()});
         xhr.send(blob);
 }
 
@@ -143,7 +140,54 @@ function rightToggle(e) {
 				break;
 		}
 	}
+=======
+/**
+ * Called when the user clicks the "Log Out" button.
+ * Signs the user out and enbales the "Sign In" button.
+ */
+function logOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out.');
+    });
+    var buttonLogin = $(".g-signin2");
+    buttonLogin.style.display = "block";
+
+    var buttonLogout = $(".LogoutButton");
+    buttonLogout.style.display = "none";
 }
+
+/**
+ * @param  {googleUser} Represents the Google User.
+ */
+function onSignIn(googleUser) {
+    console.log("hi");
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail());
+    var id_token = googleUser.getAuthResponse().id_token;
+    console.log('ID Token: ' + id_token);
+
+    var buttonLogin = $(".g-signin2");
+    buttonLogin.style.display = "none";
+
+    var buttonLogout = $(".LogoutButton");
+    buttonLogout.style.display = "block";
+
+    // This code is sends the user's token to our backend.
+    /* 
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        console.log('Signed in as: ' + xhr.responseText);
+        };
+    xhr.send('idtoken=' + id_token);
+    */
+}
+
 
 function newRecorder() {
 	return new Promise(function(resolve, reject) {
@@ -165,38 +209,38 @@ function newRecorder() {
 }
 
 function resize(e) {
-	var w = window.innerWidth;
-	var h = window.innerHeight;
-	var s = (w > h ? h : w);
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var s = (w > h ? h : w);
 
-	// main button 
-	var button = $("#MainButton");
-	var buttonScale = s * 2 / 3;
-	button.style.width = buttonScale + "px";
-	button.style.height = buttonScale + "px";
-	button.style.borderWidth = s * 0.015 + "px";
-	button.style.fontSize = s * 1 / 6 + "px";
-	button.style.lineHeight = buttonScale + "px";
-	var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
-	var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
-	button.style.top = Math.round(heightMargin) + "px";
-	button.style.left = Math.round(widthMargin) + "px";
+    // main button 
+    var button = $("#MainButton");
+    var buttonScale = s * 2 / 3;
+    button.style.width = buttonScale + "px";
+    button.style.height = buttonScale + "px";
+    button.style.borderWidth = s * 0.015 + "px";
+    button.style.fontSize = s * 1 / 6 + "px";
+    button.style.lineHeight = buttonScale + "px";
+    var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
+    var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
+    button.style.top = Math.round(heightMargin) + "px";
+    button.style.left = Math.round(widthMargin) + "px";
 
-	// secondary buttons
-	var smallButtonScale = s * 1 / 4;
-	$$(".SideButton").forEach(function(ele) {
-		ele.style.width = smallButtonScale + "px";
-		ele.style.height = smallButtonScale + "px";
-		ele.style.lineHeight = smallButtonScale + "px";
-		ele.style.fontSize = s * 1 / 16 + "px";
-		ele.style.top = Math.round(heightMargin 
-			+ buttonScale - smallButtonScale) + "px";
-	});
-	var leftButton = $(".SideButton.left");
-	var rightButton = $(".SideButton.right");
-	var circleOffset = 0;
-	leftButton.style.left = Math.round(
-		widthMargin - smallButtonScale + circleOffset) + "px";
-	rightButton.style.left = Math.round(
-		widthMargin  + buttonScale - circleOffset) + "px";
+    // secondary buttons
+    var smallButtonScale = s * 1 / 4;
+    $$(".SideButton").forEach(function(ele) {
+        ele.style.width = smallButtonScale + "px";
+        ele.style.height = smallButtonScale + "px";
+        ele.style.lineHeight = smallButtonScale + "px";
+        ele.style.fontSize = s * 1 / 16 + "px";
+        ele.style.top = Math.round(heightMargin 
+            + buttonScale - smallButtonScale) + "px";
+    });
+    var leftButton = $(".SideButton.left");
+    var rightButton = $(".SideButton.right");
+    var circleOffset = 0;
+    leftButton.style.left = Math.round(
+        widthMargin - smallButtonScale + circleOffset) + "px";
+    rightButton.style.left = Math.round(
+        widthMargin  + buttonScale - circleOffset) + "px";
 }
