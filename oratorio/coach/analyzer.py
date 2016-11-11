@@ -1,5 +1,5 @@
 from watson_developer_cloud import SpeechToTextV1
-from secret_settings import WATSON_USER_NAME, WATSON_PASSWORD
+from settings import WATSON_USER_NAME, WATSON_PASSWORD
 from models import Recording, Speech, User
 import json
 
