@@ -39,10 +39,57 @@ function upload(blob){
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'upload', true);
         xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+        xhr.onload = function () {
+            console.log('DONE', xhr.readyState); // readyState will be 4
+            $('body').innerHTML = xhr.response;
+        };
    
         // need to get user id here?
         xhr.setRequestHeader("UserHeader", "User ID needed");
         xhr.send(blob);
+
+        //Displays the spinner and rotates
+        hideButtons();
+        var spinner = createSpinner();
+        rotate(spinner, 1, 1);
+}
+function hideButtons() {
+    var mainButton = document.getElementById("MainButton");
+    mainButton.style.display = 'none';
+    var leftButton = document.getElementById("LeftButton");
+    leftButton.style.display = 'none';
+    var rightButton = document.getElementById("RightButton");
+    rightButton.style.display = 'none';
+}
+function createSpinner() {
+    var spinner = new Image();
+    spinner.src = '../../static/spinner.png';
+    spinner.id = "spinner";
+    $('body').appendChild(spinner);
+    return spinner
+}
+function rotate(elem, speed, degrees)
+{
+	if(elem == null) {
+	    return;
+	}
+	if(navigator.userAgent.match("Chrome")){
+		elem.style.WebkitTransform = "rotate("+degrees+"deg)";
+	} else if(navigator.userAgent.match("Firefox")){
+		elem.style.MozTransform = "rotate("+degrees+"deg)";
+	} else if(navigator.userAgent.match("MSIE")){
+		elem.style.msTransform = "rotate("+degrees+"deg)";
+	} else if(navigator.userAgent.match("Opera")){
+		elem.style.OTransform = "rotate("+degrees+"deg)";
+	} else {
+		elem.style.transform = "rotate("+degrees+"deg)";
+	}
+	degrees++;
+	if(degrees > 359){
+		degrees = 0;
+	}
+	looper = setTimeout(function() { rotate(elem, speed, degrees); },speed);
 }
 
 // temporary

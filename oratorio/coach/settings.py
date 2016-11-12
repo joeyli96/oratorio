@@ -22,7 +22,7 @@ try:
 except ImportError:
     try:
         SECRET_KEY = os.environ["SECRET_KEY"]
-        ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"]
+        ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split()
         WATSON_USER_NAME = os.environ["WATSON_USER_NAME"]
         WATSON_PASSWORD = os.environ["WATSON_PASSWORD"]
         SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
