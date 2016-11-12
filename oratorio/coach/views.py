@@ -31,7 +31,7 @@ def upload(request):
         user.save()
     else:
         user = users[0]
-    # create speech
+    # create speech and recording
     num_speeches = len(Speech.objects.all())
     speech_name = "speech" + str(num_speeches + 1)
     speech = Speech(user=user, name=speech_name)
