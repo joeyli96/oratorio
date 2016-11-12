@@ -67,11 +67,6 @@ class Recording(models.Model):
             result += len(sentence[1])
         return result
 
-    def set_transcript(self, transcript):
-        """This method creates and returns a transcript from the json object that is returned by IBM Watson's Speech To
-        Text API"""
-        self.transcript = transcript
-
     def get_recording_length(self):
         """Returns the length of the recording in seconds"""
         if not self.transcript:
