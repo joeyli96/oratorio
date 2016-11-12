@@ -67,11 +67,6 @@ class Recording(models.Model):
             result += len(sentence[1])
         return result
 
-    def set_transcript(self, transcript):
-        """This method creates and returns a transcript from the json object that is returned by IBM Watson's Speech To
-        Text API"""
-        self.transcript = transcript
-
     def get_recording_length(self):
         """Returns the length of the recording in seconds"""
         if not self.transcript:
@@ -87,3 +82,7 @@ class Recording(models.Model):
         first_sentence_start_timestamp = first_word[1]
 
         return last_word_end_timestamps - first_sentence_start_timestamp
+
+    def get_most_frequent_words(self):
+        #stub for test first test (test_recording.test_get_most_frequent_words
+        return []
