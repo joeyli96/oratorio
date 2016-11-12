@@ -44,7 +44,7 @@ def upload(request):
         avg_pace = 0
     context = {
             'transcript': recording.get_transcript_text(),
-            'pace': 0,
+            'pace': avg_pace,
     }
     return HttpResponse(template.render(context, request))
 
