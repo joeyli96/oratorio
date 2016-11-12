@@ -41,7 +41,7 @@ class RecordingTestCase(TestCase):
         word_count = recording.get_word_count()
         self.assertEquals(word_count, 8)
 
-    def test_get_recrding_length(self):
+    def test_get_recording_length(self):
         self.setup()
         audio_dir = "dummy/dir"
         speech = Speech.objects.get(name="Speech1")
@@ -51,3 +51,10 @@ class RecordingTestCase(TestCase):
         ])
         audio_length = recording.get_recording_length()
         self.assertEquals(audio_length, 9)
+
+    def test_empty_recording(self):
+        self.setup()
+        speech = Speech.objects.get(name="Speech1")
+        recording = Recording.create(speech, "dummy/dir", [])
+        self.assertEquals(recording.get_word_count(), 0)
+        self.assertEquals(recording.get_transcript_text(), "")
