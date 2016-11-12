@@ -118,7 +118,7 @@ a[target="_blank"]:after {
   height: 6px;
   width: 100%;
   /*background: var(--foreground-color);*/
-  background: white;
+  background: #b3b3b3;
   border-radius: 4pt;
   opacity: 1;
   left: 0;
@@ -127,7 +127,7 @@ a[target="_blank"]:after {
 }
 
 #MenuButton:hover span {
-  background: var(--hover-color);
+  background: white;
 }
 
 #MenuButton.open span {
