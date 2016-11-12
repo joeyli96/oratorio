@@ -23,7 +23,12 @@ def upload(request):
     filename = fs.save("testfile.wav", file)
     uploaded_file_url = MEDIA_ROOT + "/" + filename
     tempfile.close()
-    user = User.objects.filter(name="Joey")[0]
+    users = User.objects.filter(name="Joey")
+    if not users:
+        user = User(name="Joey", email="joey@joey.com")
+        user.save()
+    else:
+        user = users[0]
     num_speeches = len(Speech.objects.all())
     speech_name = "speech" + str(num_speeches + 1)
     speech = Speech(user=user, name=speech_name)
