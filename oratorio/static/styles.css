@@ -315,9 +315,10 @@ a[target="_blank"]:after {
   display: inline-block;
   color: black;
   font-size: 16pt;
-  width: calc(100% - 300pt - 60px);
+  width: calc(100% - 300pt);
   top: var(--sidebar-title-height);
-  left: 60px;
+  padding-left: 1em;
+  padding-right: 1em;
   position: absolute;
   height: calc(100% - var(--sidebar-title-height) * 2);
   overflow-y: scroll;
