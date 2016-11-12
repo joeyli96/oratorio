@@ -119,3 +119,20 @@ Controller - The controller is our website interface. The user can interact with
 Null Object Pattern: This pattern is used to convey the absence of an object by using an object that doesn't do anything. An example of this would be the empty list. 
 
 We use this pattern when we use IBM Watson to get the transcript of an audio in oratorio/coach/analyzer.py. If the person does not say anything, instead of passing None, we pass an empty list as the transcript. This prevents any exceptions from being thrown.
+
+### Style guideline enforcement
+
+Set up pre-commit-hooks by editting .pre-commit-config.yaml following [this](https://github.com/pre-commit/pre-commit-hooks).
+To use it, run the following lines in your root directory:
+~~~
+pip install pre-commit
+pre-commit install
+~~~
+To skip pep8 checker when committing:
+~~~
+SKIP=autopep8-wrapper git commit -m "foo"
+~~~
+To skip trailing whitespaces checker when committing:
+~~~
+SKIP=trailing-whitespace git commit -m "foo"
+~~~
