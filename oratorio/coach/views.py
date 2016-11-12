@@ -39,7 +39,7 @@ def upload(request):
     template = loader.get_template('coach/results.html')
     rec_len = recording.get_recording_length()
     if rec_len != 0:
-        avg_pace = recording.get_word_count() / rec_len
+        avg_pace = 60 * recording.get_word_count() / rec_len
     else:
         avg_pace = 0
     context = {
