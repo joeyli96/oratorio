@@ -75,20 +75,3 @@ release through Github’s Releases feature. Detailed instructions
 All bugs and issues should be reported to the [issue
 tracker](https://github.com/PotatoTank/oratorio/issues). Please follow the issue
 template and be as informative as possible.
-
-### Style guideline enforcement
-
-Set up pre-commit-hooks by editting .pre-commit-config.yaml following [this](https://github.com/pre-commit/pre-commit-hooks).
-To use it, run the following lines in your root directory:
-~~~
-pip install pre-commit
-pre-commit install
-~~~
-To skip pep8 checker when committing:
-~~~
-SKIP=autopep8-wrapper git commit -m "foo"
-~~~
-To skip trailing whitespaces checker when committing:
-~~~
-SKIP=trailing-whitespace git commit -m "foo"
-~~~
