@@ -2,8 +2,7 @@
 
 {% block body_block %}
   <div id="transcript">
-    <p>Transcript: {{ transcript }}</p>
-    <p>Average pace: {{ pace }}</p>
+    <p>{{ transcript }}</p>
   </div>
   <a href="/">
     <div id="recordAnother">
@@ -13,9 +12,9 @@
 
   <div id="statsContainer">
     <div id="stats">
-      <h2><span>Pace:</span> (words per minute)</h2>
-      <div class = "slider pace"><div></div></div>
-      <h2><span>Hesitations:</span> (per minute)</h2>
+      <h2><span>Pace:</span> <i>(words per minute)</i> </br></br><b>{{ pace }}</b></h2>
+      <!--<div class = "slider pace"><div></div></div>-->
+      <h2><span>Hesitations:</span> <i>(per minute)</i></h2>
       <div class = "slider hesitations"><div></div></div>
       <h2><span>General Tone:</span></h2>
       <div class="tones">

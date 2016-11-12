@@ -313,7 +313,7 @@ a[target="_blank"]:after {
 #transcript {
   clear: both;
   display: inline-block;
-  color: var(--foreground-color);
+  color: black;
   font-size: 16pt;
   width: calc(100% - 300pt - 60px);
   top: var(--sidebar-title-height);
