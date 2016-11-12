@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
-
 from django.conf import settings
 from .settings import MEDIA_ROOT
 from django.core.files.storage import FileSystemStorage
@@ -10,6 +9,10 @@ from tempfile import TemporaryFile
 from .models import User, Speech, Recording
 from .analyzer import Analyzer
 import json
+
+# This class contains view functions that take a Web request
+# and returns a Web response. This can be the HTML contents
+# of a Web page, error, etc.
 
 
 def upload(request):

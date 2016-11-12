@@ -4,6 +4,9 @@ from django.conf.urls.static import static
 
 from . import views
 
+# This class maintains which URLs map to which pages
+
+
 app_name = 'coach'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -13,4 +16,3 @@ urlpatterns = [
     url(r'^userdocs$', views.userdocs, name='userdocs'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
