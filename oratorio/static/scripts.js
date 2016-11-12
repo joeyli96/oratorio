@@ -1,4 +1,3 @@
-(function() {
 /**
  * the same jQuery shortcut, without having to import jQuery. Returns DOM
  * Elements that match the css selector.
@@ -18,6 +17,7 @@ function $$(ele) {
     return document.querySelectorAll(ele);
 }
 
+(function() {
 /** The recorder object */
 var recorder;
 /** The google profile of the user signed in */
@@ -295,39 +295,6 @@ function logOut() {
 }
 
 /**
- * @param  {googleUser} Represents the Google User.
- */
-function onSignIn(googleUser) {
-    profile = googleUser.getBasicProfile();
-    //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    //console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
-    var id_token = googleUser.getAuthResponse().id_token;
-    //console.log('ID Token: ' + id_token);
-
-    var buttonLogin = $(".g-signin2");
-    buttonLogin.style.display = "none";
-
-    var buttonLogout = $(".LogoutButton");
-    buttonLogout.style.display = "block";
-
-    var userName = document.getElementById("UserName");
-    userName.innerHTML = profile.getName();
-
-    // This code is sends the user's token to our backend.
-    /*
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
-        console.log('Signed in as: ' + xhr.responseText);
-        };
-    xhr.send('idtoken=' + id_token);
-    */
-}
-
-/**
  * creates a new recorder object
  * @return a promise to the recorder object
  */
@@ -387,4 +354,38 @@ function resize(e) {
             widthMargin  + buttonScale - circleOffset) + "px";
     }
 }
-})()
+})();
+
+
+/**
+ * @param  {googleUser} Represents the Google User.
+ */
+function onSignIn(googleUser) {
+    profile = googleUser.getBasicProfile();
+    //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    //console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail());
+    var id_token = googleUser.getAuthResponse().id_token;
+    //console.log('ID Token: ' + id_token);
+
+    var buttonLogin = $(".g-signin2");
+    buttonLogin.style.display = "none";
+
+    var buttonLogout = $(".LogoutButton");
+    buttonLogout.style.display = "block";
+
+    var userName = document.getElementById("UserName");
+    userName.innerHTML = profile.getName();
+
+    // This code is sends the user's token to our backend.
+    /*
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        console.log('Signed in as: ' + xhr.responseText);
+        };
+    xhr.send('idtoken=' + id_token);
+    */
+}
