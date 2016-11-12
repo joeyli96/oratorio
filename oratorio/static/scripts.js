@@ -1,24 +1,54 @@
+(function() {
+/**
+ * the same jQuery shortcut, without having to import jQuery. Returns DOM
+ * Elements that match the css selector.
+ * @param {string} ele The css selector for the element you want returned.
+ * @return {Object} The DOM Object, or null if not found.
+ */
 function $(ele) {
     return document.querySelector(ele);
-} 
+}
 
+/**
+ * A shortcut for css selector, returning an array of matching objects.
+ * @param {string} ele the selector for the elements desired.
+ * @return {Array} an array of the DOM Objects that match.
+ */
 function $$(ele) {
     return document.querySelectorAll(ele);
 }
 
+/** The recorder object */
 var recorder;
+/** The google profile of the user signed in */
 var profile;
 
+/**
+ * The main function
+ */
 window.addEventListener("load", function(){
-    $('#MainButton').addEventListener("click", buttonToggle);
-    $(".SideButton.left").addEventListener("click", leftToggle);
-    $(".SideButton.right").addEventListener("click", rightToggle);
+    // hook all listen events
+    var button = $('#MainButton');
+    var left = $(".SideButton.left");
+    var right = $(".SideButton.right");
+    // if we're on the main index page with the buttons
+    if (button) {
+        button.addEventListener("click", buttonToggle);
+        left.addEventListener("click", leftToggle);
+        right.addEventListener("click", rightToggle);
+    }
     $(".LogoutButton").addEventListener("click", logOut);
 
+    // hook and run the resize function
     window.addEventListener("resize", resize);
     resize();
 });
 
+/**
+ * returns the value for the cookie named name
+ * @param {string} name the Name of the cookie
+ * @return The value associated with name
+ */
 function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie != '') {
@@ -34,6 +64,10 @@ function getCookie(name) {
         return cookieValue;
     }
 
+/**
+ * uploads audio/wav data and spins until returned, displaying results
+ * @param {blob} blob The binary audio/wav type data to be uploaded
+ */
 function upload(blob){
         var csrftoken = getCookie('csrftoken');
         var xhr = new XMLHttpRequest();
@@ -44,7 +78,7 @@ function upload(blob){
             console.log('DONE', xhr.readyState); // readyState will be 4
             $('body').innerHTML = xhr.response;
         };
-   
+
         // need to get user id here?
         xhr.setRequestHeader("UserHeader", "User ID needed");
         xhr.send(blob);
@@ -54,6 +88,10 @@ function upload(blob){
         var spinner = createSpinner();
         rotate(spinner, 1, 1);
 }
+
+/**
+ * hides the main 3 ui buttons
+ */
 function hideButtons() {
     var mainButton = document.getElementById("MainButton");
     mainButton.style.display = 'none';
@@ -62,6 +100,11 @@ function hideButtons() {
     var rightButton = document.getElementById("RightButton");
     rightButton.style.display = 'none';
 }
+
+/**
+ * creates a spinner
+ * @return the spinner DOM object
+ */
 function createSpinner() {
     var spinner = new Image();
     spinner.src = '../../static/spinner.png';
@@ -69,6 +112,13 @@ function createSpinner() {
     $('body').appendChild(spinner);
     return spinner
 }
+
+/**
+ * rotates an element 
+ * @param {object} elem the DOM Object to spin
+ * @param {number} speed the refresh rate of the spinner 
+ * @param {number} degrees the number of degrees to rotate the spinner
+ */
 function rotate(elem, speed, degrees)
 {
 	if(elem == null) {
@@ -95,6 +145,11 @@ function rotate(elem, speed, degrees)
 // temporary
 var timeInterval = 60 * 60 * 1000;
 
+/**
+ * event function for UI to start recording
+ * @param {object} button the DOM object for the main center button
+ * @param {object} right the DOM object for the right button
+ */
 function onStart(button, right) {
 	button.innerHTML = "STOP";
 	right.classList.remove("hide");
@@ -102,6 +157,12 @@ function onStart(button, right) {
 	right.innerHTML = "PAUSE";
 }
 
+/**
+ * event function for UI to pause
+ * @param {object} button the DOM object for the main center button
+ * @param {object} left the DOM object for the left button
+ * @param {object} right the DOM object for the right button.
+ */
 function onPause(button, left, right) {
 	button.innerHTML = "RESUME";
 	left.classList.remove("hide");
@@ -110,6 +171,12 @@ function onPause(button, left, right) {
 	right.classList.add("SideRedButton");
 }
 
+/**
+ * event function for UI to resume recording
+ * @param {object} button the DOM object for the main center button
+ * @param {object} left the DOM object for the left button
+ * @param {object} right the DOM object for the right button.
+ */
 function onResume(button, left, right) {
 	button.innerHTML = "STOP";
 	left.classList.add("hide");
@@ -117,6 +184,12 @@ function onResume(button, left, right) {
 	right.classList.remove("SideRedButton");
 }
 
+/**
+ * event function for UI to stop recording
+ * @param {object} button the DOM object for the main center button
+ * @param {object} left the DOM object for the left button
+ * @param {object} right the DOM object for the right button.
+ */
 function onStop(button, left, right) {
 	button.innerHTML = "RECORD";
 	left.classList.add("hide");
@@ -124,6 +197,12 @@ function onStop(button, left, right) {
 	// window.location = "result";
 }
 
+/**
+ * event function for UI to reset the buttons
+ * @param {object} button the DOM object for the main center button
+ * @param {object} left the DOM object for the left button
+ * @param {object} right the DOM object for the right button.
+ */
 function onRestart(button, left, right) {
 	button.innerHTML = "RECORD";
 	left.classList.add("hide");
@@ -131,6 +210,9 @@ function onRestart(button, left, right) {
 	right.classList.remove("SideRedButton");
 }
 
+/**
+ * event function for when the main center button is clicked
+ */
 function buttonToggle(e) {
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
@@ -159,6 +241,9 @@ function buttonToggle(e) {
 	}
 }
 
+/**
+ * event function for when the left button is clicked
+ */
 function leftToggle(e) {
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
@@ -172,6 +257,9 @@ function leftToggle(e) {
 	}
 }
 
+/**
+ * event function for when the right button is clicked
+ */
 function rightToggle(e) {
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
@@ -189,6 +277,7 @@ function rightToggle(e) {
 		}
 	}
 }
+
 /**
  * Called when the user clicks the "Log Out" button.
  * Signs the user out and enbales the "Sign In" button.
@@ -227,7 +316,7 @@ function onSignIn(googleUser) {
     userName.innerHTML = profile.getName();
 
     // This code is sends the user's token to our backend.
-    /* 
+    /*
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -238,7 +327,10 @@ function onSignIn(googleUser) {
     */
 }
 
-
+/**
+ * creates a new recorder object
+ * @return a promise to the recorder object
+ */
 function newRecorder() {
 	return new Promise(function(resolve, reject) {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function(mediaStream) {
@@ -247,10 +339,6 @@ function newRecorder() {
 		r.ondataavailable = function(blob) {
 		    upload(blob);
 		};
-		    
-		var s = $("#MainButton");
-		var left = $(".SideButton.left");
-		var right = $(".SideButton.right");
 		resolve(r);
 		}).catch(function(err) {
 		reject(err);
@@ -258,39 +346,45 @@ function newRecorder() {
 	});
 }
 
+/**
+ * Event function for the UI to resize according to the screens max width/height
+ */
 function resize(e) {
     var w = window.innerWidth;
     var h = window.innerHeight;
     var s = (w > h ? h : w);
 
-    // main button 
+    // main button
     var button = $("#MainButton");
-    var buttonScale = s * 2 / 3;
-    button.style.width = buttonScale + "px";
-    button.style.height = buttonScale + "px";
-    button.style.borderWidth = s * 0.015 + "px";
-    button.style.fontSize = s * 1 / 6 + "px";
-    button.style.lineHeight = buttonScale + "px";
-    var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
-    var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
-    button.style.top = Math.round(heightMargin) + "px";
-    button.style.left = Math.round(widthMargin) + "px";
+    if (button) {
+        var buttonScale = s * 2 / 3;
+        button.style.width = buttonScale + "px";
+        button.style.height = buttonScale + "px";
+        button.style.borderWidth = s * 0.015 + "px";
+        button.style.fontSize = s * 1 / 6 + "px";
+        button.style.lineHeight = buttonScale + "px";
+        var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
+        var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
+        button.style.top = Math.round(heightMargin) + "px";
+        button.style.left = Math.round(widthMargin) + "px";
 
-    // secondary buttons
-    var smallButtonScale = s * 1 / 4;
-    $$(".SideButton").forEach(function(ele) {
-        ele.style.width = smallButtonScale + "px";
-        ele.style.height = smallButtonScale + "px";
-        ele.style.lineHeight = smallButtonScale + "px";
-        ele.style.fontSize = s * 1 / 16 + "px";
-        ele.style.top = Math.round(heightMargin 
-            + buttonScale - smallButtonScale) + "px";
-    });
-    var leftButton = $(".SideButton.left");
-    var rightButton = $(".SideButton.right");
-    var circleOffset = 0;
-    leftButton.style.left = Math.round(
-        widthMargin - smallButtonScale + circleOffset) + "px";
-    rightButton.style.left = Math.round(
-        widthMargin  + buttonScale - circleOffset) + "px";
+        // secondary buttons
+        var smallButtonScale = s * 1 / 4;
+        $$(".SideButton").forEach(function(ele) {
+            ele.style.width = smallButtonScale + "px";
+            ele.style.height = smallButtonScale + "px";
+            ele.style.lineHeight = smallButtonScale + "px";
+            ele.style.fontSize = s * 1 / 16 + "px";
+            ele.style.top = Math.round(heightMargin
+                + buttonScale - smallButtonScale) + "px";
+        });
+        var leftButton = $(".SideButton.left");
+        var rightButton = $(".SideButton.right");
+        var circleOffset = 0;
+        leftButton.style.left = Math.round(
+            widthMargin - smallButtonScale + circleOffset) + "px";
+        rightButton.style.left = Math.round(
+            widthMargin  + buttonScale - circleOffset) + "px";
+    }
 }
+})()

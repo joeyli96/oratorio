@@ -1,8 +1,16 @@
 (function() {
+  /**
+   * shortcut for css selector of a dom element
+   * @param {string} ele the css selector of the element
+   * @return the first matching element
+   */
   function $(ele) {
     return document.querySelector(ele);
   } 
 
+  /**
+   * the main function
+   */
   window.addEventListener("load", function(e) {
     $('#MenuButton').addEventListener('click', function(e){
         $('#MenuButton').classList.toggle('open');
@@ -12,7 +20,9 @@
     });
   });
 
-
+  /**
+   * event function to handle sidebar screen resizing.
+   */
   function resizeSideBar(e) {
     var w = window.innerWidth;
     var h = window.innerHeight;

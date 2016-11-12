@@ -1,5 +1,9 @@
 {% extends "coach/base.html" %}
 
+{% block head_block %}
+<script src="static/wordFrequency.js"></script>
+{% endblock %}
+
 {% block body_block %}
   <div id="transcript">
     <p>{{ transcript }}</p>
