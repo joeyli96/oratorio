@@ -114,9 +114,9 @@ function createSpinner() {
 }
 
 /**
- * rotates an element 
+ * rotates an element
  * @param {object} elem the DOM Object to spin
- * @param {number} speed the refresh rate of the spinner 
+ * @param {number} speed the refresh rate of the spinner
  * @param {number} degrees the number of degrees to rotate the spinner
  */
 function rotate(elem, speed, degrees)
@@ -271,6 +271,7 @@ function rightToggle(e) {
 				onPause(button, left, right);
 				break;
 			case "STOP":
+				recorder.resume();
 				recorder.stop();
 				onStop(button, left, right);
 				break;
