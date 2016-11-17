@@ -216,14 +216,14 @@ a[target="_blank"]:after {
 #mirrorContainer {
   display: none;
   margin: 0px auto;
-  width: 500px;
-  height: 375px;
+  width: 700px;
+  height: 525px;
   border: 10px #333 solid;
   border-radius: 2px;
 }
 #videoElement {
-  width: 500px;
-  height: 375px;
+  width: 700px;
+  height: 525px;
   background-color: #666;
 
   /* "Rotate" it 180 degrees around y-axis to mirror the input. */
@@ -236,10 +236,11 @@ a[target="_blank"]:after {
 .switch {
   position: absolute;
   left: 50%;
-  margin-left: -35px;
+  margin-left: -45px;
   display: inline-block;
   width: 60px;
   height: 34px;
+  bottom: 6%;
 }
 
 /* Hide default HTML checkbox */
@@ -253,6 +254,7 @@ a[target="_blank"]:after {
   left: 0;
   right: 0;
   bottom: 0;
+  color: #F6F6F6;
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
