@@ -139,7 +139,8 @@ function enableMirror() {
 }
 
 function disableMirror() {
-    localStream.stop();
+    if (localStream != null)
+        localStream.stop();
 }
 
 function showToast() {
