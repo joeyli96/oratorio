@@ -115,6 +115,9 @@ function createSpinner() {
     return spinner;
 }
 
+/* Keeps track of the stream object to stop webcam streaming. */
+var localStream;
+
 function enableMirror() {
     var video = document.querySelector("#videoElement");
     
@@ -126,12 +129,17 @@ function enableMirror() {
      
     function handleVideo(stream) {
         video.src = window.URL.createObjectURL(stream);
+        localStream = stream;
     }
      
     function videoError(e) {
         $(".switch input").click();
         showToast();
     }
+}
+
+function disableMirror() {
+    localStream.stop();
 }
 
 function showToast() {
@@ -152,6 +160,7 @@ function showToast() {
 function toggleVisibility() {
     var mirror = document.getElementById("mirrorContainer");
     if (mirror.style.display == 'block') {
+        disableMirror();
         mirror.style.display = 'none';
     }
     else { 
