@@ -12,7 +12,7 @@ from django.db import models
 
 class User(models.Model):
     name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
+    email = models.CharField(max_length=100, primary_key=True)
 
     def __str__(self):
        return "User " + self.name + ", email " + self.email
@@ -87,3 +87,25 @@ class Recording(models.Model):
         first_sentence_start_timestamp = first_word[1]
 
         return last_word_end_timestamps - first_sentence_start_timestamp
+    
+    def get_avg_pace(self):
+        rec_len = self.get_recording_length()
+        if rec_len != 0:
+            return 60 * self.get_word_count() / rec_len
+        else:
+            return 0
+
+    def get_tone(self):
+        tones = {
+            'happiness': self.happiness,
+            'sadness': self.sadness,
+            'anger': self.anger,
+            'fear': self.fear,
+        }
+        maxVal = float('-inf')
+        res = None
+        for key, value in tones.iteritems():
+            if value > maxVal:
+                maxVal = value
+                res = key
+        return res

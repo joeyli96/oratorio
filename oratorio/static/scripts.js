@@ -69,18 +69,17 @@ function getCookie(name) {
  * @param {blob} blob The binary audio/wav type data to be uploaded
  */
 function upload(blob){
-        var csrftoken = getCookie('csrftoken');
+        //var csrftoken = getCookie('csrftoken');
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'upload', true);
-        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        //xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        var id_token = getCookie("id_token")
 
         xhr.onload = function () {
             console.log('DONE', xhr.readyState); // readyState will be 4
             $('body').innerHTML = xhr.response;
         };
 
-        // need to get user id here?
-        xhr.setRequestHeader("UserHeader", "User ID needed");
         xhr.send(blob);
 
         //Displays the spinner and rotates
@@ -293,6 +292,9 @@ function logOut() {
 
     var buttonLogout = $(".LogoutButton");
     buttonLogout.style.display = "none";
+
+    document.cookie = "id_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;"
+    location.reload();
 }
 
 /**
@@ -362,12 +364,15 @@ function resize(e) {
  * @param  {googleUser} Represents the Google User.
  */
 function onSignIn(googleUser) {
+    // TODO: session handling with the google token id as a cookie is not working
+    // properly.
     profile = googleUser.getBasicProfile();
     //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     console.log('Name: ' + profile.getName());
     //console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail());
     var id_token = googleUser.getAuthResponse().id_token;
+    document.cookie = "id_token=" + id_token;
     //console.log('ID Token: ' + id_token);
 
     var buttonLogin = $(".g-signin2");
@@ -377,8 +382,14 @@ function onSignIn(googleUser) {
     buttonLogout.style.display = "block";
 
     var userName = document.getElementById("UserName");
-    userName.innerHTML = profile.getName();
+    if (userName) {
+        userName.innerHTML = profile.getName();
+    }
 
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'login', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send();
     // This code is sends the user's token to our backend.
     /*
     var xhr = new XMLHttpRequest();

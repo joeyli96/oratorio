@@ -3,8 +3,7 @@ python:
   - 2.7
 
 install:
-  - pip install django==1.10
-  - pip install watson-developer-cloud
+  - pip install django==1.10 watson-developer-cloud oauth2client
 env:
   - SECRET_KEY=oratorio
 

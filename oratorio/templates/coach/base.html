@@ -24,26 +24,17 @@
 				Previous Speeches
 			</div>
 
-			<div class="menuItem">
-				<!--Hardcoded menu items for demo purposes.-->
-				<a class="itemName" href="result">
-					<span>Speech 1</span>
-					(5 recordings)
-				</a>
-				<div>
-					(Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
-				</div>
-			</div>
-
+            {% for recording in recordings %}
 			<div class="menuItem">
 				<a class="itemName" href="result">
-					<span>Speech 1</span>
-					(5 recordings)
+                    <span>Recording {{ recording.id }}</span>
+                    ({{ recording.speech.name }})
 				</a>
 				<div>
-					(Pace: 135, Hesitations: 10, Tone: Sad, Date: 14/04/2016)
+                    (Pace: {{ recording.get_avg_pace }}, Hesitations: {{ recording.hesitations }}, Tone: {{ recording.get_tone }})
 				</div>
 			</div>
+            {% endfor %}
 		</div>
 		
 
