@@ -31,11 +31,13 @@ window.addEventListener("load", function(){
     var button = $('#MainButton');
     var left = $(".SideButton.left");
     var right = $(".SideButton.right");
+    var toggle = $(".switch input");
     // if we're on the main index page with the buttons
     if (button) {
         button.addEventListener("click", buttonToggle);
         left.addEventListener("click", leftToggle);
         right.addEventListener("click", rightToggle);
+        toggle.addEventListener("click", toggleVisibility);
     }
     $(".LogoutButton").addEventListener("click", logOut);
 
@@ -110,7 +112,52 @@ function createSpinner() {
     spinner.src = '../../static/spinner.png';
     spinner.id = "spinner";
     $('body').appendChild(spinner);
-    return spinner
+    return spinner;
+}
+
+function enableMirror() {
+    var video = document.querySelector("#videoElement");
+    
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+     
+    if (navigator.getUserMedia) {       
+        navigator.getUserMedia({video: true}, handleVideo, videoError);
+    }
+     
+    function handleVideo(stream) {
+        video.src = window.URL.createObjectURL(stream);
+    }
+     
+    function videoError(e) {
+        $(".switch input").click();
+        showToast();
+    }
+}
+
+function showToast() {
+    // Get the snackbar DIV
+    var x = document.getElementById("snackbar");
+
+    // Add the "show" class to DIV
+    x.className = "show";
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+
+/**
+ * toggles the visibility of the mirror
+ * @param  {String} the id of the mirror container
+ */
+function toggleVisibility() {
+    var mirror = document.getElementById("mirrorContainer");
+    if (mirror.style.display == 'block') {
+        mirror.style.display = 'none';
+    }
+    else { 
+        enableMirror();
+        mirror.style.display = 'block';
+    }
 }
 
 /**
