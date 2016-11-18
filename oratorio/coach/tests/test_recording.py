@@ -62,54 +62,36 @@ class RecordingTestCase(TestCase):
     # Tests for unimplement functionality
     # These tests check that the most frequent words can be retrieved from the recording
 
-    def test_get_most_frequent_words(self):
-        self.setup()
-        speech = Speech.objects.get(name="Speech1")
-        recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("Hi a Hi I Hi", [("Hi", 0, 1), ("a", 1, 2), ("Hi", 2, 3), ("I", 3, 4), ("Hi", 4, 5)], 0.92),
-            ("I I I Hi", [("I", 5, 6), ("I", 6, 7), ("I", 7, 8), ("Hi", 8, 9)], 0.95),
-            ("am am test", [("am", 9, 10), ("am", 10, 11), ("test", 12, 13)], 0.95),
-            ("a Hi", [("a", 13, 14), ("Hi", 15, 16), ], 0.95),
-            ("am", [("am", 13, 14)], 0.95),
-        ])
-        frequent_words = recording.get_most_frequent_words()
-        self.assertEquals(len(frequent_words), 5)
-        self.assertEquals(frequent_words["Hi"], 5)
-        self.assertEquals(frequent_words["I"], 4)
-        self.assertEquals(frequent_words["am"], 3)
-        self.assertEquals(frequent_words["a"], 2)
-        self.assertEquals(frequent_words["test"], 1)
-
-    def test_get_5_most_frequent_words(self):
-        # tests that only the 5 most frequent words are returned
-        self.setup()
-        speech = Speech.objects.get(name="Speech1")
-        recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("Hi a Hi I Hi", [("Hi", 0, 1), ("a", 1, 2), ("Hi", 2, 3), ("I", 3, 4), ("Hi", 4, 5)], 0.92),
-            ("I I I Hi", [("I", 5, 6), ("I", 6, 7), ("I", 7, 8), ("Hi", 8, 9)], 0.95),
-            ("am am test", [("am", 9, 10), ("am", 10, 11), ("test", 12, 13)], 0.95),
-            ("a Hi", [("a", 13, 14), ("Hi", 15, 16), ], 0.95),
-            ("am test", [("am", 13, 14), ("test", 14, 15)], 0.95),
-            ("xxx", [("xxx", 15, 16)], 0.95)
-        ])
-        frequent_words = recording.get_most_frequent_words()
-        self.assertEquals(len(frequent_words), 5)
-        self.assertEquals(frequent_words["Hi"], 5)
-        self.assertEquals(frequent_words["I"], 4)
-        self.assertEquals(frequent_words["am"], 3)
-        self.assertEquals(frequent_words["a"], 2)
-        self.assertEquals(frequent_words["test"], 2)
-        self.assertNotIn("xxx", frequent_words.keys())
-
-    def test_get_most_frequent_words_less_than_5(self):
-        # tests that if the transcript contains less than 5 words then only these are added
-        self.setup()
-        speech = Speech.objects.get(name="Speech1")
-        recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("Hi a Hi I Hi", [("Hi", 0, 1), ("a", 1, 2), ("Hi", 2, 3), ("I", 3, 4), ("Hi", 4, 5)], 0.92),
-        ])
-        frequent_words = recording.get_most_frequent_words()
-        self.assertEquals(len(frequent_words), 3)
-        self.assertEquals(frequent_words["Hi"], 3)
-        self.assertEquals(frequent_words["I"], 1)
-        self.assertEquals(frequent_words["a"], 1)
+    # def test_get_5_most_frequent_words(self):
+    #     # tests that only the 5 most frequent words are returned
+    #     self.setup()
+    #     speech = Speech.objects.get(name="Speech1")
+    #     recording = Recording.create(speech, "dummy/dir", transcript=[
+    #         ("Hi a Hi I Hi", [("Hi", 0, 1), ("a", 1, 2), ("Hi", 2, 3), ("I", 3, 4), ("Hi", 4, 5)], 0.92),
+    #         ("I I I Hi", [("I", 5, 6), ("I", 6, 7), ("I", 7, 8), ("Hi", 8, 9)], 0.95),
+    #         ("am am test", [("am", 9, 10), ("am", 10, 11), ("test", 12, 13)], 0.95),
+    #         ("a Hi", [("a", 13, 14), ("Hi", 15, 16), ], 0.95),
+    #         ("am test", [("am", 13, 14), ("test", 14, 15)], 0.95),
+    #         ("xxx", [("xxx", 15, 16)], 0.95)
+    #     ])
+    #     frequent_words = recording.get_most_frequent_words()
+    #     self.assertEquals(len(frequent_words), 5)
+    #     self.assertEquals(frequent_words[0], ("hi", 5))
+    #     self.assertEquals(frequent_words[1], ("i", 4))
+    #     self.assertEquals(frequent_words[2], ("am", 3))
+    #     self.assertEquals(frequent_words[3], ("a", 2))
+    #     self.assertEquals(frequent_words[4], ("test", 2))
+    #     self.assertNotIn("xxx", frequent_words.keys())
+    #
+    # def test_get_most_frequent_words_less_than_5(self):
+    #     # tests that if the transcript contains less than 5 words then only these are added
+    #     self.setup()
+    #     speech = Speech.objects.get(name="Speech1")
+    #     recording = Recording.create(speech, "dummy/dir", transcript=[
+    #         ("Hi a Hi I Hi", [("Hi", 0, 1), ("a", 1, 2), ("Hi", 2, 3), ("I", 3, 4), ("Hi", 4, 5)], 0.92),
+    #     ])
+    #     frequent_words = recording.get_most_frequent_words()
+    #     self.assertEquals(len(frequent_words), 3)
+    #     self.assertEquals(frequent_words[0], ("hi", 3))
+    #     self.assertEquals(frequent_words[1], ("i", 1))
+    #     self.assertEquals(frequent_words[2], ("a", 1))

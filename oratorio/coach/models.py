@@ -87,3 +87,7 @@ class Recording(models.Model):
         first_sentence_start_timestamp = first_word[1]
 
         return last_word_end_timestamps - first_sentence_start_timestamp
+
+    def get_most_frequent_words():
+        """Returns up to 5 of the most frequent words in pairs of word and frequency"""
+        return Analyzer.get_word_frequency(self.transcript, 5)

@@ -58,6 +58,9 @@ class Analyzer:
 
     @staticmethod
     def get_word_frequency(transcript_text, k):
+        """Given transcript, returns k of the most frequently used words in transcript. (ignores STOP WORDS)"""
+        if not transcript_text:
+            return []
         word_frequencies = Counter()
         transcript_text = re.sub("[.]", "", transcript_text.lower().strip())
         for word in re.split("\s+", transcript_text):
