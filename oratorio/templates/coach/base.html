@@ -1,89 +1,89 @@
 <!doctype html>
 <html lang="en-US">
-    <head>
-    	<link rel="stylesheet" href="static/styles.css"/>
-		<script src="static/sidebar.js"></script>
+  <head>
+    <link rel="stylesheet" href="static/styles.css"/>
+    <script src="static/sidebar.js"></script>
 
-    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    	<script src="https://cdn.WebRTC-Experiment.com/MediaStreamRecorder.js"></script>
-    	<script src="https://cdn.WebRTC-Experiment.com/gumadapter.js"></script>
-		<script src="static/scripts.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.WebRTC-Experiment.com/MediaStreamRecorder.js"></script>
+    <script src="https://cdn.WebRTC-Experiment.com/gumadapter.js"></script>
+    <script src="static/scripts.js"></script>
 
-		<meta name="google-signin-client_id" content=829611170519-u2fu8nis9unm4nvlmfdcuhiqod9rsbuh.apps.googleusercontent.com>
-		<script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content=829611170519-u2fu8nis9unm4nvlmfdcuhiqod9rsbuh.apps.googleusercontent.com>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
-        <title>Oratorio</title>
+    <title>Oratorio</title>
 
 
-		{% block head_block %}{% endblock %}
-    </head>
+    {% block head_block %}{% endblock %}
+  </head>
 
-    <body>
-    	<div id="Sidebar">
-			<div id="SidebarTitle">
-				Previous Speeches
-			</div>
+  <body>
+    <div id="Sidebar">
+      <div id="SidebarTitle">
+        Previous Speeches
+      </div>
 
-            {% for recording in recordings %}
-			<div class="menuItem">
-				<a class="itemName" href="result">
-                    <span>Recording {{ recording.id }}</span>
-                    ({{ recording.speech.name }})
-				</a>
-				<div>
-                    (Pace: {{ recording.get_avg_pace }}, Hesitations: {{ recording.hesitations }}, Tone: {{ recording.get_tone }})
-				</div>
-			</div>
-            {% endfor %}
-		</div>
-		
+      {% for recording in recordings %}
+      <div class="menuItem">
+        <a class="itemName" href="result?rid={{ recording.id }}">
+          <span>Recording {{ recording.id }}</span>
+          ({{ recording.speech.name }})
+        </a>
+        <div>
+          (Pace: {{ recording.get_avg_pace }}, Hesitations: {{ recording.hesitations }}, Tone: {{ recording.get_tone }})
+        </div>
+      </div>
+      {% endfor %}
+    </div>
 
-		<ul id="ul">
-			<li style="float:left">
-				<div id="MenuButton">
-					<span></span>
-					<span></span>
-					<span></span>
-					<span></span>
-				</div>
-			</li>
-			<li id="home">
-				<a href="/">
-					Oratorio (beta)
-				</a>
-			</li>
-			<li style="float:right">
-				<a href="https://github.com/PotatoTank/oratorio" target="_blank">
-					Dev Docs
-				</a>
-			</li>
-			<li style="float:right">
-				<a href="userdocs">
-					User Docs
-				</a>
-			</li>
-			<li style="float:right">
-				<a href="profile">
-					User Profile
-				</a>
-			</li>
-			<li style="float:right">
-				
-			</li>
-		</ul>
-		
-		<div class="LoginButton">
-			<div class="g-signin2" data-onsuccess="onSignIn"></div>
-		</div>
-		<div class="LogoutButton">
-			Log Out
-		</div>
 
-		
+    <ul id="ul">
+      <li style="float:left">
+        <div id="MenuButton">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </li>
+      <li id="home">
+        <a href="/">
+          Oratorio (beta)
+        </a>
+      </li>
+      <li style="float:right">
+        <a href="https://github.com/PotatoTank/oratorio" target="_blank">
+          Dev Docs
+        </a>
+      </li>
+      <li style="float:right">
+        <a href="userdocs">
+          User Docs
+        </a>
+      </li>
+      <li style="float:right">
+        <a href="profile">
+          User Profile
+        </a>
+      </li>
+      <li style="float:right">
 
-		
+      </li>
+    </ul>
 
-	    {% block body_block %}{% endblock %}
+    <div class="LoginButton">
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    </div>
+    <div class="LogoutButton">
+      Log Out
+    </div>
 
-    </body>
+
+
+
+
+    {% block body_block %}{% endblock %}
+
+  </body>
 </html>

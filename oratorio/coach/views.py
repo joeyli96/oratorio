@@ -108,7 +108,7 @@ def result(request):
     if users:
         user = users[0]
     else:
-        return HttpResponseBadRequest("Permission denied: how did you get here?")
+        return HttpResponseBadRequest("User does not exist: how did you get here?")
 
     # If no recording id was provided as url parameter, return error
     rec_id = request.GET.get('rid', '')
