@@ -37,7 +37,7 @@ window.addEventListener("load", function(){
         button.addEventListener("click", buttonToggle);
         left.addEventListener("click", leftToggle);
         right.addEventListener("click", rightToggle);
-        toggle.addEventListener("click", toggleVisibility);
+        toggle.addEventListener("click", onClickMirrorToggle);
     }
     $(".LogoutButton").addEventListener("click", logOut);
 
@@ -118,9 +118,16 @@ function createSpinner() {
 /* Keeps track of the stream object to stop webcam streaming. */
 var localStream;
 
+/**
+ * Requests the user's permission to use camera, if not already attemptd,
+ * then attemps to stream a mirrored version of the camera input onto the
+ * screen.
+ */
 function enableMirror() {
     var video = document.querySelector("#videoElement");
-    
+    var mirror = document.getElementById("mirrorContainer");
+    var toggle = $(".switch input");
+
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
      
     if (navigator.getUserMedia) {       
@@ -128,21 +135,38 @@ function enableMirror() {
     }
      
     function handleVideo(stream) {
+        // Successfully got the camera stream -- play it in a video on the page!
         video.src = window.URL.createObjectURL(stream);
         localStream = stream;
+        mirror.style.display = 'block';
+        toggle.checked = true;
     }
      
     function videoError(e) {
-        $(".switch input").click();
+        // Usually occurs because the user denied camera permissions.
         showToast();
+        disableMirror();
     }
 }
 
+/**
+ * Disables the mirror by stopping the camera video stream and hiding
+ * the container for the mirror.
+ */
 function disableMirror() {
+    var mirror = document.getElementById("mirrorContainer");
+    var toggle = $(".switch input");
+
     if (localStream != null)
         localStream.stop();
+
+    mirror.style.display = 'none';
+    toggle.checked = false;
 }
 
+/**
+ * Shows a toast message defined in this page's html for 3 seconds.
+ */
 function showToast() {
     // Get the snackbar DIV
     var x = document.getElementById("snackbar");
@@ -155,18 +179,17 @@ function showToast() {
 }
 
 /**
- * toggles the visibility of the mirror
- * @param  {String} the id of the mirror container
+ * Handles when the user clicks on the mirror toggle. Either enables
+ * the mirror or disables the mirror based on the toggle state.
  */
-function toggleVisibility() {
-    var mirror = document.getElementById("mirrorContainer");
-    if (mirror.style.display == 'block') {
-        disableMirror();
-        mirror.style.display = 'none';
-    }
-    else { 
+function onClickMirrorToggle() {
+    var toggle = $(".switch input");
+
+    if (toggle.checked == true) {
         enableMirror();
-        mirror.style.display = 'block';
+    }
+    else {
+        disableMirror();
     }
 }
 
