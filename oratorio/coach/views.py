@@ -57,10 +57,14 @@ def upload(request):
     for word in most_frequent_words :
         print word[0]
 
+    pause_list, pauses = Analyzer.get_pauses(recording.transcript)
+
+
     context = {
         'transcript': transcript_text,
         'pace': avg_pace,
-        'most_frequent_words': most_frequent_words
+        'most_frequent_words': most_frequent_words,
+        'pauses': pauses
     }
     return HttpResponse(template.render(context, request))
 
