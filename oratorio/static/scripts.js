@@ -77,7 +77,8 @@ function upload(blob){
 
         xhr.onload = function () {
             console.log('DONE', xhr.readyState); // readyState will be 4
-            $('body').innerHTML = xhr.response;
+            rec_id = xhr.response;
+            window.location = "result?rid=" + rec_id;
         };
 
         xhr.send(blob);

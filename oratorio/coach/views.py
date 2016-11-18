@@ -65,15 +65,8 @@ def upload(request):
     recording = Analyzer.create_recording(
         audio_dir=uploaded_file_url, speech=speech)
     recording.save()
-    print json.dumps(recording.transcript)
-    # send transcript and pace to result page
-
-    template = loader.get_template('coach/results.html')
-    context = {
-        'transcript': recording.get_transcript_text(),
-        'pace': recording.get_avg_pace(),
-    }
-    return HttpResponse(template.render(context, request))
+    print json.dumps(recording.get_transcript())
+    return HttpResponse(str(recording.id))
 
 
 def index(request):
@@ -99,12 +92,19 @@ def profile(request):
 
 
 def result(request):
+    rec_id = request.GET.get('rid', '')
+    recs = Recording.objects.filter(id=rec_id)
+    if not recs:
+        return HttpResponseBadRequest("Recording does not exist")
+    rec = recs[0]
     template = loader.get_template('coach/results.html')
     try:
         token = request.COOKIES['id_token']
     except KeyError:
         return HttpResponse(template.render({}, request))
     context = get_context(token)
+    context['transcript'] = rec.get_transcript_text()
+    context['pace'] = rec.get_avg_pace()
     return HttpResponse(template.render(context, request))
 
 
