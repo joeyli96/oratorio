@@ -9,11 +9,12 @@ from tempfile import TemporaryFile
 from .models import User, Speech, Recording
 from .analyzer import Analyzer
 import json
-from .utils import verify_id_token
+from .utils import verify_id_token, get_context
 
 # This class contains view functions that take a Web request
 # and returns a Web response. This can be the HTML contents
 # of a Web page, error, etc.
+
 
 def login(request):
     if request.method != 'POST':
@@ -30,10 +31,10 @@ def login(request):
 
     return HttpResponse("OK")
 
+
 def upload(request):
     if request.method != 'POST':
         return redirect('index')
-
 
     # create a temp file to store the blob
     tempfile = TemporaryFile()
@@ -52,7 +53,7 @@ def upload(request):
             return HttpResponseBadRequest()
         users = User.objects.filter(email=idinfo['email'])
         if users:
-             user=users[0]
+            user = users[0]
     except KeyError:
         user = User(name="temp", email="temp")
         user.save()
@@ -66,6 +67,7 @@ def upload(request):
     recording.save()
     print json.dumps(recording.transcript)
     # send transcript and pace to result page
+
     template = loader.get_template('coach/results.html')
     context = {
         'transcript': recording.get_transcript_text(),
@@ -81,34 +83,36 @@ def index(request):
         token = request.COOKIES['id_token']
     except KeyError:
         return HttpResponse(template.render({}, request))
-
-
-    idinfo = verify_id_token(token)
-    if not idinfo:
-        return HttpResponseBadRequest()
-
-    recordings = []
-    for speech in Speech.objects.filter(user__email=idinfo["email"]):
-        for recording in Recording.objects.filter(speech=speech):
-            recordings.append(recording)
-
-    context = { 'recordings': recordings, }
+    context = get_context(token)
     return HttpResponse(template.render(context, request))
 
 
 def profile(request):
     template = loader.get_template('coach/profile.html')
-    context = {}
+
+    try:
+        token = request.COOKIES['id_token']
+    except KeyError:
+        return HttpResponse(template.render({}, request))
+    context = get_context(token)
     return HttpResponse(template.render(context, request))
 
 
 def result(request):
     template = loader.get_template('coach/results.html')
-    context = {}
+    try:
+        token = request.COOKIES['id_token']
+    except KeyError:
+        return HttpResponse(template.render({}, request))
+    context = get_context(token)
     return HttpResponse(template.render(context, request))
 
 
 def userdocs(request):
     template = loader.get_template('coach/userdocs.html')
-    context = {}
+    try:
+        token = request.COOKIES['id_token']
+    except KeyError:
+        return HttpResponse(template.render({}, request))
+    context = get_context(token)
     return HttpResponse(template.render(context, request))

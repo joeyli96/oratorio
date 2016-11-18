@@ -1,5 +1,21 @@
 from oauth2client import client, crypt
 from .settings import SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+from .models import Speech, Recording
+
+
+def get_context(token):
+    idinfo = verify_id_token(token)
+    if not idinfo:
+        return HttpResponseBadRequest()
+
+    recordings = []
+    for speech in Speech.objects.filter(user__email=idinfo["email"]):
+        for recording in Recording.objects.filter(speech=speech):
+            recordings.append(recording)
+
+    context = {'recordings': recordings, }
+    return context
+
 
 def verify_id_token(token):
     client_id = SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
