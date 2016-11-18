@@ -70,11 +70,14 @@ a[target="_blank"]:after {
 }
 
 #SidebarTitle {
+  position: relative;
   width: 100%;
   height: var(--sidebar-title-height);
   color: var(--background-color);
   font-size: calc( var(--sidebar-title-height) / 2);
   padding: 5pt -5pt 5pt 5pt;
+  text-align: center;
+  top: 10px;
 }
 
 .menuItem {
