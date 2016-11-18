@@ -2,9 +2,25 @@ from watson_developer_cloud import SpeechToTextV1
 from settings import WATSON_USER_NAME, WATSON_PASSWORD
 from models import Recording, Speech, User
 import json
+from collections import Counter
+import re
 
+STOP_WORDS = ["a", "am", "an", "and", "any", "are", "as", "at", "be", \
+              "because", "been", "but", "by", "can", "cannot", "could", \
+              "did", "do", "does", "every", "for", "from", "get", "got", \
+              "had", "has", "have", "he", "her", "hers", "him", "his", \
+              "how", "i", "in", "into", "is", "it", "its", "may", "me", \
+              "might", "most", "must", "my", "neither", "no", "nor", "not", \
+              "of", "off", "on", "or", "other", "our", "own", "she", \
+              "should", "so", "some", "than", "that", "the", "their", \
+              "them", "then", "there", "they", "this", "tis", "to", "too", \
+              "twas", "us", "was", "we", "were", "what", "when", "where", \
+              "which", "while", "who", "whom", "why", "will", "with", "would", \
+              "you", "your"]
 
 class Analyzer:
+
+
     @staticmethod
     def get_transcript_json(audio_dir):
         """This method calls the IBM Watson's speech API and returns the json that this produces"""
@@ -39,3 +55,12 @@ class Analyzer:
         clean_transcript = Analyzer.clean_transcript(json_transcript)
         recording = Recording.create(speech=speech, audio_dir=audio_dir, transcript=clean_transcript)
         return recording
+
+    @staticmethod
+    def get_word_frequency(transcript, k):
+        word_frequencies = Counter()
+        transcript = re.sub("[.]", "", transcript.lower().strip())
+        for word in re.split("\s+", transcript):
+            if word not in STOP_WORDS:
+                word_frequencies[word] += 1
+        return word_frequencies.most_common(k)

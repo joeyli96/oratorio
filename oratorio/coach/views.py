@@ -51,9 +51,16 @@ def upload(request):
         avg_pace = 60 * recording.get_word_count() / rec_len
     else:
         avg_pace = 0
+    transcript_text = recording.get_transcript_text()
+
+    most_frequent_words = Analyzer.get_word_frequency(transcript_text, 5)
+    for word in most_frequent_words :
+        print word[0]
+
     context = {
-        'transcript': recording.get_transcript_text(),
+        'transcript': transcript_text,
         'pace': avg_pace,
+        'most_frequent_words': most_frequent_words
     }
     return HttpResponse(template.render(context, request))
 

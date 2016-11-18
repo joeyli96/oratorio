@@ -45,15 +45,11 @@
       </div>
       <h2><span>Frequently Used Words:</span></h2>
       <div class="words">
-        <a href="javascript:wordFrequency('cow')">
-          cow: 7
+        {% for word in most_frequent_words %}
+        <a href="javascript:wordFrequency('{{ word.0 }}')">
+          {{ word.0 }} : {{ word.1 }}
         </a>
-        <a href="javascript:wordFrequency('jerky')">
-          jerky: 6
-        </a>
-        <a href="javascript:wordFrequency('bacon')">
-          bacon: 2
-        </a>
+        {% endfor %}
       </div>
     </div>
   </div>
