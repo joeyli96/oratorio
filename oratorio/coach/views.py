@@ -92,19 +92,42 @@ def profile(request):
 
 
 def result(request):
-    rec_id = request.GET.get('rid', '')
-    recs = Recording.objects.filter(id=rec_id)
-    if not recs:
-        return HttpResponseBadRequest("Recording does not exist")
-    rec = recs[0]
-    template = loader.get_template('coach/results.html')
+    # If there is no id_token, user is not logged in, so redirect to index
     try:
         token = request.COOKIES['id_token']
     except KeyError:
-        return HttpResponse(template.render({}, request))
+        return redirect('index')
+
+    # If the id_token is invalid, return error
+    idinfo = verify_id_token(token)
+    if not idinfo:
+        return HttpResponseBadRequest("Invalid id token: that's a no no")
+
+    # If the user doesn't exist in the database, return error
+    users = User.objects.filter(email=idinfo['email'])
+    if users:
+        user = users[0]
+    else:
+        return HttpResponseBadRequest("Permission denied: how did you get here?")
+
+    # If no recording id was provided as url parameter, return error
+    rec_id = request.GET.get('rid', '')
+    if not rec_id:
+        return HttpResponseBadRequest("No ID was provided")
+
+    # Check that current user has access to the requested recording, and that
+    # the recording exists. Otherwise return error.
+    valid_recs = Recording.objects.filter(speech__user=user, id=rec_id)
+    if not valid_recs:
+        return HttpResponseBadRequest("Permission denied: how did you get here?")
+    rec = valid_recs[0]
+
+    # Populate context with sidebar data, transcript text and avg pace
     context = get_context(token)
     context['transcript'] = rec.get_transcript_text()
     context['pace'] = rec.get_avg_pace()
+
+    template = loader.get_template('coach/results.html')
     return HttpResponse(template.render(context, request))
 
 
