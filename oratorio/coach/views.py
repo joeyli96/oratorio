@@ -65,7 +65,6 @@ def upload(request):
     recording = Analyzer.create_recording(
         audio_dir=uploaded_file_url, speech=speech)
     recording.save()
-    print json.dumps(recording.transcript)
     # send transcript and pace to result page
 
     template = loader.get_template('coach/results.html')
