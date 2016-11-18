@@ -77,6 +77,8 @@ def index(request):
     except KeyError:
         return HttpResponse(template.render({}, request))
     context = get_context(token)
+    if not context:
+        return HttpResponseBadRequest("Invalid id token: that's a no no")
     return HttpResponse(template.render(context, request))
 
 

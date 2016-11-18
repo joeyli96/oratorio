@@ -6,7 +6,7 @@ from .models import Speech, Recording
 def get_context(token):
     idinfo = verify_id_token(token)
     if not idinfo:
-        return HttpResponseBadRequest()
+        return None
 
     recordings = []
     for speech in Speech.objects.filter(user__email=idinfo["email"]):
