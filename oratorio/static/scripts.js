@@ -372,7 +372,6 @@ function onSignIn(googleUser) {
     //console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail());
     var id_token = googleUser.getAuthResponse().id_token;
-    document.cookie = "id_token=" + id_token;
     //console.log('ID Token: ' + id_token);
 
     var buttonLogin = $(".g-signin2");
@@ -389,7 +388,15 @@ function onSignIn(googleUser) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'login', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send();
+
+    if (document.cookie.indexOf('id_token') == -1) {
+        document.cookie = "id_token=" + id_token;
+        xhr.send();
+        location.reload();
+    } else {
+        xhr.send();
+    }
+
     // This code is sends the user's token to our backend.
     /*
     var xhr = new XMLHttpRequest();
