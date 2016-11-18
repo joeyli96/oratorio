@@ -424,6 +424,7 @@ input:checked + .mirrorSlider:before {
   font-size: 16pt;
   cursor: pointer;
   transition: 0.5s;
+  z-index: 10;
 }
 .button {
   float: right;
@@ -538,6 +539,7 @@ input:checked + .mirrorSlider:before {
   height: 90%;
   overflow-y: auto;
   padding: 0 80px;
+  z-index: -1;
 }
 
 #userDocumentation p {
