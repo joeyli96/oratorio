@@ -1,5 +1,6 @@
 from django.test import TestCase
-from oratorio.coach.models import Recording, User, Speech
+from ..models import Recording, User, Speech
+from ..analyzer import Analyzer
 
 class RecordingTestCase(TestCase):
 
@@ -73,7 +74,7 @@ class RecordingTestCase(TestCase):
             ("am test", [("am", 13, 14), ("test", 14, 15)], 0.95),
             ("xxx", [("xxx", 15, 16)], 0.95)
         ])
-        frequent_words = recording.get_most_frequent_words()
+        frequent_words = Analyzer.get_word_frequency(recording.get_transcript_text(), 5)
         self.assertEquals(len(frequent_words), 5)
         self.assertEquals(frequent_words[0], ("hi", 5))
         self.assertEquals(frequent_words[1], ("i", 4))
@@ -89,7 +90,7 @@ class RecordingTestCase(TestCase):
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("Hi a Hi I Hi", [("Hi", 0, 1), ("a", 1, 2), ("Hi", 2, 3), ("I", 3, 4), ("Hi", 4, 5)], 0.92),
         ])
-        frequent_words = recording.get_most_frequent_words()
+        frequent_words = Analyzer.get_word_frequency(recording.get_transcript_text(), 5)
         self.assertEquals(len(frequent_words), 3)
         self.assertEquals(frequent_words[0], ("hi", 3))
         self.assertEquals(frequent_words[1], ("i", 1))
