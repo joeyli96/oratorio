@@ -402,6 +402,11 @@ function resize(e) {
     var h = window.innerHeight;
     var s = (w > h ? h : w);
 
+    resizeHelper(w, h, s);    
+}
+})();
+
+function resizeHelper(w, h, s) {
     // main button
     var button = $("#MainButton");
     if (button) {
@@ -435,7 +440,6 @@ function resize(e) {
             widthMargin  + buttonScale - circleOffset) + "px";
     }
 }
-})();
 
 
 /**

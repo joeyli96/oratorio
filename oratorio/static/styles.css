@@ -364,7 +364,7 @@ input:checked + .mirrorSlider:before {
   cursor: pointer;
 }
 .SideButton {
-  border-width: 10px;
+  border-width: 5px;
   border-color: rgb(102, 101, 100);
   color: rgb(102, 101, 100);
   border-style: solid;
