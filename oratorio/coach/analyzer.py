@@ -67,34 +67,7 @@ class Analyzer:
 
     # @staticmethod
     # def get_emotions(audio_dir):
-    #     print ("Loading library...")
-    #     Vokaturi.load(COACH_ROOT + "/lib/Vokaturi_isimu_i386.o")
-    #
-    #     print ("Reading sound file...")
-    #     (sample_rate, samples) = scipy.io.wavfile.read(audio_dir)
-    #
-    #     print ("Allocating Vokaturi sample array...")
-    #     buffer_length = len(samples)
-    #     c_buffer = Vokaturi.SampleArrayC(buffer_length)
-    #     c_buffer[:] = samples[:] / 32768.0
-    #
-    #     print ("Creating VokaturiVoice...")
-    #     voice = Vokaturi.Voice(sample_rate, buffer_length)
-    #
-    #     print ("Filling VokaturiVoice with samples...")
-    #     voice.fill(buffer_length, c_buffer)
-    #
-    #     print ("Extracting emotions from VokaturiVoice...")
-    #     emotionProbabilities = Vokaturi.EmotionProbabilities()
-    #     voice.extract(None, None, emotionProbabilities)
-    #
-    #     print ("Neutral: %.3f" % emotionProbabilities.neutrality)
-    #     print ("Happy: %.3f" % emotionProbabilities.happiness)
-    #     print ("Sad: %.3f" % emotionProbabilities.sadness)
-    #     print ("Angry: %.3f" % emotionProbabilities.anger)
-    #     print ("Fear: %.3f" % emotionProbabilities.fear)
-    #
-    #     voice.destroy()
+
 
     @staticmethod
     def get_pauses(transcript):
@@ -107,7 +80,8 @@ class Analyzer:
 
         pause_list = [0]*len(start_end_times)  # stores an array with where pauses are
 
-        for i in range(1, len(start_end_times)-1):
+
+        for i in range(0, len(start_end_times)-1):
             if start_end_times[i+1][0] - start_end_times[i][1] >= 1.5:
                 pause_list[i] = 1
                 pauses += 1
