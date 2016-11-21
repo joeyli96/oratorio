@@ -22,6 +22,13 @@ To install IBM Watson
 sudo pip install --upgrade watson-developer-cloud
 ~~~
 
+To test clientside using grunt
+~~~
+# begin in the root folder containing this README.md
+cd oratorio
+npm install
+~~~
+
 ### Installation
 
 Download the latest release version of oratorio from Releases.
@@ -44,7 +51,7 @@ SECRET_KEY: Django uses this key for crpytographic signing. To test locally, set
 ALLOWED_HOSTS: Used to create a list of IP addresses / domains where this code can be hosted. This field is optional when testing locally.
 
 (Used for speech-to-text API, please create an account at http://www.ibm.com/watson/developercloud/speech-to-text.html or contact us for credentials)
-WATSON_USER_NAME: Username for IBM Watson 
+WATSON_USER_NAME: Username for IBM Watson
 WATSON_PASSWORD: Password for IBM Watson
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: Key used for Google login, contact us for credentials
@@ -78,7 +85,7 @@ oratorio/ - Project directory
     coach/
       devdocs.html - HTML code for the developer docs
       index.html - HTML code for the landing page with record button
-      profile.html  
+      profile.html
       results.html - HTML code to display transcript and analysis
   static/ - Images, css and other static files for the whole project
     scripts.js - Contains javascript for record button
@@ -116,7 +123,7 @@ View - The HTML pages located in oratorio/templates/coach/ as this is what is ac
 Controller - The controller is our website interface. The user can interact with the record button which sends data to the model to transcribe and analyze.
 
 
-Null Object Pattern: This pattern is used to convey the absence of an object by using an object that doesn't do anything. An example of this would be the empty list. 
+Null Object Pattern: This pattern is used to convey the absence of an object by using an object that doesn't do anything. An example of this would be the empty list.
 
 We use this pattern when we use IBM Watson to get the transcript of an audio in oratorio/coach/analyzer.py. If the person does not say anything, instead of passing None, we pass an empty list as the transcript. This prevents any exceptions from being thrown.
 

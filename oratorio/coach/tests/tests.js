@@ -12,7 +12,7 @@ QUnit.test("getCookie", function(assert) {
 });
 */
 
-// also disabled because I cannot give permission 
+// also disabled because I cannot give permission
 /*
 QUnit.test("recorder", function(assert) {
 	var p = newRecorder()
@@ -20,7 +20,7 @@ QUnit.test("recorder", function(assert) {
         function(rec) {
             console.log("Okay.");
         }
-    ).catch( 
+    ).catch(
         function(err) {
             assert.notOk(true, "Failed to get permission.");
         }
@@ -99,3 +99,44 @@ QUnit.test("Restart Event", function(assert) {
     assert.notOk(right.classList.contains("SideRedButton"), "Right button still red.");
 });
 
+QUnit.test("Main Button Toggle", function(assert) {
+    // spoof some elements
+    var main = document.createElement("div");
+    main.id = "MainButton";
+    var left = document.createElement("div");
+    left.classList.add("SideButton");
+    left.classList.add("left");
+    var right = document.createElement("div");
+    right.classList.add("SideButton");
+    right.classList.add("right");
+    recorder = {}; // we currently can't test recorder construction
+    document.body.appendChild(main);
+    document.body.appendChild(left);
+    document.body.appendChild(right);
+    // the recorders state should change every time throughout this.
+
+    assert.expect(4);
+    verify = "";
+    recorder.start = function() {
+        assert.ok(true, "recorder started.");
+        verify += "s";
+    }
+    recorder.stop = function() {
+        assert.ok(true, "recorder stopped.");
+        verify += "x";
+    }
+    recorder.resume = function() {
+        assert.ok(true, "recorder resuming.");
+        verify += "r";
+    }
+    main.innerHTML = "RECORD";
+    buttonToggle();
+    main.innerHTML = "RESUME";
+    buttonToggle();
+    main.innerHTML = "STOP";
+    buttonToggle();
+    main.parentNode.removeChild(main);
+    left.parentNode.removeChild(left);
+    right.parentNode.removeChild(right);
+    assert.equal(verify, "srx", "Didn't activate the functions in the desired order.");
+});
