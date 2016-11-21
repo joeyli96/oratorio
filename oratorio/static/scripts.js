@@ -117,6 +117,7 @@ function createSpinner() {
 
 /* Keeps track of the stream object to stop webcam streaming. */
 var localStream;
+var mirrorEnabled = false;
 
 /**
  * Requests the user's permission to use camera, if not already attemptd,
@@ -140,6 +141,10 @@ function enableMirror() {
         localStream = stream;
         mirror.style.display = 'block';
         toggle.checked = true;
+
+        // Adjust the position and size of the "Record" button.
+        mirrorEnabled = true;
+        resize();
     }
      
     function videoError(e) {
@@ -162,6 +167,10 @@ function disableMirror() {
 
     mirror.style.display = 'none';
     toggle.checked = false;
+
+    // Adjust the position and size of the "Record" button.
+    mirrorEnabled = false;
+    resize();
 }
 
 /**
@@ -275,6 +284,7 @@ function onStop(button, left, right) {
 	left.classList.add("hide");
 	right.classList.add("hide");
 	// window.location = "result";
+    disableMirror(); 
 }
 
 /**
@@ -399,14 +409,14 @@ function newRecorder() {
  */
 function resize(e) {
     var w = window.innerWidth;
+    if (mirrorEnabled == true) {
+        w /= 4;
+    }
     var h = window.innerHeight;
     var s = (w > h ? h : w);
 
-    resizeHelper(w, h, s);    
-}
-})();
+    var mirrorLeftMargin = w * 2.8;
 
-function resizeHelper(w, h, s) {
     // main button
     var button = $("#MainButton");
     if (button) {
@@ -416,10 +426,15 @@ function resizeHelper(w, h, s) {
         button.style.borderWidth = s * 0.015 + "px";
         button.style.fontSize = s * 1 / 6 + "px";
         button.style.lineHeight = buttonScale + "px";
-        var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
         var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
+        var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
         button.style.top = Math.round(heightMargin) + "px";
-        button.style.left = Math.round(widthMargin) + "px";
+        if (mirrorEnabled == true) {
+            button.style.left = mirrorLeftMargin + "px";
+        }
+        else {
+            button.style.left = Math.round(widthMargin) + "px";    
+        }
 
         // secondary buttons
         var smallButtonScale = s * 1 / 4;
@@ -434,13 +449,19 @@ function resizeHelper(w, h, s) {
         var leftButton = $(".SideButton.left");
         var rightButton = $(".SideButton.right");
         var circleOffset = 0;
-        leftButton.style.left = Math.round(
-            widthMargin - smallButtonScale + circleOffset) + "px";
-        rightButton.style.left = Math.round(
-            widthMargin  + buttonScale - circleOffset) + "px";
-    }
+        if (mirrorEnabled == true) {
+            leftButton.style.left = mirrorLeftMargin - smallButtonScale + circleOffset + "px";
+            rightButton.style.left = mirrorLeftMargin + buttonScale - circleOffset + "px";
+        }
+        else {
+            leftButton.style.left = Math.round(
+                widthMargin - smallButtonScale + circleOffset) + "px";
+            rightButton.style.left = Math.round(
+                widthMargin  + buttonScale - circleOffset) + "px";
+        }
+    }   
 }
-
+})();
 
 /**
  * @param  {googleUser} Represents the Google User.
