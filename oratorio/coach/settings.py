@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django_nose',
     #'social.apps.django_app.default',
     #'django.contrib.contenttypes.models.ContentType',
 ]
@@ -88,3 +89,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 COACH_ROOT = os.path.join(BASE_DIR, 'coach')
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=coach',
+]
