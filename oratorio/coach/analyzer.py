@@ -1,10 +1,13 @@
 from watson_developer_cloud import SpeechToTextV1
 from settings import WATSON_USER_NAME, WATSON_PASSWORD, COACH_ROOT
 from models import Recording, Speech, User
-import json
 from collections import Counter
 import re
 
+# A pause is considered a pause if it is longer than (THREDSHOLD)s
+THRESHOLD = 1.5
+
+# STOP_WORDS will not be counted in the word frequency
 STOP_WORDS = ["a", "am", "an", "and", "any", "are", "as", "at", "be", \
               "because", "been", "but", "by", "can", "cannot", "could", \
               "did", "do", "does", "every", "for", "from", "get", "got", \
@@ -19,7 +22,8 @@ STOP_WORDS = ["a", "am", "an", "and", "any", "are", "as", "at", "be", \
               "you", "your"]
 
 class Analyzer:
-
+    """This class creates recordings and performs the analysis on a recording. It calls Watson's speech to text API to
+    get the transcript and BeyondVerbal to get the tone of the speech, counts the frequently used words and pauses"""
 
     @staticmethod
     def get_transcript_json(audio_dir):
@@ -74,6 +78,10 @@ class Analyzer:
 
     @staticmethod
     def get_pauses(transcript):
+        """Given transcript (with stop an end times, see Recording in models.py for format), returns the number of pauses
+        and where they occur. Eg: If get_pauses(a_transcript) returns ([1, 0, 1, 1, 0], 3) This means that the speech
+        has 3 pauses one after the 1st, 3rd and 4th word, there was no pause after words 2 and 5 (and there are 6 words)
+        A pause is only counted as a pause if it is longer than the THRESHOLD"""
         start_end_times = []
         pauses = 0
 
@@ -84,7 +92,7 @@ class Analyzer:
         pause_list = [0]*(len(start_end_times)-len(transcript))  # stores an array with where pauses are
 
         for i in range(0, len(start_end_times)-1):
-            if start_end_times[i+1][0] - start_end_times[i][1] >= 1.5:
+            if start_end_times[i+1][0] - start_end_times[i][1] >= THRESHOLD:
                 pause_list[i] = 1
                 pauses += 1
 

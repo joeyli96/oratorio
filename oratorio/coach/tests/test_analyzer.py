@@ -3,16 +3,19 @@ from ..analyzer import Analyzer
 from django.test import TestCase
 
 class AnalyzerTestCase(TestCase):
-    # Tests for the Analyzer class in analyzer.py
+    """Tests for the Analyzer class in analyzer.py"""
 
     def setup(self):
+        """Sets up the database for the analyzer"""
         user = User(name="TestUser", email="test@test.test")
         user.save()
         speech = Speech(user=user, name="Speech1")
         speech.save()
 
+    # The following tests test the analysis of the most frequently used words
+
     def test_get_5_most_frequent_words(self):
-        # tests that only the 5 most frequent words are returned
+        """tests that only the 5 most frequent words are returned"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
@@ -32,10 +35,8 @@ class AnalyzerTestCase(TestCase):
         self.assertEquals(frequent_words[4], ("test", 2))
         self.assertNotIn("xxx", [item[0] for item in frequent_words])
 
-
-
     def test_get_most_frequent_words_less_than_5(self):
-        # tests that if the transcript contains less than 5 words then only these are added
+        """tests that if the transcript contains less than 5 words then only these are added"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
@@ -48,7 +49,7 @@ class AnalyzerTestCase(TestCase):
         self.assertEquals(frequent_words[2], ("ab", 1))
 
     def test_stop_words(self):
-        # tests that the stop words are not counted and do not effect the counting of other words
+        """tests that the stop words are not counted and do not effect the counting of other words"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
@@ -67,7 +68,7 @@ class AnalyzerTestCase(TestCase):
     # The threshold for a pause in our system is 1.5 (ie if a pause >= 1.5s it is counted as a pause)
 
     def test_no_pauses(self):
-        # tests a speech which has a pause that is just under the threshold
+        """tests a speech which has a pause that is just under the threshold"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
@@ -78,7 +79,7 @@ class AnalyzerTestCase(TestCase):
         self.assertEquals(pauses[0], [0] * 3)
 
     def test_pause(self):
-        # tests a speech which has a pause that is just at the threshold
+        """tests a speech which has a pause that is just at the threshold"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
@@ -89,7 +90,7 @@ class AnalyzerTestCase(TestCase):
         self.assertEquals(pauses[0], [0, 0, 1])
 
     def test_bounds(self):
-        # tests that pauses are counted correctly at the beginning and ends of speeches
+        """tests that pauses are counted correctly at the beginning and ends of speeches"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         # with pauses at beginning and end
@@ -108,7 +109,7 @@ class AnalyzerTestCase(TestCase):
         self.assertEquals(pauses[0], [0] * 3)
 
     def test_multisentence_speech(self):
-        # checks that pauses are counted correctly across multiple sentences (even when a pause occurs across a sentence)
+        """checks that pauses are counted correctly across multiple sentences (even when a pause occurs across a sentence)"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[

@@ -1,16 +1,18 @@
 from django.test import TestCase
 from ..models import Recording, User, Speech
-from ..analyzer import Analyzer
 
 class RecordingTestCase(TestCase):
+    """Tests for the Recording class in model.py"""
 
     def setup(self):
+        """Sets up the database for the with a user and speech to which the recording is added"""
         user = User(name="TestUser", email="test@test.test")
         user.save()
         speech = Speech(user=user, name="Speech1")
         speech.save()
 
     def test_create(self):
+        """Tests the creation of a recording"""
         self.setup()
         audio_dir = "dummy/dir"
         speech = Speech.objects.get(name="Speech1")
@@ -20,6 +22,7 @@ class RecordingTestCase(TestCase):
         self.assertEquals([], recording.transcript)
 
     def test_get_transcript_text(self):
+        """Tests the get_transcript_text method"""
         self.setup()
         audio_dir = "dummy/dir"
         speech = Speech.objects.get(name="Speech1")
@@ -31,6 +34,7 @@ class RecordingTestCase(TestCase):
         self.assertEquals(transcript_text.strip(), "Hi I am a test. Hi I am a test too.")
 
     def test_get_word_count(self):
+        """Tests the get_word_count method"""
         self.setup()
         audio_dir = "dummy/dir"
         speech = Speech.objects.get(name="Speech1")
@@ -42,6 +46,7 @@ class RecordingTestCase(TestCase):
         self.assertEquals(word_count, 8)
 
     def test_get_recording_length(self):
+        """Tests the get_recording_length method"""
         self.setup()
         audio_dir = "dummy/dir"
         speech = Speech.objects.get(name="Speech1")
@@ -53,9 +58,12 @@ class RecordingTestCase(TestCase):
         self.assertEquals(audio_length, 9)
 
     def test_empty_recording(self):
+        """Tests all recording methods on an empty speech. This would be the object returned by Watson if the user does
+        not say anything"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", [])
         self.assertEquals(recording.get_word_count(), 0)
         self.assertEquals(recording.get_transcript_text(), "")
+        self.assertEquals(recording.get_recording_length(), 0)
 
