@@ -60,9 +60,9 @@ def upload(request):
     # create speech and recording
     num_speeches = len(Speech.objects.filter(user=user))
     speech_name = "speech" + str(num_speeches + 1)
-    speech = Speech(user=user, name=speech_name)
+    speech = Speech(name=speech_name, user=user)
     speech.save()
-    recording = Analyzer.create_recording(
+    recording = Recording.create(
         audio_dir=uploaded_file_url, speech=speech)
     recording.save()
     print json.dumps(recording.get_transcript())
@@ -134,6 +134,7 @@ def result(request):
 
     context['pauses'] = pauses
     context['most_frequent_words'] = most_frequent_words
+    context['recording'] = rec
 
     template = loader.get_template('coach/results.html')
     return HttpResponse(template.render(context, request))

@@ -23,9 +23,11 @@ except ImportError:
     try:
         SECRET_KEY = os.environ["SECRET_KEY"]
         ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split()
-        WATSON_USER_NAME = os.environ["WATSON_USER_NAME"]
-        WATSON_PASSWORD = os.environ["WATSON_PASSWORD"]
+        SPEECH_TO_TEXT_USER_NAME = os.environ["WATSON_USER_NAME"]
+        SPEECH_TO_TEXT_PASSWORD = os.environ["WATSON_PASSWORD"]
         SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
+        TONE_ANALYZER_USER_NAME = os.environ["TONE_ANALYZER_USER_NAME"]
+        TONE_ANALYZER_PASSWORD = os.environ["TONE_ANALYZER_PASSWORD"]
     except KeyError:
         print("Please create a secret_settings.py file following instructions from secret_settings.py.template")
 

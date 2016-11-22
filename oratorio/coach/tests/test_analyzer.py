@@ -1,6 +1,7 @@
 from ..models import Speech, Recording, User
 from ..analyzer import Analyzer
 from django.test import TestCase
+import json
 
 class AnalyzerTestCase(TestCase):
     """Tests for the Analyzer class in analyzer.py"""
@@ -126,3 +127,17 @@ class AnalyzerTestCase(TestCase):
         pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 4)
         self.assertEquals(pauses[0], [1, 1, 1, 0, 0, 1])
+
+    def test_emotion_analyzer_joy(self):
+        self.setup()
+        speech = Speech.objects.get(name="Speech1")
+        recording = Recording.create(speech, "dummy/dir", transcript=[
+            ("I am very happy", [("I", 0, 1), ("am", 2.5, 3), ("his", 4.5, 4), ("her", 5.5, 6)], 0.92),
+            ("I am very very very joyful", [("I", 7.5, 8), ("am", 9, 10), ("a", 11.5, 12), ("sentence2", 5.5, 6)], 0.12),
+        ])
+        tone_dictionary = Analyzer.get_emotion(recording.get_transcript_text())
+
+        # assert that the sentence is sufficiently joyful :)
+        self.assertGreater(tone_dictionary["joy"], 80)
+        self.assertLess(tone_dictionary["sadness"], 20)
+
