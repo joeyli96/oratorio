@@ -1,7 +1,6 @@
 from ..models import Speech, Recording, User
 from ..analyzer import Analyzer
 from django.test import TestCase
-import json
 
 class AnalyzerTestCase(TestCase):
     """Tests for the Analyzer class in analyzer.py"""
