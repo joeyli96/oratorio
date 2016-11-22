@@ -1,8 +1,11 @@
 from django.test import TestCase
 from django.test.client import Client
 import os
+from coach.models import Recording
+
 
 class SystemTest(TestCase):
+
     def test_index(self):
         client = Client()
         # first check that the client can load the index page
@@ -22,9 +25,10 @@ class SystemTest(TestCase):
         response = client.post('/upload', data=blob,
                                content_type="audio/wav", secure=True)
         self.assertEqual(response.status_code, 200)
-        self.assertRegexpMatches(response.content,
-            'we all look great. the end of the Republic has never looked better.',
-            'Did not transcribe the audio correctly')
+        recording = Recording.objects.filter(id=response.content)[0]
+        self.assertRegexpMatches(recording.get_transcript_text(),
+                                 'we all look great. the end of the Republic has never looked better.',
+                                 'Did not transcribe the audio correctly')
 
     def test_malicious_upload(self):
         client = Client()

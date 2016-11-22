@@ -8,6 +8,7 @@ body {
   --sidebar-bg-color: rgb(140, 139, 137);
   --sidebar-fg-color: rgb(192, 191, 189);
   --sidebar-title-height: 45pt;
+  --red-color: #C63D0F;
   margin: 0;
   overflow: hidden;
   font-family: roboto;
@@ -70,11 +71,14 @@ a[target="_blank"]:after {
 }
 
 #SidebarTitle {
+  position: relative;
   width: 100%;
   height: var(--sidebar-title-height);
   color: var(--background-color);
   font-size: calc( var(--sidebar-title-height) / 2);
   padding: 5pt -5pt 5pt 5pt;
+  text-align: center;
+  top: 10px;
 }
 
 .menuItem {
@@ -213,6 +217,136 @@ a[target="_blank"]:after {
   padding-left: 0.5em;
 }
 
+#mirrorContainer {
+  display: none;
+  /*margin: 35px auto;*/
+  width: 600px;
+  height: 450px;
+  border: 5px #333 solid;
+  border-radius: 2px;
+  margin-top: 35px;
+  margin-left: 120px;
+}
+#videoElement {
+  width: 600px;
+  height: 450px;
+  background-color: #666;
+
+  /* "Rotate" it 180 degrees around y-axis to mirror the input. */
+  transform: rotateY(180deg);
+  -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+  -moz-transform:rotateY(180deg); /* Firefox */
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: absolute;
+  left: 50%;
+  margin-left: -45px;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  bottom: 6%;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* Slider to toggle mirror */
+.mirrorSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #F6F6F6;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.mirrorSlider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .mirrorSlider {
+  background-color: #C63D0F;
+}
+
+input:focus + .mirrorSlider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .mirrorSlider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.mirrorSlider.round {
+  border-radius: 34px;
+}
+
+.mirrorSlider.round:before {
+  border-radius: 50%;
+}
+
+#snackbar {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -200px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 3px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  right: 0px;
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+  visibility: visible; /* Show the snackbar */
+
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
 /*Buttons*/
 #MainButton {
   border-color: rgb(153, 47, 35);
@@ -231,7 +365,7 @@ a[target="_blank"]:after {
   cursor: pointer;
 }
 .SideButton {
-  border-width: 10px;
+  border-width: 5px;
   border-color: rgb(102, 101, 100);
   color: rgb(102, 101, 100);
   border-style: solid;
@@ -291,6 +425,7 @@ a[target="_blank"]:after {
   font-size: 16pt;
   cursor: pointer;
   transition: 0.5s;
+  z-index: 10;
 }
 .button {
   float: right;
@@ -341,13 +476,14 @@ a[target="_blank"]:after {
   border: 3pt solid var(--sidebar-bg-color);
   margin: 10pt;
   padding-top: 10pt;
+  overflow-y: scroll;
 }
 
 #stats {
   padding: 0 1em 0 1em;
   font-family: "Roboto";
   color: var(--background-color);
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
 }
 
 #stats h2 {
@@ -370,8 +506,8 @@ a[target="_blank"]:after {
 .slider {
   width: 100%;
   height: 12pt;
-  --red-to-green: linear-gradient(90deg, #e75d36, #e0c418, #34bd8e);
-  background: var(--red-to-green);
+  /*--red-to-green: linear-gradient(90deg, #e75d36, #e0c418, #34bd8e);*/
+  background: var(--red-color);
   border-radius: 12pt;
 }
 .slider > div {
@@ -382,7 +518,8 @@ a[target="_blank"]:after {
 }
 
 .pace {
-  background: linear-gradient(90deg, #e75d36, #e0c418, #34bd8e, #e0c418, #e75d36)
+  /*background: linear-gradient(90deg, #e75d36, #e0c418, #34bd8e, #e0c418, #e75d36)*/
+  background: var(--red-color);
 }
 
 
@@ -404,6 +541,7 @@ a[target="_blank"]:after {
   height: 90%;
   overflow-y: auto;
   padding: 0 80px;
+  z-index: -1;
 }
 
 #userDocumentation p {

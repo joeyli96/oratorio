@@ -18,8 +18,7 @@
     <div id="stats">
       <h2><span>Pace:</span> <i>(words per minute)</i> </br></br><b>{{ pace }}</b></h2>
       <!--<div class = "slider pace"><div></div></div>-->
-      <h2><span>Hesitations:</span> <i>(per minute)</i></h2>
-      <div class = "slider hesitations"><div></div></div>
+      <h2><span>Pauses:</span> <i>(>= 1.5 seconds)</i> </br></br><b>{{ pauses }}</b></h2>
       <h2><span>General Tone:</span></h2>
       <div class="tones">
         <div>
@@ -45,15 +44,11 @@
       </div>
       <h2><span>Frequently Used Words:</span></h2>
       <div class="words">
-        <a href="javascript:wordFrequency('cow')">
-          cow: 7
+        {% for word in most_frequent_words %}
+        <a href="javascript:wordFrequency('{{ word.0 }}')">
+          {{ word.0 }} : {{ word.1 }}
         </a>
-        <a href="javascript:wordFrequency('jerky')">
-          jerky: 6
-        </a>
-        <a href="javascript:wordFrequency('bacon')">
-          bacon: 2
-        </a>
+        {% endfor %}
       </div>
     </div>
   </div>

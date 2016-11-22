@@ -22,6 +22,16 @@ To install IBM Watson
 sudo pip install --upgrade watson-developer-cloud
 ~~~
 
+To install oauth2
+~~~
+sudo pip install oauth2client
+~~~
+
+To install Django Nose (For Coverage testing)
+~~~
+sudo pip install django-nose coverage
+~~~
+
 To test clientside using grunt
 ~~~
 # begin in the root folder containing this README.md
