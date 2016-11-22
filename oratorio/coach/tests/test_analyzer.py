@@ -74,7 +74,7 @@ class AnalyzerTestCase(TestCase):
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 1, 2), ("his", 2, 3), ("her", 4.49999999, 4)], 0.92),
         ])
-        pauses = Analyzer.get_pauses(recording.transcript)
+        pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 0)
         self.assertEquals(pauses[0], [0] * 3)
 
@@ -85,7 +85,7 @@ class AnalyzerTestCase(TestCase):
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 1, 2), ("his", 2, 3), ("her", 4.5, 5)], 0.92),
         ])
-        pauses = Analyzer.get_pauses(recording.transcript)
+        pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 1)
         self.assertEquals(pauses[0], [0, 0, 1])
 
@@ -97,14 +97,14 @@ class AnalyzerTestCase(TestCase):
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 2.5, 3), ("his", 3, 4), ("her", 5.5, 6)], 0.92),
         ])
-        pauses = Analyzer.get_pauses(recording.transcript)
+        pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 2)
         self.assertEquals(pauses[0], [1, 0, 1])
         # without pauses at beginning and end
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 2.49999999, 3), ("his", 3, 4), ("her", 5.49999999, 6)], 0.92),
         ])
-        pauses = Analyzer.get_pauses(recording.transcript)
+        pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 0)
         self.assertEquals(pauses[0], [0] * 3)
 
@@ -116,13 +116,13 @@ class AnalyzerTestCase(TestCase):
             ("I am his her", [("I", 0, 1), ("am", 2.5, 3), ("his", 4.5, 4), ("her", 5.5, 6)], 0.92),
             ("I am a sentence2", [("I", 7.5, 8), ("am", 9, 10), ("a", 11.5, 12), ("sentence2", 5.5, 6)], 0.12),
         ])
-        pauses = Analyzer.get_pauses(recording.transcript)
+        pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 5)
         self.assertEquals(pauses[0], [1, 1, 1, 1, 0, 1])
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 2.5, 3), ("his", 4.5, 4), ("her", 5.5, 6)], 0.92),
             ("I am a sentence2", [("I", 7.4999999, 8), ("am", 9, 10), ("a", 11.5, 12), ("sentence2", 5.5, 6)], 0.12),
         ])
-        pauses = Analyzer.get_pauses(recording.transcript)
+        pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 4)
         self.assertEquals(pauses[0], [1, 1, 1, 0, 0, 1])

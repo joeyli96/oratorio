@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.template import loader
 from django.conf import settings
 from .settings import MEDIA_ROOT
@@ -9,15 +9,33 @@ from tempfile import TemporaryFile
 from .models import User, Speech, Recording
 from .analyzer import Analyzer
 import json
+from .utils import verify_id_token, get_context
 
 # This class contains view functions that take a Web request
 # and returns a Web response. This can be the HTML contents
 # of a Web page, error, etc.
 
 
+def login(request):
+    if request.method != 'POST':
+        return redirect('index')
+
+    token = request.COOKIES['id_token']
+    idinfo = verify_id_token(token)
+    if not idinfo:
+        return HttpResponseBadRequest()
+
+    user = User.objects.filter(email=idinfo["email"])
+    if not user:
+        User(name=idinfo["name"], email=idinfo["email"]).save()
+
+    return HttpResponse("OK")
+
+
 def upload(request):
     if request.method != 'POST':
         return redirect('index')
+
     # create a temp file to store the blob
     tempfile = TemporaryFile()
     tempfile.write(request.body)
@@ -27,67 +45,105 @@ def upload(request):
     filename = fs.save("testfile.wav", file)
     uploaded_file_url = MEDIA_ROOT + "/" + filename
     tempfile.close()
-    # get user Joey
-    # if Joey does not exist, create user
-    users = User.objects.filter(name="Joey")
-    if not users:
-        user = User(name="Joey", email="joey@joey.com")
+
+    try:
+        token = request.COOKIES['id_token']
+        idinfo = verify_id_token(token)
+        if not idinfo:
+            return HttpResponseBadRequest()
+        users = User.objects.filter(email=idinfo['email'])
+        if users:
+            user = users[0]
+    except KeyError:
+        user = User(name="temp", email="temp")
         user.save()
-    else:
-        user = users[0]
     # create speech and recording
-    num_speeches = len(Speech.objects.all())
+    num_speeches = len(Speech.objects.filter(user=user))
     speech_name = "speech" + str(num_speeches + 1)
     speech = Speech(user=user, name=speech_name)
     speech.save()
     recording = Analyzer.create_recording(
         audio_dir=uploaded_file_url, speech=speech)
     recording.save()
-    print json.dumps(recording.transcript)
-    # send transcript and pace to result page
-    template = loader.get_template('coach/results.html')
-    rec_len = recording.get_recording_length()
-    if rec_len != 0:
-        avg_pace = 60 * recording.get_word_count() / rec_len
-    else:
-        avg_pace = 0
-    transcript_text = recording.get_transcript_text()
-
-    most_frequent_words = Analyzer.get_word_frequency(transcript_text, 5)
-    for word in most_frequent_words :
-        print word[0]
-
-    pause_list, pauses = Analyzer.get_pauses(recording.transcript)
-
-
-    context = {
-        'transcript': transcript_text,
-        'pace': avg_pace,
-        'most_frequent_words': most_frequent_words,
-        'pauses': pauses
-    }
-    return HttpResponse(template.render(context, request))
+    print json.dumps(recording.get_transcript())
+    return HttpResponse(str(recording.id))
 
 
 def index(request):
     template = loader.get_template('coach/index.html')
-    context = {}
+
+    try:
+        token = request.COOKIES['id_token']
+    except KeyError:
+        return HttpResponse(template.render({}, request))
+    context = get_context(token)
+    if not context:
+        return HttpResponseBadRequest("Invalid id token: that's a no no")
     return HttpResponse(template.render(context, request))
 
 
 def profile(request):
     template = loader.get_template('coach/profile.html')
-    context = {}
+
+    try:
+        token = request.COOKIES['id_token']
+    except KeyError:
+        return HttpResponse(template.render({}, request))
+    context = get_context(token)
     return HttpResponse(template.render(context, request))
 
 
 def result(request):
+    # If there is no id_token, user is not logged in, so redirect to index
+    try:
+        token = request.COOKIES['id_token']
+    except KeyError:
+        return redirect('index')
+
+    # If the id_token is invalid, return error
+    idinfo = verify_id_token(token)
+    if not idinfo:
+        return HttpResponseBadRequest("Invalid id token: that's a no no")
+
+    # If the user doesn't exist in the database, return error
+    users = User.objects.filter(email=idinfo['email'])
+    if users:
+        user = users[0]
+    else:
+        return HttpResponseBadRequest("User does not exist: how did you get here?")
+
+    # If no recording id was provided as url parameter, return error
+    rec_id = request.GET.get('rid', '')
+    if not rec_id:
+        return HttpResponseBadRequest("No ID was provided")
+
+    # Check that current user has access to the requested recording, and that
+    # the recording exists. Otherwise return error.
+    valid_recs = Recording.objects.filter(speech__user=user, id=rec_id)
+    if not valid_recs:
+        return HttpResponseBadRequest("Permission denied: how did you get here?")
+    rec = valid_recs[0]
+
+    # Populate context with sidebar data, transcript text and avg pace
+    context = get_context(token)
+    context['transcript'] = rec.get_transcript_text()
+    context['pace'] = rec.get_avg_pace()
+
+    most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
+    pause_list, pauses = Analyzer.get_pauses(rec.get_transcript())
+
+    context['pauses'] = pauses
+    context['most_frequent_words'] = most_frequent_words
+
     template = loader.get_template('coach/results.html')
-    context = {}
     return HttpResponse(template.render(context, request))
 
 
 def userdocs(request):
     template = loader.get_template('coach/userdocs.html')
-    context = {}
+    try:
+        token = request.COOKIES['id_token']
+    except KeyError:
+        return HttpResponse(template.render({}, request))
+    context = get_context(token)
     return HttpResponse(template.render(context, request))
