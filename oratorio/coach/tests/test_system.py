@@ -62,70 +62,68 @@ class SystemTest(TestCase):
                                  'Invalid id token: that\'s a no no',
                                  'Did not display error message')
 
-    def test_result_user_not_exit(self):
-        """Test if user does not exist scenario is handled"""
-        self.setup()
-        client = Client()
-        cookie = Cookie.SimpleCookie()
-        cookie['id_token'] = self.token
-        client.cookies = cookie
-        response = client.get('/result', secure=True)
-        self.assertEqual(response.status_code, 400)
-        self.assertRegexpMatches(response.content,
-                                 'User does not exist: how did you get here?',
-                                 'Did not display error message')
+#    def test_result_user_not_exit(self):
+#        """Test if user does not exist scenario is handled"""
+#        self.setup()
+#        client = Client()
+#        cookie = Cookie.SimpleCookie()
+#        cookie['id_token'] = self.token
+#        client.cookies = cookie
+#        response = client.get('/result', secure=True)
+#        self.assertEqual(response.status_code, 400)
+#        self.assertRegexpMatches(response.content,
+#                                 'User does not exist: how did you get here?',
+#                                 'Did not display error message')
 
-    def test_result_no_rid_provided(self):
-        """Test if rid not provided scenario is handled"""
-        self.setup()
-        client = Client()
-        cookie = Cookie.SimpleCookie()
-        cookie['id_token'] = self.token
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
-        user.save()
-        client.cookies = cookie
-        response = client.get('/result', secure=True)
-        self.assertEqual(response.status_code, 400)
-        self.assertRegexpMatches(response.content,
-                                 'No ID was provided',
-                                 'Did not display error message')
-        user.delete()
+#    def test_result_no_rid_provided(self):
+#        """Test if rid not provided scenario is handled"""
+#        self.setup()
+#        client = Client()
+#        cookie = Cookie.SimpleCookie()
+#        cookie['id_token'] = self.token
+#        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+#        user.save()
+#        client.cookies = cookie
+#        response = client.get('/result', secure=True)
+#        self.assertEqual(response.status_code, 400)
+#        self.assertRegexpMatches(response.content,
+#                                 'No ID was provided',
+#                                 'Did not display error message')
+#        user.delete()
 
-    def test_result_access_others_recording(self):
-        """Test if user is not allowed to access other person's recording"""
-        self.setup()
-        client = Client()
-        cookie = Cookie.SimpleCookie()
-        cookie['id_token'] = self.token
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
-        user.save()
-        client.cookies = cookie
-        response = client.get('/result?rid=100000', secure=True)
-        self.assertEqual(response.status_code, 400)
-        self.assertRegexpMatches(response.content,
-                                 'Permission denied: how did you get here?',
-                                 'Did not display error message')
-        user.delete()
+#    def test_result_access_others_recording(self):
+#        """Test if user is not allowed to access other person's recording"""
+#        self.setup()
+#        client = Client()
+#        cookie = Cookie.SimpleCookie()
+#        cookie['id_token'] = self.token
+#        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+#        user.save()
+#        client.cookies = cookie
+#        response = client.get('/result?rid=100000', secure=True)
+#        self.assertEqual(response.status_code, 400)
+#        self.assertRegexpMatches(response.content,
+#                                 'Permission denied: how did you get here?',
+#                                 'Did not display error message')
+#        user.delete()
 
-    def test_result_access_recording_success(self):
-        """Test if user can access one's own recording"""
-        self.setup()
-        client = Client()
-        cookie = Cookie.SimpleCookie()
-        cookie['id_token'] = self.token
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
-        user.save()
-        speech = Speech(user=user, name="Speech1")
-        speech.save()
-        audio_dir = "dummy/dir"
-        speech = Speech.objects.get(name="Speech1")
-        recording = Recording.create(
-            speech=speech, audio_dir=audio_dir, transcript=[])
-        recording.save()
-        id = recording.id
-        client.cookies = cookie
-        response = client.get('/result?rid=' + str(id), secure=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertRegexpMatches(response.content, '<\!doctype html>',
-                                 'result does not contain an html doctype.')
-        user.delete()
+#    def test_result_access_recording_success(self):
+#        """Test if user can access one's own recording"""
+#        self.setup()
+#        client = Client()
+#        cookie = Cookie.SimpleCookie()
+#        cookie['id_token'] = self.token
+#        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+#        user.save()
+#        speech = Speech(user=user, name="Speech1")
+#        speech.save()
+#        audio_dir = "dummy/dir"
+#        speech = Speech.objects.get(name="Speech1")
+#        recording = Recording.create(
+#            speech=speech, audio_dir=audio_dir, transcript=[])
+#        recording.save()
+#        id = recording.id
+#        client.cookies = cookie
+#        response = client.get('/result?rid=' + str(id), secure=True)
+#        self.assertEqual(response.status_code, 200)
+#        self.assertRegexpMatches(response.content, '<\!doctype html>',
