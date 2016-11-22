@@ -8,11 +8,15 @@ install:
 env:
   - SECRET_KEY=oratorio
 
+before_script:
+  - npm install -g grunt
+
 script:
   - cd oratorio
   - python manage.py makemigrations coach
   - python manage.py migrate coach
   - python manage.py test
+  - grunt test --verbose --force
 
 notifications:
   slack:
