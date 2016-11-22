@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test.client import Client
 import os
 from coach.models import Recording
+import Cookie
 
 
 class SystemTest(TestCase):
