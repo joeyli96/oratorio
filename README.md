@@ -111,6 +111,25 @@ Set up Travis CI by following [this](https://travis-ci.org/getting_started)
 starter's guide. We set up Travis to run our test suite every time a commit is
 pushed, and to notify team members via email and Slack when a test fails.
 
+### Coverage testing
+
+Django will automatically run coverage tests when you run its built in test suite:
+~~~
+# in the oratorio/ directory
+python manage.py test
+~~~
+Client side tests and coverage can be accessed while the django server is running at
+[localhost:8000/static/client-tests.html](http://localhost:8000/static/client-tests.html?coverage)
+
+Additionally, [grunt](http://gruntjs.com/) can be used in the oratorio/ directory, running
+the same test suite. Grunt can be installed by
+```
+# in the oratorio/ directory
+npm install
+```
+
+Current coverage rates are 48% backend, 31% frontend.
+
 ### Adding a new release version
 
 To release a new version, package the code in a tar file and create a new
