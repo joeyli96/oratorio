@@ -28,10 +28,55 @@ QUnit.test("recorder", function(assert) {
 });
 */
 
+function mainButtons() {
+    var container = {};
+    var main = document.createElement("div");
+    main.id = "MainButton";
+    var left = document.createElement("div");
+    left.classList.add("SideButton");
+    left.classList.add("left");
+    var right = document.createElement("div");
+    right.classList.add("SideButton");
+    right.classList.add("right");
+    container.main = main;
+    container.left = left;
+    container.right = right;
+    document.body.appendChild(main);
+    document.body.appendChild(left);
+    document.body.appendChild(right);
+    container.cleanUp = function() {
+        main.parentNode.removeChild(main);
+        left.parentNode.removeChild(left);
+        right.parentNode.removeChild(right);
+    }
+    return container;
+}
+
+function mirror() {
+    var container = {};
+    var mirror = document.createElement("div");
+    mirror.id = "mirrorContainer";
+    container.mirror = mirror;
+    var swit = document.createElement("div");
+    swit.classList.add("switch");
+    var input = document.createElement("input");
+    input.type = "checkbox";
+    swit.appendChild(input);
+    document.body.appendChild(mirror);
+    document.body.appendChild(swit);
+    container.swh = swit;
+    container.cleanUp = function() {
+        mirror.parentNode.removeChild(mirror);
+        swit.parentNode.removeChild(swit);
+    }
+    return container;
+}
+
 /** EVENT TESTS */
 QUnit.test("Start Event", function(assert) {
-    var main = document.createElement("div");
-    var right = document.createElement("div");
+    var c = mainButtons();
+    var main = c.main;
+    var right = c.right;
     var cl = right.classList;
     cl.add("other");
     cl.add("hide");
@@ -39,16 +84,17 @@ QUnit.test("Start Event", function(assert) {
     onStart(main, right);
     assert.equal(main.innerHTML, "STOP", "Didn't change button to stop.");
     assert.equal(right.innerHTML, "PAUSE", "Didn't change button to pause.");
-    var cl = right.classList;
     assert.ok(cl.contains("other"), "Removed other class styles.");
     assert.notOk(cl.contains("hide"), "Side button hidden.");
     assert.notOk(cl.contains("SideRedButton"), "Side button still red.");
+    c.cleanUp();
 });
 
 QUnit.test("Pause Event", function(assert) {
-    var main = document.createElement("div");
-    var left = document.createElement("div");
-    var right = document.createElement("div");
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
     var cl = left.classList;
     cl.add("hide");
     cl.add("other");
@@ -58,12 +104,14 @@ QUnit.test("Pause Event", function(assert) {
     assert.equal(left.innerHTML, "RESTART", "Didn't change button to restart.");
     assert.ok(cl.contains("other"), "Left removed extra classes.");
     assert.notOk(cl.contains("hide"), "Left still hidden.");
+    c.cleanUp();
 });
 
 QUnit.test("Resume Event", function (assert) {
-    var main = document.createElement("div");
-    var left = document.createElement("div");
-    var right = document.createElement("div");
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
     var cl = right.classList;
     cl.add("other");
     cl.add("SideRedButton");
@@ -73,28 +121,30 @@ QUnit.test("Resume Event", function (assert) {
     assert.ok(left.classList.contains("hide"), "Left button didn't disappear.");
     assert.notOk(cl.contains("SideRedButton"), "Right button still red.");
     assert.ok(cl.contains("other"), "Right button removed other classes.");
+    c.cleanUp();
 });
 
-/*
 QUnit.test("Stop Event UI", function(assert) {
-    var main = document.createElement("div");
-    var left = document.createElement("div");
-    var right = document.createElement("div");
-    var mirror = documnent.createElement("div");
-    mirror.id = "mirrorContainer";
-    document.body.appendChild(mirror);
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
+    // the mirror will be tested seperately...
+    var disableMirrorSave = disableMirror;
+    disableMirror = function() {};
     onStop(main, left, right);
-    mirror.parentNode.removeChild(mirror);
+    disableMirror = disableMirrorSave;
     assert.equal(main.innerHTML, "RECORD", "Didn't change main button.");
     assert.ok(left.classList.contains("hide"), "Left button still visible.");
     assert.ok(right.classList.contains("hide"), "Right button still visible.");
+    c.cleanUp();
 });
-*/
 
 QUnit.test("Restart Event", function(assert) {
-    var main = document.createElement("div");
-    var left = document.createElement("div");
-    var right = document.createElement("div");
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
     right.classList.add("SideRedButton");
     right.classList.add("other");
     onRestart(main, left, right);
@@ -103,28 +153,22 @@ QUnit.test("Restart Event", function(assert) {
     assert.ok(right.classList.contains("hide"), "Right button still visible.");
     assert.ok(right.classList.contains("other"), "Right button removed other classes.");
     assert.notOk(right.classList.contains("SideRedButton"), "Right button still red.");
+    c.cleanUp();
 });
 
-/*
+
 QUnit.test("Main Button Toggle", function(assert) {
     // spoof some elements
-    var main = document.createElement("div");
-    main.id = "MainButton";
-    var left = document.createElement("div");
-    left.classList.add("SideButton");
-    left.classList.add("left");
-    var right = document.createElement("div");
-    right.classList.add("SideButton");
-    right.classList.add("right");
-    var mirror = documnent.createElement("div");
-    mirror.id = "mirrorContainer";
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
     recorder = {}; // we currently can't test recorder construction
-    document.body.appendChild(main);
-    document.body.appendChild(left);
-    document.body.appendChild(right);
-    document.body.appendChild(mirror);
     // the recorders state should change every time throughout this.
 
+    // mirror will be tested seperately...
+    var disableMirrorSave = disableMirror;
+    disableMirror = function() {};
     assert.expect(4);
     verify = "";
     recorder.start = function() {
@@ -145,10 +189,45 @@ QUnit.test("Main Button Toggle", function(assert) {
     buttonToggle();
     main.innerHTML = "STOP";
     buttonToggle();
-    main.parentNode.removeChild(main);
-    left.parentNode.removeChild(left);
-    right.parentNode.removeChild(right);
-    mirror.parentNode.removeChild(mirror);
+    disableMirror = disableMirrorSave;
+    c.cleanUp();
     assert.equal(verify, "srx", "Didn't activate the functions in the desired order.");
 });
-*/
+
+QUnit.test("Sidebar resize", function(assert) {
+    var sidebar = document.createElement("div");
+    sidebar.id = "Sidebar";
+    sidebar.style.height = "100px";
+    document.body.appendChild(sidebar);
+    window.innerHeight = 300;
+    resizeSideBar();
+    assert.equal(sidebar.style.height, "300px", "sidebar does not resize.");
+    sidebar.parentNode.removeChild(sidebar);
+});
+
+QUnit.test("word frequency save", function(assert) {
+    var trans = document.createElement("div");
+    trans.id = "transcript";
+    document.body.appendChild(trans);
+    var key = "" + Math.random();
+    trans.innerHTML = key;
+    saveAndRestore();
+    trans.innerHTML = Math.random();
+    saveAndRestore();
+    assert.equal(trans.innerHTML, key, "transcript not reset.");
+    trans.parentNode.removeChild(trans);
+});
+
+QUnit.test("word frequency isolates words", function(assert) {
+    var trans = document.createElement("div");
+    trans.id = "transcript";
+    var par = document.createElement("p");
+    par.innerHTML = "we're going to select the word batman";
+    trans.appendChild(par);
+    document.body.appendChild(trans);
+    $$ = function() {return [par]};
+    wordFrequency("Batman");
+    re = /<span>batman<\/span>/;
+    assert.ok(re.test(par.innerHTML), "Did not isolate and corner Batman.");
+    trans.parentNode.removeChild(trans);
+});
