@@ -12,7 +12,7 @@ from django.db import models
 
 class User(models.Model):
     name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
+    email = models.CharField(max_length=100, primary_key=True)
 
     def __str__(self):
        return "User " + self.name + ", email " + self.email
@@ -44,14 +44,12 @@ class Recording(models.Model):
     anger = models.IntegerField(default=0)
     fear = models.IntegerField(default=0)
     ml_score = models.IntegerField(default=0)
-    transcript = []
 
     @staticmethod
     def create(speech, audio_dir, transcript):
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,
                   json_transcript=json.dumps(transcript))
-        recording.transcript = transcript
         recording.save()
         return recording
 
@@ -60,30 +58,59 @@ class Recording(models.Model):
 
     def get_transcript_text(self):
         """Returns the textual representation of the transcript (does not return the start and end time of each word)"""
+        transcript = self.get_transcript()
         result = ""
-        for sentence in self.transcript:
+        for sentence in transcript:
             result += sentence[0].strip() + ". "
         return result
 
     def get_word_count(self):
         """Returns the word count of the speech"""
+        transcript = self.get_transcript()
         result = 0
-        for sentence in self.transcript:
+        for sentence in transcript:
             result += len(sentence[1])
         return result
 
     def get_recording_length(self):
         """Returns the length of the recording in seconds"""
-        if not self.transcript:
+        transcript = self.get_transcript()
+        if not transcript:
             return 0
-        last_sentence = self.transcript[-1]
+        last_sentence = transcript[-1]
         last_sentence_words = last_sentence[1]
         last_word = last_sentence_words[-1]
         last_word_end_timestamps = last_word[2]
 
-        first_sentence = self.transcript[0]
+        first_sentence = transcript[0]
         first_sentence_words = first_sentence[1]
         first_word = first_sentence_words[0]
         first_sentence_start_timestamp = first_word[1]
 
         return last_word_end_timestamps - first_sentence_start_timestamp
+    
+    def get_avg_pace(self):
+        rec_len = self.get_recording_length()
+        if rec_len != 0:
+            res = 60 * self.get_word_count() / rec_len
+        else:
+            res = 0
+        return round(res, 2)
+
+    def get_tone(self):
+        tones = {
+            'happiness': self.happiness,
+            'sadness': self.sadness,
+            'anger': self.anger,
+            'fear': self.fear,
+        }
+        maxVal = float('-inf')
+        res = None
+        for key, value in tones.iteritems():
+            if value > maxVal:
+                maxVal = value
+                res = key
+        return res
+    
+    def get_transcript(self):
+        return json.loads(self.json_transcript)
