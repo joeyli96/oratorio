@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 
 import json
 from django.db import models
+from analyzer import Analyzer
 
 
 class User(models.Model):
@@ -38,18 +39,33 @@ class Recording(models.Model):
     audio_length = models.IntegerField(default=0)
     json_transcript = models.TextField()
     hesitations = models.IntegerField(default=0)
-    neutrality = models.IntegerField(default=0)
-    happiness = models.IntegerField(default=0)
+    disgust = models.IntegerField(default=0)
+    joy = models.IntegerField(default=0)
     sadness = models.IntegerField(default=0)
     anger = models.IntegerField(default=0)
     fear = models.IntegerField(default=0)
+    confident = models.IntegerField(default=0)
     ml_score = models.IntegerField(default=0)
 
     @staticmethod
-    def create(speech, audio_dir, transcript):
+    def create(speech, audio_dir, transcript=None):
+        # Optional transcript used for testing
+        if transcript is None and audio_dir != "dummy/dir":
+            json_transcript = Analyzer.get_transcript_json(audio_dir)
+            transcript = Analyzer.clean_transcript(json_transcript)
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,
                   json_transcript=json.dumps(transcript))
+        transcript_text = recording.get_transcript_text()
+        if transcript_text:
+            tone_dictionary = Analyzer.get_emotion(transcript_text)
+            recording.disgust = tone_dictionary["disgust"]
+            recording.joy = tone_dictionary["joy"]
+            recording.sadness = tone_dictionary["sadness"]
+            recording.anger = tone_dictionary["anger"]
+            recording.fear = tone_dictionary["fear"]
+            recording.confident = tone_dictionary["confident"]
+
         recording.save()
         return recording
 
@@ -99,7 +115,7 @@ class Recording(models.Model):
 
     def get_tone(self):
         tones = {
-            'happiness': self.happiness,
+            'joy': self.joy,
             'sadness': self.sadness,
             'anger': self.anger,
             'fear': self.fear,

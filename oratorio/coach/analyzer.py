@@ -1,14 +1,14 @@
-from watson_developer_cloud import SpeechToTextV1
-from settings import WATSON_USER_NAME, WATSON_PASSWORD, COACH_ROOT
-from models import Recording, Speech, User
+from watson_developer_cloud import SpeechToTextV1, ToneAnalyzerV3
+from settings import SPEECH_TO_TEXT_USER_NAME, SPEECH_TO_TEXT_PASSWORD, COACH_ROOT, TONE_ANALYZER_USER_NAME, TONE_ANALYZER_PASSWORD
 from collections import Counter
+from sets import Set
 import re
 
 # A pause is considered a pause if it is longer than (THREDSHOLD)s
 THRESHOLD = 1.5
 
 # STOP_WORDS will not be counted in the word frequency
-STOP_WORDS = ["a", "am", "an", "and", "any", "are", "as", "at", "be", \
+STOP_WORDS = Set(["a", "am", "an", "and", "any", "are", "as", "at", "be", \
               "because", "been", "but", "by", "can", "cannot", "could", \
               "did", "do", "does", "every", "for", "from", "get", "got", \
               "had", "has", "have", "he", "her", "hers", "him", "his", \
@@ -19,7 +19,7 @@ STOP_WORDS = ["a", "am", "an", "and", "any", "are", "as", "at", "be", \
               "them", "then", "there", "they", "this", "tis", "to", "too", \
               "twas", "us", "was", "we", "were", "what", "when", "where", \
               "which", "while", "who", "whom", "why", "will", "with", "would", \
-              "you", "your"]
+              "you", "your"])
 
 class Analyzer:
     """This class creates recordings and performs the analysis on a recording. It calls Watson's speech to text API to
@@ -28,7 +28,7 @@ class Analyzer:
     @staticmethod
     def get_transcript_json(audio_dir):
         """This method calls the IBM Watson's speech API and returns the json that this produces"""
-        speech_to_text = SpeechToTextV1(username=WATSON_USER_NAME, password=WATSON_PASSWORD)
+        speech_to_text = SpeechToTextV1(username=SPEECH_TO_TEXT_USER_NAME, password=SPEECH_TO_TEXT_PASSWORD)
         audio_file = open(audio_dir, "rb")
         # This is the call to IBM Watson's Speech to Text API
         # By default IBM Watson's Speech To Text API stops transcribing at the first long pause, setting continuous to
@@ -52,13 +52,6 @@ class Analyzer:
                                final_sentence["confidence"]))
         return transcript
 
-    @staticmethod
-    def create_recording(audio_dir, speech):
-        """Given an audio file this method creates a transcript for this recording."""
-        json_transcript = Analyzer.get_transcript_json(audio_dir)
-        clean_transcript = Analyzer.clean_transcript(json_transcript)
-        recording = Recording.create(speech=speech, audio_dir=audio_dir, transcript=clean_transcript)
-        return recording
 
     @staticmethod
     def get_word_frequency(transcript_text, k):
@@ -72,9 +65,19 @@ class Analyzer:
                 word_frequencies[word] += 1
         return word_frequencies.most_common(k)
 
-    # @staticmethod
-    # def get_emotions(audio_dir):
-
+    @staticmethod
+    def get_emotion(transcript_text):
+        tone_analyzer = ToneAnalyzerV3(username=TONE_ANALYZER_USER_NAME, password=TONE_ANALYZER_PASSWORD, version='2016-02-11')
+        result = tone_analyzer.tone(text=transcript_text)["document_tone"]["tone_categories"]
+        emotion_tone_result = result[0]["tones"]
+        writing_tone_result = result[1]["tones"]
+        tone_dictionary = {}
+        for emotion_tone in emotion_tone_result:
+            tone_dictionary[emotion_tone["tone_id"]] = int(emotion_tone["score"] * 100)
+        for writing_tone in writing_tone_result:
+            tone_dictionary[writing_tone["tone_id"]] = int(writing_tone["score"] * 100)
+        print writing_tone_result
+        return tone_dictionary
 
     @staticmethod
     def get_pauses(transcript):
@@ -97,3 +100,4 @@ class Analyzer:
                 pauses += 1
 
         return (pause_list, pauses)
+
