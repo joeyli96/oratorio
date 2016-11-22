@@ -500,6 +500,7 @@ function onSignIn(googleUser) {
         xhr.send();
         location.reload();
     } else {
+        document.cookie = "id_token=" + id_token;
         xhr.send();
     }
 
