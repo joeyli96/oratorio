@@ -341,13 +341,14 @@ a[target="_blank"]:after {
   border: 3pt solid var(--sidebar-bg-color);
   margin: 10pt;
   padding-top: 10pt;
+  overflow-y: scroll;
 }
 
 #stats {
   padding: 0 1em 0 1em;
   font-family: "Roboto";
   color: var(--background-color);
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
 }
 
 #stats h2 {

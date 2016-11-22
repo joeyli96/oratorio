@@ -129,6 +129,12 @@ def result(request):
     context['transcript'] = rec.get_transcript_text()
     context['pace'] = rec.get_avg_pace()
 
+    most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
+    pause_list, pauses = Analyzer.get_pauses(rec.get_transcript())
+
+    context['pauses'] = pauses
+    context['most_frequent_words'] = most_frequent_words
+
     template = loader.get_template('coach/results.html')
     return HttpResponse(template.render(context, request))
 
