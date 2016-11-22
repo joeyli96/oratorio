@@ -22,6 +22,16 @@ To install IBM Watson
 sudo pip install --upgrade watson-developer-cloud
 ~~~
 
+To install oauth2
+~~~
+sudo pip install oauth2client
+~~~
+
+To install Django Nose (For Coverage testing)
+~~~
+sudo pip install django-nose coverage
+~~~
+
 ### Installation
 
 Download the latest release version of oratorio from Releases.
