@@ -35,3 +35,19 @@ class SystemTest(TestCase):
         response = client.get('/upload', secure=True)
         self.assertEqual(response.status_code, 302,
                          'Loading upload from a browser does not redirect')
+
+    def test_result_handle_bad_token(self):
+        client = Client()
+        response = client.get('/result', secure=True, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_bad_token(self):
+        client = Client()
+        cookie = Cookie.SimpleCookie()
+        cookie['id_token'] = 'I am not a token'
+        client.cookies = cookie
+        response = client.get('/result', secure=True)
+        self.assertEqual(response.status_code, 400)
+        self.assertRegexpMatches(response.content,
+                                 'Invalid id token: that\'s a no no',
+                                 'Did not display error message')
