@@ -17,7 +17,6 @@ function $$(ele) {
     return document.querySelectorAll(ele);
 }
 
-(function() {
 /** The recorder object */
 var recorder;
 /** The google profile of the user signed in */
@@ -37,7 +36,10 @@ window.addEventListener("load", function(){
         left.addEventListener("click", leftToggle);
         right.addEventListener("click", rightToggle);
     }
-    $(".LogoutButton").addEventListener("click", logOut);
+    var logout = $(".LogoutButton");
+    if (logout) {
+        logout.addEventListener("click", logOut);
+    }
 
     // hook and run the resize function
     window.addEventListener("resize", resize);
@@ -355,8 +357,6 @@ function resize(e) {
             widthMargin  + buttonScale - circleOffset) + "px";
     }
 }
-})();
-
 
 /**
  * @param  {googleUser} Represents the Google User.
