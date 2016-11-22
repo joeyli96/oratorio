@@ -53,9 +53,15 @@ SECRET_KEY: Django uses this key for crpytographic signing. To test locally, set
 
 ALLOWED_HOSTS: Used to create a list of IP addresses / domains where this code can be hosted. This field is optional when testing locally.
 
-(Used for speech-to-text API, please create an account at http://www.ibm.com/watson/developercloud/speech-to-text.html or contact us for credentials)
-WATSON_USER_NAME: Username for IBM Watson 
-WATSON_PASSWORD: Password for IBM Watson
+(Used for speech-to-text API, please contact us for credential or to create your own -
+ - Create a Bluemix server by signing up for bluemix
+ - When logged in to Bluemix add Watson Speech to Text Application
+ - When logged in to Bluemix add Watson Tone Analyzer)
+SPEECH_TO_TEXT_USER_NAME: Username for IBM Watson Sppech to Text App
+SPEECH_TO_TEXT_PASSWORD: Password for IBM Watson Speech to Text App
+
+TONE_ANALYZER_USER_NAME: Username for IBM Watson Sppech to Tone Analyzer App
+TONE_ANALYZER_PASSWORD: Password for IBM Watson Speech to Tone Analyzer App
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: Key used for Google login, contact us for credentials
 
