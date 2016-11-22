@@ -27,5 +27,6 @@ def verify_id_token(token):
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise crypt.AppIdentityError("Wrong issuer.")
     except crypt.AppIdentityError:
+        # Invalid token
         return None
     return idinfo
