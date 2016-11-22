@@ -31,11 +31,13 @@ window.addEventListener("load", function(){
     var button = $('#MainButton');
     var left = $(".SideButton.left");
     var right = $(".SideButton.right");
+    var toggle = $(".switch input");
     // if we're on the main index page with the buttons
     if (button) {
         button.addEventListener("click", buttonToggle);
         left.addEventListener("click", leftToggle);
         right.addEventListener("click", rightToggle);
+        toggle.addEventListener("click", onClickMirrorToggle);
     }
     $(".LogoutButton").addEventListener("click", logOut);
 
@@ -110,7 +112,94 @@ function createSpinner() {
     spinner.src = '../../static/spinner.png';
     spinner.id = "spinner";
     $('body').appendChild(spinner);
-    return spinner
+    return spinner;
+}
+
+/* Keeps track of the stream object to stop webcam streaming. */
+var localStream;
+var mirrorEnabled = false;
+
+/**
+ * Requests the user's permission to use camera, if not already attemptd,
+ * then attemps to stream a mirrored version of the camera input onto the
+ * screen.
+ */
+function enableMirror() {
+    var video = document.querySelector("#videoElement");
+    var mirror = document.getElementById("mirrorContainer");
+    var toggle = $(".switch input");
+
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+     
+    if (navigator.getUserMedia) {       
+        navigator.getUserMedia({video: true}, handleVideo, videoError);
+    }
+     
+    function handleVideo(stream) {
+        // Successfully got the camera stream -- play it in a video on the page!
+        video.src = window.URL.createObjectURL(stream);
+        localStream = stream;
+        mirror.style.display = 'block';
+        toggle.checked = true;
+
+        // Adjust the position and size of the "Record" button.
+        mirrorEnabled = true;
+        resize();
+    }
+     
+    function videoError(e) {
+        // Usually occurs because the user denied camera permissions.
+        showToast();
+        disableMirror();
+    }
+}
+
+/**
+ * Disables the mirror by stopping the camera video stream and hiding
+ * the container for the mirror.
+ */
+function disableMirror() {
+    var mirror = document.getElementById("mirrorContainer");
+    var toggle = $(".switch input");
+
+    if (localStream != null)
+        localStream.stop();
+
+    mirror.style.display = 'none';
+    toggle.checked = false;
+
+    // Adjust the position and size of the "Record" button.
+    mirrorEnabled = false;
+    resize();
+}
+
+/**
+ * Shows a toast message defined in this page's html for 3 seconds.
+ */
+function showToast() {
+    // Get the snackbar DIV
+    var x = document.getElementById("snackbar");
+
+    // Add the "show" class to DIV
+    x.className = "show";
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+
+/**
+ * Handles when the user clicks on the mirror toggle. Either enables
+ * the mirror or disables the mirror based on the toggle state.
+ */
+function onClickMirrorToggle() {
+    var toggle = $(".switch input");
+
+    if (toggle.checked == true) {
+        enableMirror();
+    }
+    else {
+        disableMirror();
+    }
 }
 
 /**
@@ -195,6 +284,7 @@ function onStop(button, left, right) {
 	left.classList.add("hide");
 	right.classList.add("hide");
 	// window.location = "result";
+    disableMirror(); 
 }
 
 /**
@@ -322,8 +412,13 @@ function newRecorder() {
  */
 function resize(e) {
     var w = window.innerWidth;
+    if (mirrorEnabled == true) {
+        w /= 4;
+    }
     var h = window.innerHeight;
     var s = (w > h ? h : w);
+
+    var mirrorLeftMargin = w * 2.8;
 
     // main button
     var button = $("#MainButton");
@@ -334,10 +429,15 @@ function resize(e) {
         button.style.borderWidth = s * 0.015 + "px";
         button.style.fontSize = s * 1 / 6 + "px";
         button.style.lineHeight = buttonScale + "px";
-        var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
         var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
+        var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
         button.style.top = Math.round(heightMargin) + "px";
-        button.style.left = Math.round(widthMargin) + "px";
+        if (mirrorEnabled == true) {
+            button.style.left = mirrorLeftMargin + "px";
+        }
+        else {
+            button.style.left = Math.round(widthMargin) + "px";    
+        }
 
         // secondary buttons
         var smallButtonScale = s * 1 / 4;
@@ -352,14 +452,19 @@ function resize(e) {
         var leftButton = $(".SideButton.left");
         var rightButton = $(".SideButton.right");
         var circleOffset = 0;
-        leftButton.style.left = Math.round(
-            widthMargin - smallButtonScale + circleOffset) + "px";
-        rightButton.style.left = Math.round(
-            widthMargin  + buttonScale - circleOffset) + "px";
-    }
+        if (mirrorEnabled == true) {
+            leftButton.style.left = mirrorLeftMargin - smallButtonScale + circleOffset + "px";
+            rightButton.style.left = mirrorLeftMargin + buttonScale - circleOffset + "px";
+        }
+        else {
+            leftButton.style.left = Math.round(
+                widthMargin - smallButtonScale + circleOffset) + "px";
+            rightButton.style.left = Math.round(
+                widthMargin  + buttonScale - circleOffset) + "px";
+        }
+    }   
 }
 })();
-
 
 /**
  * @param  {googleUser} Represents the Google User.
