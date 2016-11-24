@@ -47,6 +47,17 @@ class User(models.Model):
         res['confident'] /= len(speeches)
         return res
 
+    def get_avg_pauses(self):
+        speeches = Speech.objects.filter(user=self)
+        res = 0.0
+        for speech in speeches:
+            res += speech.get_avg_pauses()
+        try:
+            res /= len(speeches)
+        except ZeroDivisionError:
+            return 0
+        res = round(res, 2)
+        return res
 
 class Speech(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -85,7 +96,18 @@ class Speech(models.Model):
         res['confident'] /= len(recs)
         return res
 
-
+    def get_avg_pauses(self):
+        recs = Recording.objects.filter(speech=self)
+        res = 0.0
+        for rec in recs:
+            res += rec.pauses
+        try:
+            res /= len(recs)
+        except ZeroDivisionError:
+            return 0
+        res = round(res, 2)
+        return res
+        
 
 class Recording(models.Model):
     """The Transcript class represents the transcript of a speech. It also records the start and end time for each word

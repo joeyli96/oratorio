@@ -62,10 +62,13 @@ def upload(request):
     speech_name = "speech" + str(num_speeches + 1)
     speech = Speech(name=speech_name, user=user)
     speech.save()
-    recording = Recording.create(
-        audio_dir=uploaded_file_url, speech=speech)
-    recording.save()
-    print json.dumps(recording.get_transcript())
+    try:
+        recording = Recording.create(
+            audio_dir=uploaded_file_url, speech=speech)
+        recording.save()
+    except:
+        # Delete empty speech if anything goes wrong
+        speech.delete()
     return HttpResponse(str(recording.id))
 
 
@@ -87,9 +90,19 @@ def profile(request):
 
     try:
         token = request.COOKIES['id_token']
+        idinfo = verify_id_token(token)
+        if not idinfo:
+            return HttpResponse("-1")
+        users = User.objects.filter(email=idinfo['email'])
+        if users:
+            user = users[0]
+        else:
+            return HttpResponseBadRequest("User doesn't exist")
     except KeyError:
-        return HttpResponse(template.render({}, request))
+        return HttpResponseBadRequest("User doesn't exist")
     context = get_context(token)
+    context['user'] = user
+    context['tones'] = user.get_avg_tone()
     return HttpResponse(template.render(context, request))
 
 
