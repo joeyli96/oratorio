@@ -18,20 +18,20 @@ class User(models.Model):
 
     def get_avg_pace(self):
         "Return the average pace of all the speeches this user owns"
-        res = 0
+        res = 0.0
         speeches = Speech.objects.filter(user=self)
         if speeches:
             for speech in speeches:
                 res += speech.get_avg_pace()
-            res /= len(speeches)
+            res = round(res / len(speeches), 2)
         return res
     
     def get_avg_tone(self):
         "Return a dict where keys are types of emotions and values are the \
         average values of those emotions for the user"
         speeches = Speech.objects.filter(user=self)
-        res = { 'joy': 0, 'sadness': 0, 'anger': 0,
-                'fear': 0, 'disgust': 0, 'confident': 0 }
+        res = { 'joy': 0.0, 'sadness': 0.0, 'anger': 0.0,
+                'fear': 0.0, 'disgust': 0.0, 'confident': 0.0 }
         if speeches:
             for speech in speeches:
                 avg_tone = speech.get_avg_tone()
@@ -41,12 +41,12 @@ class User(models.Model):
                 res['fear'] += avg_tone['fear']
                 res['disgust'] += avg_tone['disgust']
                 res['confident'] += avg_tone['confident']
-            res['joy'] /= len(speeches)
-            res['sadness'] /= len(speeches)
-            res['anger'] /= len(speeches)
-            res['fear'] /= len(speeches)
-            res['disgust'] /= len(speeches)
-            res['confident'] /= len(speeches)
+            res['joy'] = round(res['joy'] / len(speeches), 2)
+            res['sadness'] = round(res['sadness'] / len(speeches), 2)
+            res['anger'] = round(res['anger'] / len(speeches), 2)
+            res['fear'] = round(res['fear'] / len(speeches), 2)
+            res['disgust'] = round(res['disgust'] / len(speeches), 2)
+            res['confident'] = round(res['confident'] / len(speeches), 2)
         return res
 
     def get_avg_pauses(self):
@@ -55,8 +55,7 @@ class User(models.Model):
         if speeches:
             for speech in speeches:
                 res += speech.get_avg_pauses()
-            res /= len(speeches)
-            res = round(res, 2)
+            res = round(res / len(speeches), 2)
         return res
 
 class Speech(models.Model):
@@ -68,20 +67,20 @@ class Speech(models.Model):
 
     def get_avg_pace(self):
         "Return the average pace of all the recordings in this speech"
-        res = 0
+        res = 0.0
         recs = Recording.objects.filter(speech=self)
         if recs:
             for rec in recs:
                 res += rec.get_avg_pace()
-            res /= len(recs)
+            res = round(res / len(recs), 2)
         return res
 
     def get_avg_tone(self):
         "Return a dict where keys are types of emotions and values are the \
         average values of those emotions for the speech"
         recs = Recording.objects.filter(speech=self)
-        res = { 'joy': 0, 'sadness': 0, 'anger': 0,
-                'fear': 0, 'disgust': 0, 'confident': 0 }
+        res = { 'joy': 0.0, 'sadness': 0.0, 'anger': 0.0,
+                'fear': 0.0, 'disgust': 0.0, 'confident': 0.0 }
         if recs:
             for rec in recs:
                 res['joy'] += rec.joy
@@ -90,12 +89,12 @@ class Speech(models.Model):
                 res['fear'] += rec.fear
                 res['disgust'] += rec.disgust
                 res['confident'] += rec.confident
-            res['joy'] /= len(recs)
-            res['sadness'] /= len(recs)
-            res['anger'] /= len(recs)
-            res['fear'] /= len(recs)
-            res['disgust'] /= len(recs)
-            res['confident'] /= len(recs)
+            res['joy'] = round(res['joy'] / len(recs), 2)
+            res['sadness'] = round(res['sadness'] / len(recs), 2)
+            res['anger'] = round(res['anger'] / len(recs), 2)
+            res['fear'] = round(res['fear'] / len(recs), 2)
+            res['disgust'] = round(res['disgust'] / len(recs), 2)
+            res['confident'] = round(res['confident'] / len(recs), 2)
         return res
 
     def get_avg_pauses(self):
@@ -104,8 +103,7 @@ class Speech(models.Model):
         if recs:
             for rec in recs:
                 res += rec.pauses
-            res /= len(recs)
-            res = round(res, 2)
+            res = round(res / len(recs), 2)
         return res
         
 
