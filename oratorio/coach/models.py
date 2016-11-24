@@ -13,7 +13,7 @@ from analyzer import Analyzer
 
 class User(models.Model):
     name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100, primary_key=True)
+    email = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
        return "User " + self.name + ", email " + self.email
