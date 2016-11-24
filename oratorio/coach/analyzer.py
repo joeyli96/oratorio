@@ -92,7 +92,7 @@ class Analyzer:
             for item in list:
                 start_end_times.append(item[1:]) # we only want start and end times
 
-        pause_list = [0]*(len(start_end_times)-len(transcript))  # stores an array with where pauses are
+        pause_list = []
 
         for i in range(0, len(start_end_times)-1):
             if start_end_times[i+1][0] - start_end_times[i][1] >= THRESHOLD:

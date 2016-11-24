@@ -114,14 +114,14 @@ class AnalyzerTestCase(TestCase):
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 2.5, 3), ("his", 4.5, 4), ("her", 5.5, 6)], 0.92),
-            ("I am a sentence2", [("I", 7.5, 8), ("am", 9, 10), ("a", 11.5, 12), ("sentence2", 5.5, 6)], 0.12),
+            ("I am a sentence2", [("I", 7.5, 8), ("am", 9, 10), ("a", 11.5, 12)], 0.12),
         ])
         pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 5)
         self.assertEquals(pauses[0], [1, 1, 1, 1, 0, 1])
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 2.5, 3), ("his", 4.5, 4), ("her", 5.5, 6)], 0.92),
-            ("I am a sentence2", [("I", 7.4999999, 8), ("am", 9, 10), ("a", 11.5, 12), ("sentence2", 5.5, 6)], 0.12),
+            ("I am a", [("I", 7.4999999, 8), ("am", 9, 10), ("a", 11.5, 12)], 0.12),
         ])
         pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 4)
@@ -131,8 +131,8 @@ class AnalyzerTestCase(TestCase):
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("I am very happy", [("I", 0, 1), ("am", 2.5, 3), ("his", 4.5, 4), ("her", 5.5, 6)], 0.92),
-            ("I am very very very joyful", [("I", 7.5, 8), ("am", 9, 10), ("a", 11.5, 12), ("sentence2", 5.5, 6)], 0.12),
+            ("I am very happy", [], 0.1),
+            ("I am very very very joyful", [], 0.1),
         ])
         tone_dictionary = Analyzer.get_emotion(recording.get_transcript_text())
 
