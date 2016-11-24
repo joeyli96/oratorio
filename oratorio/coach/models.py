@@ -1,8 +1,6 @@
 # Django models for Coach
 # This class contains the models used to hold data and as a schema
 # for the django database.
-#
-# TODO: Separate classes that mirror class diagram?
 
 from __future__ import unicode_literals
 
