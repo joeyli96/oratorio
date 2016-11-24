@@ -488,9 +488,6 @@ function onSignIn(googleUser) {
     buttonLogout.style.display = "block";
 
     var userName = document.getElementById("UserName");
-    if (userName) {
-        userName.innerHTML = profile.getName();
-    }
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'login', true);

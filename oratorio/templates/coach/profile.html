@@ -3,7 +3,7 @@
 {% block body_block %}
 	<div id="ProfilePanel">
 		<div id="ProfileTitle">
-			<span id="UserName">Your Stats<span>
+      <span id="UserName">{{ user.name }}<span>
 		</div>
 		<div id="stats">
           <h2><span>Pace: {{ user.get_avg_pace }}</span> (words per minute)</h2>

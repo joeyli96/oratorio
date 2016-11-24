@@ -20,9 +20,10 @@ class User(models.Model):
         "Return the average pace of all the speeches this user owns"
         res = 0
         speeches = Speech.objects.filter(user=self)
-        for speech in speeches:
-            res += speech.get_avg_pace()
-        res /= len(speeches)
+        if speeches:
+            for speech in speeches:
+                res += speech.get_avg_pace()
+            res /= len(speeches)
         return res
     
     def get_avg_tone(self):
@@ -31,32 +32,31 @@ class User(models.Model):
         speeches = Speech.objects.filter(user=self)
         res = { 'joy': 0, 'sadness': 0, 'anger': 0,
                 'fear': 0, 'disgust': 0, 'confident': 0 }
-        for speech in speeches:
-            avg_tone = speech.get_avg_tone()
-            res['joy'] += avg_tone['joy']
-            res['sadness'] += avg_tone['sadness']
-            res['anger'] += avg_tone['anger']
-            res['fear'] += avg_tone['fear']
-            res['disgust'] += avg_tone['disgust']
-            res['confident'] += avg_tone['confident']
-        res['joy'] /= len(speeches)
-        res['sadness'] /= len(speeches)
-        res['anger'] /= len(speeches)
-        res['fear'] /= len(speeches)
-        res['disgust'] /= len(speeches)
-        res['confident'] /= len(speeches)
+        if speeches:
+            for speech in speeches:
+                avg_tone = speech.get_avg_tone()
+                res['joy'] += avg_tone['joy']
+                res['sadness'] += avg_tone['sadness']
+                res['anger'] += avg_tone['anger']
+                res['fear'] += avg_tone['fear']
+                res['disgust'] += avg_tone['disgust']
+                res['confident'] += avg_tone['confident']
+            res['joy'] /= len(speeches)
+            res['sadness'] /= len(speeches)
+            res['anger'] /= len(speeches)
+            res['fear'] /= len(speeches)
+            res['disgust'] /= len(speeches)
+            res['confident'] /= len(speeches)
         return res
 
     def get_avg_pauses(self):
         speeches = Speech.objects.filter(user=self)
         res = 0.0
-        for speech in speeches:
-            res += speech.get_avg_pauses()
-        try:
+        if speeches:
+            for speech in speeches:
+                res += speech.get_avg_pauses()
             res /= len(speeches)
-        except ZeroDivisionError:
-            return 0
-        res = round(res, 2)
+            res = round(res, 2)
         return res
 
 class Speech(models.Model):
@@ -70,9 +70,10 @@ class Speech(models.Model):
         "Return the average pace of all the recordings in this speech"
         res = 0
         recs = Recording.objects.filter(speech=self)
-        for rec in recs:
-            res += rec.get_avg_pace()
-        res /= len(recs)
+        if recs:
+            for rec in recs:
+                res += rec.get_avg_pace()
+            res /= len(recs)
         return res
 
     def get_avg_tone(self):
@@ -81,31 +82,30 @@ class Speech(models.Model):
         recs = Recording.objects.filter(speech=self)
         res = { 'joy': 0, 'sadness': 0, 'anger': 0,
                 'fear': 0, 'disgust': 0, 'confident': 0 }
-        for rec in recs:
-            res['joy'] += rec.joy
-            res['sadness'] += rec.sadness
-            res['anger'] += rec.anger
-            res['fear'] += rec.fear
-            res['disgust'] += rec.disgust
-            res['confident'] += rec.confident
-        res['joy'] /= len(recs)
-        res['sadness'] /= len(recs)
-        res['anger'] /= len(recs)
-        res['fear'] /= len(recs)
-        res['disgust'] /= len(recs)
-        res['confident'] /= len(recs)
+        if recs:
+            for rec in recs:
+                res['joy'] += rec.joy
+                res['sadness'] += rec.sadness
+                res['anger'] += rec.anger
+                res['fear'] += rec.fear
+                res['disgust'] += rec.disgust
+                res['confident'] += rec.confident
+            res['joy'] /= len(recs)
+            res['sadness'] /= len(recs)
+            res['anger'] /= len(recs)
+            res['fear'] /= len(recs)
+            res['disgust'] /= len(recs)
+            res['confident'] /= len(recs)
         return res
 
     def get_avg_pauses(self):
         recs = Recording.objects.filter(speech=self)
         res = 0.0
-        for rec in recs:
-            res += rec.pauses
-        try:
+        if recs:
+            for rec in recs:
+                res += rec.pauses
             res /= len(recs)
-        except ZeroDivisionError:
-            return 0
-        res = round(res, 2)
+            res = round(res, 2)
         return res
         
 
