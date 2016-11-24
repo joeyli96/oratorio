@@ -34,7 +34,7 @@ def login(request):
 
 def upload(request):
     if request.method != 'POST':
-        return redirect('index')
+        return HttpResponse("-1")
 
     # create a temp file to store the blob
     tempfile = TemporaryFile()
@@ -50,7 +50,7 @@ def upload(request):
         token = request.COOKIES['id_token']
         idinfo = verify_id_token(token)
         if not idinfo:
-            return HttpResponseBadRequest()
+            return HttpResponse("-1")
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -117,6 +117,9 @@ def result(request):
     if not rec_id:
         return HttpResponseBadRequest("No ID was provided")
 
+    if rec_id == "-1":
+        return HttpResponseBadRequest("An error has occurred")
+
     # Check that current user has access to the requested recording, and that
     # the recording exists. Otherwise return error.
     valid_recs = Recording.objects.filter(speech__user=user, id=rec_id)
@@ -128,11 +131,10 @@ def result(request):
     context = get_context(token)
     context['transcript'] = rec.get_transcript_text()
     context['pace'] = rec.get_avg_pace()
+    context['pauses'] = rec.pauses
 
     most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
-    pause_list, pauses = Analyzer.get_pauses(rec.get_transcript())
 
-    context['pauses'] = pauses
     context['most_frequent_words'] = most_frequent_words
     context['recording'] = rec
 

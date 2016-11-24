@@ -79,7 +79,10 @@ function upload(blob){
 
         xhr.onload = function () {
             console.log('DONE', xhr.readyState); // readyState will be 4
-            rec_id = xhr.response;
+            rec_id = parseInt(xhr.response);
+            if (isNaN(rec_id)) {
+                rec_id = -1
+            }
             window.location = "result?rid=" + rec_id;
         };
 

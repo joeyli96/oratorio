@@ -96,7 +96,9 @@ class Analyzer:
 
         for i in range(0, len(start_end_times)-1):
             if start_end_times[i+1][0] - start_end_times[i][1] >= THRESHOLD:
-                pause_list[i] = 1
+                # TODO: fix this
+                # Disable pause_list due to index out of bounds error
+                # pause_list[i] = 1
                 pauses += 1
 
         return (pause_list, pauses)
