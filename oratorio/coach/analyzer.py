@@ -76,7 +76,6 @@ class Analyzer:
             tone_dictionary[emotion_tone["tone_id"]] = int(emotion_tone["score"] * 100)
         for writing_tone in writing_tone_result:
             tone_dictionary[writing_tone["tone_id"]] = int(writing_tone["score"] * 100)
-        print writing_tone_result
         return tone_dictionary
 
     @staticmethod
