@@ -471,8 +471,6 @@ function resize(e) {
  * @param  {googleUser} Represents the Google User.
  */
 function onSignIn(googleUser) {
-    // TODO: session handling with the google token id as a cookie is not working
-    // properly.
     profile = googleUser.getBasicProfile();
     //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     console.log('Name: ' + profile.getName());

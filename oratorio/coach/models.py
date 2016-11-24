@@ -1,8 +1,6 @@
 # Django models for Coach
 # This class contains the models used to hold data and as a schema
 # for the django database.
-#
-# TODO: Separate classes that mirror class diagram?
 
 from __future__ import unicode_literals
 
@@ -13,7 +11,7 @@ from analyzer import Analyzer
 
 class User(models.Model):
     name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100, primary_key=True)
+    email = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
        return "User " + self.name + ", email " + self.email
