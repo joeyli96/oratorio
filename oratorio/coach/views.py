@@ -97,9 +97,9 @@ def profile(request):
         if users:
             user = users[0]
         else:
-            return HttpResponseBadRequest("User doesn't exist")
+            return redirect('index')
     except KeyError:
-        return HttpResponseBadRequest("User doesn't exist")
+        return redirect('index')
     context = get_context(token)
     context['user'] = user
     context['tones'] = user.get_avg_tone()
