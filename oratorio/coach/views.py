@@ -34,7 +34,7 @@ def login(request):
 
 def upload(request):
     if request.method != 'POST':
-        return HttpResponse("-1")
+        return redirect('index')
 
     # create a temp file to store the blob
     tempfile = TemporaryFile()
