@@ -114,7 +114,7 @@ class AnalyzerTestCase(TestCase):
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
             ("I am his her", [("I", 0, 1), ("am", 2.5, 3), ("his", 4.5, 4), ("her", 5.5, 6)], 0.92),
-            ("I am a sentence2", [("I", 7.5, 8), ("am", 9, 10), ("a", 11.5, 12)], 0.12),
+            ("I am a", [("I", 7.5, 8), ("am", 9, 10), ("a", 11.5, 12)], 0.12),
         ])
         pauses = Analyzer.get_pauses(recording.get_transcript())
         self.assertEquals(pauses[1], 5)
