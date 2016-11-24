@@ -50,7 +50,7 @@ def upload(request):
         token = request.COOKIES['id_token']
         idinfo = verify_id_token(token)
         if not idinfo:
-            return HttpResponse("-1")
+            return HttpResponseBadRequest()
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -69,6 +69,7 @@ def upload(request):
     except:
         # Delete empty speech if anything goes wrong
         speech.delete()
+        return HttpResponseBadRequest()
     return HttpResponse(str(recording.id))
 
 

@@ -78,12 +78,14 @@ function upload(blob){
         var id_token = getCookie("id_token")
 
         xhr.onload = function () {
-            console.log('DONE', xhr.readyState); // readyState will be 4
-            rec_id = parseInt(xhr.response);
-            if (isNaN(rec_id)) {
-                rec_id = -1
+            if (xhr.status == 200) {
+              rec_id = parseInt(xhr.response);
+              window.location = "result?rid=" + rec_id;
+            } else {
+              // An error occurred, return to index for now
+              // TODO: display error in some way to the user
+              window.location = "";
             }
-            window.location = "result?rid=" + rec_id;
         };
 
         xhr.send(blob);
