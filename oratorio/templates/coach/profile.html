@@ -3,33 +3,37 @@
 {% block body_block %}
 	<div id="ProfilePanel">
 		<div id="ProfileTitle">
-			<span id="UserName">Your Stats<span>
+      <span id="UserName">{{ user.name }}<span>
 		</div>
 		<div id="stats">
-	        <h2><span>Pace:</span> (words per minute)</h2>
+          <h2><span>Pace: {{ user.get_avg_pace }}</span> (words per minute)</h2>
 	        <div class = "slider pace"><div></div></div>
-	        <h2><span>Hesitations:</span> (per minute)</h2>
+          <h2><span>Pauses: {{ user.get_avg_pauses }}</span> (per minute)</h2>
 	        <div class = "slider hesitations"><div></div></div>
 	        <h2><span>General Tone:</span></h2>
 	        <div class="tones">
 	          <div>
-	            <h3>Happiness</h3>
+              <h3>Joy {{ tones.joy }}</h3>
 	            <div class = "slider"><div></div></div>
 	          </div>
 	          <div>
-	            <h3>Sadness</h3>
+              <h3>Sadness {{ tones.sadness }}</h3>
 	            <div class = "slider"><div></div></div>
 	          </div>
 	          <div>
-	            <h3>Fear</h3>
+              <h3>Fear {{ tones.fear }}</h3>
 	            <div class = "slider"><div></div></div>
 	          </div>
 	          <div>
-	            <h3>Anger</h3>
+              <h3>Anger {{ tones.anger }}</h3>
 	            <div class = "slider"><div></div></div>
 	          </div>
 	          <div>
-	            <h3>Neutrality</h3>
+              <h3>Disgust {{ tones.disgust }}</h3>
+	            <div class = "slider"><div></div></div>
+	          </div>
+	          <div>
+              <h3>Confidence {{ tones.confident }}</h3>
 	            <div class = "slider"><div></div></div>
 	          </div>
 	        </div>

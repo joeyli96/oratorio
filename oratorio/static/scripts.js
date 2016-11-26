@@ -78,9 +78,14 @@ function upload(blob){
         var id_token = getCookie("id_token")
 
         xhr.onload = function () {
-            console.log('DONE', xhr.readyState); // readyState will be 4
-            rec_id = xhr.response;
-            window.location = "result?rid=" + rec_id;
+            if (xhr.status == 200) {
+              rec_id = parseInt(xhr.response);
+              window.location = "result?rid=" + rec_id;
+            } else {
+              // An error occurred, return to index for now
+              // TODO: display error in some way to the user
+              window.location = "";
+            }
         };
 
         xhr.send(blob);
@@ -485,9 +490,6 @@ function onSignIn(googleUser) {
     buttonLogout.style.display = "block";
 
     var userName = document.getElementById("UserName");
-    if (userName) {
-        userName.innerHTML = profile.getName();
-    }
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'login', true);
