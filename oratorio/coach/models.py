@@ -53,6 +53,7 @@ class Recording(models.Model):
         if transcript is None and audio_dir != "dummy/dir":
             json_transcript = Analyzer.get_transcript_json(audio_dir)
             transcript = Analyzer.clean_transcript(json_transcript)
+            Analyzer.get_tone(audio_dir)
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,
                   json_transcript=json.dumps(transcript))

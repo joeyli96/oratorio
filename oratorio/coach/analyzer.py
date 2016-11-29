@@ -2,7 +2,10 @@ from watson_developer_cloud import SpeechToTextV1, ToneAnalyzerV3
 from settings import SPEECH_TO_TEXT_USER_NAME, SPEECH_TO_TEXT_PASSWORD, COACH_ROOT, TONE_ANALYZER_USER_NAME, TONE_ANALYZER_PASSWORD
 from collections import Counter
 from sets import Set
+import requests
+import json
 import re
+import os
 
 # A pause is considered a pause if it is longer than (THREDSHOLD)s
 THRESHOLD = 1.5
@@ -101,3 +104,37 @@ class Analyzer:
 
         return (pause_list, pauses)
 
+    @staticmethod
+    def get_tone(audio_dir):
+        url = "https://token.beyondverbal.com/token"
+        headers = {"Content-Type" : "multipart/form-data"}
+        data = {"apiKey" : "b7c489bd-2ffa-4215-af80-9ed1b8a14fcb",
+                "grant_type" : "client_credentials"}
+        response = requests.get(url, headers=headers, data=data)
+        print response.text
+        access_token = response.json()['access_token']
+        authorization = "Bearer " + access_token
+
+        url = "https://apiv3.beyondverbal.com/v3/recording/start"
+        headers = {"Authorization" : authorization}
+        data = {"dataFormat" : "dataFormat:{type:\"WAV\"}",
+                "metadata" : "metadata:{}",
+                "displayLang" : "displayLang:\"en-us\""}
+
+        data2 = {"dataFormat" : {"type": "WAV"},
+                "metadata" : {},
+                "displayLang" : "en-us"}
+
+        data3 = {"dataFormat" : "{type:\"WAV\"}",
+                "metadata" : "{}",
+                "displayLang" : "en-us"}
+        response = requests.post(url, headers=headers, data=json.dumps(data2))
+        print response.text
+        if (response.status_code == 200):
+            url = "https://apiv3.beyondverbal.com/v3/recording/" + response.json()['recordingId']
+            audio_file = open(audio_dir, "rb")
+            headers = {"Authorization" : authorization,
+                       'content-type': 'application/json'}
+            # data = {"Sample Data" : bytearray(audio_file.read())}
+            response = requests.post(url, headers=headers, data=audio_file)
+            print response.text
