@@ -118,18 +118,12 @@ class Analyzer:
 
         url = "https://apiv3.beyondverbal.com/v3/recording/start"
         headers = {"Authorization" : authorization}
-        data = {"dataFormat" : "dataFormat:{type:\"WAV\"}",
-                "metadata" : "metadata:{}",
-                "displayLang" : "displayLang:\"en-us\""}
 
-        data2 = {"dataFormat" : {"type": "WAV"},
+        data = {"dataFormat" : {"type": "WAV"},
                 "metadata" : {},
                 "displayLang" : "en-us"}
 
-        data3 = {"dataFormat" : "{type:\"WAV\"}",
-                "metadata" : "{}",
-                "displayLang" : "en-us"}
-        response = requests.post(url, headers=headers, data=json.dumps(data2))
+        response = requests.post(url, headers=headers, data=json.dumps(data))
         print response.text
         if (response.status_code == 200):
             url = "https://apiv3.beyondverbal.com/v3/recording/" + response.json()['recordingId']
@@ -138,4 +132,24 @@ class Analyzer:
                        'content-type': 'application/json'}
             # data = {"Sample Data" : bytearray(audio_file.read())}
             response = requests.post(url, headers=headers, data=audio_file)
-            print response.text
+            print response.json()['result']
+            analysis = response.json()['result'].get('analysisSegments')
+            if analysis:
+                for x in analysis:
+                    print x['offset']
+                    print x['duration']
+                    print x['analysis']['Mood']['Group11']['Primary']['Phrase']
+                    print x['analysis']['Mood']['Composite']['Primary']['Phrase']
+
+                    # Referenced from beyondverbal developer website
+                    # Arousal is an output that measures a speaker’s degree of energy ranging from tranquil,
+                    # bored or sleepy to excited and highly energetic.
+                    print x['analysis']['Arousal']['Value']
+
+                    #Valence is an output which measures speaker’s level of negativity / positivity.
+                    print x['analysis']['Valence']['Value']
+
+                    #Temper reflects a speaker’s temperament or emotional state ranging from gloomy or depressive
+                    # at the low-end, embracive and friendly in the mid-range, and confrontational or aggressive
+                    # at the high-end of the scale.
+                    print x['analysis']['Temper']['Value']
