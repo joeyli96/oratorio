@@ -62,10 +62,14 @@ def upload(request):
     speech_name = "speech" + str(num_speeches + 1)
     speech = Speech(name=speech_name, user=user)
     speech.save()
-    recording = Recording.create(
-        audio_dir=uploaded_file_url, speech=speech)
-    recording.save()
-    print json.dumps(recording.get_transcript())
+    try:
+        recording = Recording.create(
+            audio_dir=uploaded_file_url, speech=speech)
+        recording.save()
+    except:
+        # Delete empty speech if anything goes wrong
+        speech.delete()
+        return HttpResponseBadRequest()
     return HttpResponse(str(recording.id))
 
 
@@ -87,9 +91,19 @@ def profile(request):
 
     try:
         token = request.COOKIES['id_token']
+        idinfo = verify_id_token(token)
+        if not idinfo:
+            return HttpResponse("-1")
+        users = User.objects.filter(email=idinfo['email'])
+        if users:
+            user = users[0]
+        else:
+            return redirect('index')
     except KeyError:
-        return HttpResponse(template.render({}, request))
+        return redirect('index')
     context = get_context(token)
+    context['user'] = user
+    context['tones'] = user.get_avg_tone()
     return HttpResponse(template.render(context, request))
 
 
@@ -117,6 +131,9 @@ def result(request):
     if not rec_id:
         return HttpResponseBadRequest("No ID was provided")
 
+    if rec_id == "-1":
+        return HttpResponseBadRequest("An error has occurred")
+
     # Check that current user has access to the requested recording, and that
     # the recording exists. Otherwise return error.
     valid_recs = Recording.objects.filter(speech__user=user, id=rec_id)
@@ -128,11 +145,10 @@ def result(request):
     context = get_context(token)
     context['transcript'] = rec.get_transcript_text()
     context['pace'] = rec.get_avg_pace()
+    context['pauses'] = rec.pauses
 
     most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
-    pause_list, pauses = Analyzer.get_pauses(rec.get_transcript())
 
-    context['pauses'] = pauses
     context['most_frequent_words'] = most_frequent_words
     context['recording'] = rec
 
