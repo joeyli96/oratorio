@@ -97,6 +97,10 @@ class RecordingTestCase(TestCase):
         self.assertEquals(recording.get_tone(), 'sadness');
         recording.joy = 70
         self.assertEquals(recording.get_tone(), 'joy');
+        recording.disgust = 75
+        self.assertEquals(recording.get_tone(), 'disgust');
+        recording.confident = 76
+        self.assertEquals(recording.get_tone(), 'confident');
 
 
     def test_empty_recording(self):

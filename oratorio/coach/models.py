@@ -203,6 +203,8 @@ class Recording(models.Model):
             'sadness': self.sadness,
             'anger': self.anger,
             'fear': self.fear,
+            'disgust' : self.disgust,
+            'confident' : self.confident
         }
         maxVal = float('-inf')
         res = None

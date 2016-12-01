@@ -21,19 +21,19 @@ STOP_WORDS = Set(["a", "am", "an", "and", "any", "are", "as", "at", "be", \
               "which", "while", "who", "whom", "why", "will", "with", "would", \
               "you", "your"])
 
-SPEECH_TO_TEXT = SpeechToTextV1(username=SPEECH_TO_TEXT_USER_NAME, password=SPEECH_TO_TEXT_PASSWORD)
-
 class Analyzer:
     """This class creates recordings and performs the analysis on a recording. It calls Watson's speech to text API to
     get the transcript and BeyondVerbal to get the tone of the speech, counts the frequently used words and pauses"""
 
     @staticmethod
-    def get_transcript_json(audio_file):
+    def get_transcript_json(audio_file, speech_to_text=None):
         """This method calls the IBM Watson's speech API and returns the json that this produces"""
+        if speech_to_text is None:
+            speech_to_text = SpeechToTextV1(username=SPEECH_TO_TEXT_USER_NAME, password=SPEECH_TO_TEXT_PASSWORD)
         # This is the call to IBM Watson's Speech to Text API
         # By default IBM Watson's Speech To Text API stops transcribing at the first long pause, setting continuous to
         # true overrides this behaviour. Setting time stamps to true gets the start and end time of each word
-        json_transcript = SPEECH_TO_TEXT.recognize(audio_file, content_type="audio/wav", continuous=True,
+        json_transcript = speech_to_text.recognize(audio_file, content_type="audio/wav", continuous=True,
                                                    timestamps=True)
         return json_transcript['results']
 
@@ -66,8 +66,9 @@ class Analyzer:
         return word_frequencies.most_common(k)
 
     @staticmethod
-    def get_emotion(transcript_text):
-        tone_analyzer = ToneAnalyzerV3(username=TONE_ANALYZER_USER_NAME, password=TONE_ANALYZER_PASSWORD, version='2016-02-11')
+    def get_emotion(transcript_text, tone_analyzer=None):
+        if tone_analyzer is None:
+            tone_analyzer = ToneAnalyzerV3(username=TONE_ANALYZER_USER_NAME, password=TONE_ANALYZER_PASSWORD, version='2016-02-11')
         result = tone_analyzer.tone(text=transcript_text)["document_tone"]["tone_categories"]
         emotion_tone_result = result[0]["tones"]
         writing_tone_result = result[1]["tones"]

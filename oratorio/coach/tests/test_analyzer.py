@@ -4,7 +4,6 @@ from ..analyzer import Analyzer
 from django.test import TestCase
 from mock import Mock
 
-
 class AnalyzerTestCase(TestCase):
     """Tests for the Analyzer class in analyzer.py"""
 
@@ -14,7 +13,7 @@ class AnalyzerTestCase(TestCase):
         mock_stt = Mock()
         mock_stt.recognize = Mock(return_value={'results': "mock result"})
         analyzer.SPEECH_TO_TEXT = mock_stt
-        self.assertEquals(Analyzer.get_transcript_json("dumy-file"), "mock result")
+        self.assertEquals(Analyzer.get_transcript_json("dumy-file", mock_stt), "mock result")
 
     def test_clean_transcript(self):
         """Test the clean_trabscript method"""
@@ -188,14 +187,26 @@ class AnalyzerTestCase(TestCase):
         self.assertEquals(pauses[0], [1, 1, 1, 0, 0, 1])
 
     def test_emotion_analyzer_joy(self):
-        self.setup()
-        speech = Speech.objects.get(name="Speech1")
-        recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("I am very happy", [], 0.1),
-            ("I am very very very joyful", [], 0.1),
-        ])
-        tone_dictionary = Analyzer.get_emotion(recording.get_transcript_text())
-
-        # assert that the sentence is sufficiently joyful :)
-        self.assertGreater(tone_dictionary["joy"], 80)
-        self.assertLess(tone_dictionary["sadness"], 20)
+        mock_tone = Mock()
+        mock_tone.tone = Mock(return_value={"document_tone" : {"tone_categories" : [
+            {'tones': [
+                {"tone_name": "Anger","score": 0.1, "tone_id": "anger"},
+                {"tone_name": "Disgust","score": 0.2, "tone_id": "disgust"},
+                {"tone_name": "Fear", "score": 0.3, "tone_id": "fear"},
+                {"tone_name": "Joy", "score": 0.4, "tone_id": "joy"},
+                {"tone_name": "Sadness", "score": 0.5, "tone_id": "sadness"},
+                       ]},
+            {'tones': [
+                {"tone_name": "Analytical", "score": 0.6, "tone_id": "analytical"},
+                {"tone_name": "Confident", "score": 0.6, "tone_id": "confident"},
+                {"tone_name": "Tentative", "score": 0.6, "tone_id": "tentative"}
+            ]}
+        ]}})
+        tone_dictionary = Analyzer.get_emotion("I am a test", mock_tone)
+        self.assertEquals(len(tone_dictionary), 8)
+        self.assertEqual(tone_dictionary['anger'], 10)
+        self.assertEqual(tone_dictionary['disgust'], 20)
+        self.assertEqual(tone_dictionary['fear'], 30)
+        self.assertEqual(tone_dictionary['joy'], 40)
+        self.assertEqual(tone_dictionary['sadness'], 50)
+        self.assertEqual(tone_dictionary['confident'], 60)
