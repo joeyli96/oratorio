@@ -1,3 +1,5 @@
+/* This file needs official code review. */
+
 /**
  * the same jQuery shortcut, without having to import jQuery. Returns DOM
  * Elements that match the css selector.
