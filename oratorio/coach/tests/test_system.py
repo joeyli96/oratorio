@@ -58,9 +58,6 @@ class SystemTest(TestCase):
         client.cookies = cookie
         response = client.get('/result', secure=True)
         self.assertEqual(response.status_code, 400)
-        self.assertRegexpMatches(response.content,
-                                 'Invalid id token: that\'s a no no',
-                                 'Did not display error message')
 
 #    def test_result_user_not_exit(self):
 #        """Test if user does not exist scenario is handled"""
