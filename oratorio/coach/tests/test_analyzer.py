@@ -1,9 +1,71 @@
 from ..models import Speech, Recording, User
+from .. import analyzer
 from ..analyzer import Analyzer
 from django.test import TestCase
+from mock import Mock
+
 
 class AnalyzerTestCase(TestCase):
     """Tests for the Analyzer class in analyzer.py"""
+
+    # Tests for getting transcript
+    def test_get_transcript_json(self):
+        """Tests the get_transcript_json works correctly when IBM Watson's SpeechToText analyzer mocked out"""
+        mock_stt = Mock()
+        mock_stt.recognize = Mock(return_value={'results': "mock result"})
+        analyzer.SPEECH_TO_TEXT = mock_stt
+        self.assertEquals(Analyzer.get_transcript_json("dumy-file"), "mock result")
+
+    def test_clean_transcript(self):
+        """Test the clean_trabscript method"""
+        test_transcript = [
+            {
+                'alternatives': [
+                    {
+                        'timestamps': [
+                            [
+                                'this',
+                                0,
+                                1
+                            ],
+                            [
+                                'is',
+                                1,
+                                2
+                            ]
+                        ],
+                        'confidence': 0.664,
+                        'transcript': 'this is'
+                    }
+                ],
+                'final': True
+            },
+            {
+                'alternatives': [
+                    {
+                        'timestamps': [
+                            [
+                                'a',
+                                2,
+                                3
+                            ],
+                            [
+                                'test',
+                                3,
+                                4
+                            ]
+                        ],
+                        'confidence': 0.664,
+                        'transcript': 'a test'
+                    }
+                ],
+                'final': True
+            }
+        ]
+        self.assertEquals(Analyzer.clean_transcript(test_transcript), [
+            ('this is', [['this', 0, 1], ['is', 1, 2]], 0.664),
+            ('a test', [['a', 2, 3], ['test', 3, 4]], 0.664)
+        ])
 
     def setup(self):
         """Sets up the database for the analyzer"""
@@ -19,7 +81,8 @@ class AnalyzerTestCase(TestCase):
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("Hiss ab Hiss Ix Hiss", [("Hiss", 0, 1), ("ab", 1, 2), ("Hiss", 2, 3), ("Ix", 3, 4), ("Hiss", 4, 5)], 0.92),
+            (
+            "Hiss ab Hiss Ix Hiss", [("Hiss", 0, 1), ("ab", 1, 2), ("Hiss", 2, 3), ("Ix", 3, 4), ("Hiss", 4, 5)], 0.92),
             ("Ix Ix Ix Hiss", [("Ix", 5, 6), ("Ix", 6, 7), ("Ix", 7, 8), ("Hiss", 8, 9)], 0.95),
             ("mam mam test", [("mam", 9, 10), ("mam", 10, 11), ("test", 12, 13)], 0.95),
             ("ab Hiss", [("ab", 13, 14), ("Hiss", 15, 16), ], 0.95),
@@ -40,7 +103,8 @@ class AnalyzerTestCase(TestCase):
         self.setup()
         speech = Speech.objects.get(name="Speech1")
         recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("Hiss ab Hiss Ix Hiss", [("Hiss", 0, 1), ("ab", 1, 2), ("Hiss", 2, 3), ("Ix", 3, 4), ("Hiss", 4, 5)], 0.92),
+            (
+            "Hiss ab Hiss Ix Hiss", [("Hiss", 0, 1), ("ab", 1, 2), ("Hiss", 2, 3), ("Ix", 3, 4), ("Hiss", 4, 5)], 0.92),
         ])
         frequent_words = Analyzer.get_word_frequency(recording.get_transcript_text(), 5)
         self.assertEquals(len(frequent_words), 3)
@@ -52,17 +116,13 @@ class AnalyzerTestCase(TestCase):
         """tests that the stop words are not counted and do not effect the counting of other words"""
         self.setup()
         speech = Speech.objects.get(name="Speech1")
-        recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("I am his her", [("I", 0, 1), ("am", 1, 2), ("his", 2, 3), ("her", 3, 4)], 0.92),
-        ])
+        recording = Recording.create(speech, "dummy/dir", transcript=[])
         frequent_words = Analyzer.get_word_frequency(recording.get_transcript_text(), 5)
         self.assertEquals(frequent_words, [])
-        recording = Recording.create(speech, "dummy/dir", transcript=[
-            ("I am his xyz", [("I", 0, 1), ("am", 1, 2), ("his", 2, 3), ("xyz", 3, 4)], 0.92),
-        ])
-        frequent_words = Analyzer.get_word_frequency(recording.get_transcript_text(), 5)
-        self.assertEquals(len(frequent_words), 1)
-        self.assertEquals(frequent_words[0], ("xyz", 1))
+
+    def test_get_frequency_empty_transcript(self):
+        self.setup()
+        speech = Speech.objects.get(name="Speech1")
 
     # The following tests, test the analysis of pauses in a speech.
     # The threshold for a pause in our system is 1.5 (ie if a pause >= 1.5s it is counted as a pause)
@@ -139,4 +199,3 @@ class AnalyzerTestCase(TestCase):
         # assert that the sentence is sufficiently joyful :)
         self.assertGreater(tone_dictionary["joy"], 80)
         self.assertLess(tone_dictionary["sadness"], 20)
-

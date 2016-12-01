@@ -131,7 +131,9 @@ class Recording(models.Model):
     def create(speech, audio_dir, transcript=None):
         # Optional transcript used for testing
         if transcript is None and audio_dir != "dummy/dir":
-            json_transcript = Analyzer.get_transcript_json(audio_dir)
+            audio_file = open(audio_dir, "rb")
+            json_transcript = Analyzer.get_transcript_json(audio_file)
+            print json.dumps(json_transcript, indent=2)
             transcript = Analyzer.clean_transcript(json_transcript)
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,
@@ -186,6 +188,7 @@ class Recording(models.Model):
         return last_word_end_timestamps - first_sentence_start_timestamp
     
     def get_avg_pace(self):
+        """Gets the average pace of the speech words/min"""
         rec_len = self.get_recording_length()
         if rec_len != 0:
             res = 60 * self.get_word_count() / rec_len
@@ -194,6 +197,7 @@ class Recording(models.Model):
         return round(res, 2)
 
     def get_tone(self):
+        """Gets the dominant tone ie the tone with the highest value"""
         tones = {
             'joy': self.joy,
             'sadness': self.sadness,
@@ -209,4 +213,5 @@ class Recording(models.Model):
         return res
     
     def get_transcript(self):
+        """Returns the json transcript stored in the database as a dictionary"""
         return json.loads(self.json_transcript)
