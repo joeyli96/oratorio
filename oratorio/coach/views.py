@@ -10,6 +10,7 @@ from .models import User, Speech, Recording
 from .analyzer import Analyzer
 import json
 from .utils import verify_id_token, get_context
+from oauth2client import crypt
 
 # This class contains view functions that take a Web request
 # and returns a Web response. This can be the HTML contents
@@ -21,9 +22,10 @@ def login(request):
         return redirect('index')
 
     token = request.COOKIES['id_token']
-    idinfo = verify_id_token(token)
-    if not idinfo:
-        return HttpResponseBadRequest()
+    try:
+        idinfo = verify_id_token(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
 
     user = User.objects.filter(email=idinfo["email"])
     if not user:
@@ -48,9 +50,10 @@ def upload(request):
 
     try:
         token = request.COOKIES['id_token']
-        idinfo = verify_id_token(token)
-        if not idinfo:
-            return HttpResponseBadRequest()
+        try:
+            idinfo = verify_id_token(token)
+        except crypt.AppIdentityError as e:
+            return HttpResponseBadRequest(e)
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -80,7 +83,10 @@ def index(request):
         token = request.COOKIES['id_token']
     except KeyError:
         return HttpResponse(template.render({}, request))
-    context = get_context(token)
+    try:
+        context = get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
     if not context:
         return HttpResponseBadRequest("Invalid id token: that's a no no")
     return HttpResponse(template.render(context, request))
@@ -91,7 +97,10 @@ def profile(request):
 
     try:
         token = request.COOKIES['id_token']
-        idinfo = verify_id_token(token)
+        try:
+            idinfo = verify_id_token(token)
+        except crypt.AppIdentityError as e:
+            return HttpResponseBadRequest(e)
         if not idinfo:
             return HttpResponse("-1")
         users = User.objects.filter(email=idinfo['email'])
@@ -101,7 +110,10 @@ def profile(request):
             return redirect('index')
     except KeyError:
         return redirect('index')
-    context = get_context(token)
+    try:
+        context = get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
     context['user'] = user
     context['tones'] = user.get_avg_tone()
     return HttpResponse(template.render(context, request))
@@ -115,9 +127,10 @@ def result(request):
         return redirect('index')
 
     # If the id_token is invalid, return error
-    idinfo = verify_id_token(token)
-    if not idinfo:
-        return HttpResponseBadRequest("Invalid id token: that's a no no")
+    try:
+        idinfo = verify_id_token(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
 
     # If the user doesn't exist in the database, return error
     users = User.objects.filter(email=idinfo['email'])
@@ -142,7 +155,10 @@ def result(request):
     rec = valid_recs[0]
 
     # Populate context with sidebar data, transcript text and avg pace
-    context = get_context(token)
+    try:
+        context = get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
     context['transcript'] = rec.get_transcript_text()
     context['pace'] = rec.get_avg_pace()
     context['pauses'] = rec.pauses
@@ -162,5 +178,8 @@ def userdocs(request):
         token = request.COOKIES['id_token']
     except KeyError:
         return HttpResponse(template.render({}, request))
-    context = get_context(token)
+    try:
+        context = get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
     return HttpResponse(template.render(context, request))
