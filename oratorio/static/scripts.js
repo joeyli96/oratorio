@@ -477,9 +477,9 @@ function resize(e) {
 function onSignIn(googleUser) {
     profile = googleUser.getBasicProfile();
     //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
+//    console.log('Name: ' + profile.getName());
     //console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
+//    console.log('Email: ' + profile.getEmail());
     var id_token = googleUser.getAuthResponse().id_token;
     //console.log('ID Token: ' + id_token);
 
@@ -514,4 +514,19 @@ function onSignIn(googleUser) {
         };
     xhr.send('idtoken=' + id_token);
     */
+}
+
+function slide(item) {
+    point = item.slider.children[0];
+    point.style.position = "relative";
+    width = item.slider.offsetWidth - point.offsetWidth;
+    console.log("width" + width);
+    console.log("total" + item.total);
+    if(item.value >= item.total) {
+        translation = width;
+    } else {
+        translation = item.value * width/ item.total;
+    }
+    console.log("translation" + translation);
+    point.style.left = point.style.left + translation + "px";
 }
