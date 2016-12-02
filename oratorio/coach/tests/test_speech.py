@@ -2,10 +2,10 @@ from django.test import TestCase
 from ..models import Recording, User, Speech
 
 class SpeechTestCase(TestCase):
-    """Tests for the Recording class in models.py"""
+    """Tests for the Speech class in models.py"""
 
     def setup(self):
-        """Sets up the database for the with a user"""
+        """Sets up test database with a user with one speech with two recordings"""
         user = User(name="TestUser", email="test@test.test")
         user.save()
         audio_dir = "dummy/dir"
