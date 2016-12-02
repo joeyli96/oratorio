@@ -38,45 +38,42 @@ Download the latest release version of oratorio from Releases.
 
 Or clone this repository to obtain the latest development version of oratorio.
 
+### Setup
+
+Firstly, set up your secret_settings.py:
+
+- Go to oratorio/coach/ and locate file named "secret_settings.py.template"
+- Create a copy of it named "secret_settings.py"
+- Fill in the fields in the template
+
+Each field in secret_settings.py is explained in the following table:
+
+| Field                              | Explanation                                                                                                                 |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `SECRET_KEY`                       | Django uses this key for cryptographic signing. To test locally, set to any unique, unpredictable value.                    |
+| `ALLOWED_HOSTS`                    | Used to create a list of IP addresses / domains where this code can be hosted. This field is optional when testing locally. |
+| `SPEECH_TO_TEXT_USER_NAME`         | Username for IBM Watson Sppech to Text App.                                                                                 |
+| `SPEECH_TO_TEXT_PASSWORD`          | Password for IBM Watson Speech to Text App.                                                                                 |
+| `TONE_ANALYZER_USER_NAME`          | Username for IBM Watson Sppech to Tone Analyzer App.                                                                        |
+| `TONE_ANALYZER_PASSWORD`           | Password for IBM Watson Speech to Tone Analyzer App.                                                                        |
+| `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET` | Key used for Google login, contact us for credentials.                                                                      |
+
+Then, set up your database with
+
+`python manage.py makemigrations coach && python manage.py migrate coach`
+
 ### Usage
 
-Firstly, set up your database with
-
-`python manage.py makemigrations && python manage.py migrate`
-
-You will also need to set up secret_settings.py to test locally:
-*Go to oratorio/coach/ and locate file named "secret_settings.py.template"
-*Rename file to "secret_settings.py"
-*Fill in the fields
-
-SECRET_KEY: Django uses this key for crpytographic signing. To test locally, set to any unique, unpredictable value.
-
-ALLOWED_HOSTS: Used to create a list of IP addresses / domains where this code can be hosted. This field is optional when testing locally.
-
-(Used for speech-to-text API, please contact us for credential or to create your own -
- - Create a Bluemix server by signing up for bluemix
- - When logged in to Bluemix add Watson Speech to Text Application
- - When logged in to Bluemix add Watson Tone Analyzer)
-SPEECH_TO_TEXT_USER_NAME: Username for IBM Watson Sppech to Text App
-SPEECH_TO_TEXT_PASSWORD: Password for IBM Watson Speech to Text App
-
-TONE_ANALYZER_USER_NAME: Username for IBM Watson Sppech to Tone Analyzer App
-TONE_ANALYZER_PASSWORD: Password for IBM Watson Speech to Tone Analyzer App
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: Key used for Google login, contact us for credentials
-
-Then you can run a development server on 127.0.0.1:8000 with
+You can run a development server on localhost on port 8000 with
 
 `python manage.py runserver`
 
-You can also run the test suite with
+You can also run the test suite and get a coverage report with
 
-`python manage.py test`
-
-
-### Deploy to production
-
-Detailed instructions forthcoming.
+```
+coverage run --source=coach.models,coach.analyzer,coach.views ./manage.py test
+coverage report
+``` 
 
 ### Directory structure
 

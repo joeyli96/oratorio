@@ -29,10 +29,10 @@ class Analyzer:
     get the transcript and BeyondVerbal to get the tone of the speech, counts the frequently used words and pauses"""
 
     @staticmethod
-    def get_transcript_json(audio_dir):
+    def get_transcript_json(audio_file, speech_to_text=None):
         """This method calls the IBM Watson's speech API and returns the json that this produces"""
-        speech_to_text = SpeechToTextV1(username=SPEECH_TO_TEXT_USER_NAME, password=SPEECH_TO_TEXT_PASSWORD)
-        audio_file = open(audio_dir, "rb")
+        if speech_to_text is None:
+            speech_to_text = SpeechToTextV1(username=SPEECH_TO_TEXT_USER_NAME, password=SPEECH_TO_TEXT_PASSWORD)
         # This is the call to IBM Watson's Speech to Text API
         # By default IBM Watson's Speech To Text API stops transcribing at the first long pause, setting continuous to
         # true overrides this behaviour. Setting time stamps to true gets the start and end time of each word
@@ -50,6 +50,20 @@ class Analyzer:
             # finalSentence is the sentence with the highest confidence
             # Watson is set up so that this is always the first alternative
             final_sentence = sentence["alternatives"][0]
+
+            # Strip out the %HESITATION words from the data that Watson returns
+            found_hesitation = False
+            for word in final_sentence["timestamps"]:
+                if word[0].startswith("%"):
+                    final_sentence["timestamps"].remove(word)
+                    found_hesitation = True
+            # If a %HESITATION was found, rebuild the full sentence ignoring the %HESITATION
+            if found_hesitation:
+                sentence_transcript = ""
+                for word in final_sentence["timestamps"][:-1]:
+                    sentence_transcript += word[0] + " "
+                sentence_transcript += final_sentence["timestamps"][-1][0]
+                final_sentence["transcript"] = sentence_transcript
 
             transcript.append((final_sentence["transcript"], final_sentence["timestamps"],
                                final_sentence["confidence"]))
@@ -69,8 +83,9 @@ class Analyzer:
         return word_frequencies.most_common(k)
 
     @staticmethod
-    def get_emotion(transcript_text):
-        tone_analyzer = ToneAnalyzerV3(username=TONE_ANALYZER_USER_NAME, password=TONE_ANALYZER_PASSWORD, version='2016-02-11')
+    def get_emotion(transcript_text, tone_analyzer=None):
+        if tone_analyzer is None:
+            tone_analyzer = ToneAnalyzerV3(username=TONE_ANALYZER_USER_NAME, password=TONE_ANALYZER_PASSWORD, version='2016-02-11')
         result = tone_analyzer.tone(text=transcript_text)["document_tone"]["tone_categories"]
         emotion_tone_result = result[0]["tones"]
         writing_tone_result = result[1]["tones"]

@@ -10,6 +10,8 @@ from .models import User, Speech, Recording
 from .analyzer import Analyzer
 import re
 from .utils import verify_id_token, get_context
+import utils
+from oauth2client import crypt
 
 # This class contains view functions that take a Web request
 # and returns a Web response. This can be the HTML contents
@@ -21,9 +23,10 @@ def login(request):
         return redirect('index')
 
     token = request.COOKIES['id_token']
-    idinfo = verify_id_token(token)
-    if not idinfo:
-        return HttpResponseBadRequest()
+    try:
+        idinfo = utils.verify_id_token(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
 
     user = User.objects.filter(email=idinfo["email"])
     if not user:
@@ -48,9 +51,10 @@ def upload(request):
 
     try:
         token = request.COOKIES['id_token']
-        idinfo = verify_id_token(token)
-        if not idinfo:
-            return HttpResponseBadRequest()
+        try:
+            idinfo = utils.verify_id_token(token)
+        except crypt.AppIdentityError as e:
+            return HttpResponseBadRequest(e)
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -66,10 +70,10 @@ def upload(request):
         recording = Recording.create(
             audio_dir=uploaded_file_url, speech=speech)
         recording.save()
-    except:
+    except Exception as e:
         # Delete empty speech if anything goes wrong
         speech.delete()
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest(e)
     return HttpResponse(str(recording.id))
 
 
@@ -80,9 +84,10 @@ def index(request):
         token = request.COOKIES['id_token']
     except KeyError:
         return HttpResponse(template.render({}, request))
-    context = get_context(token)
-    if not context:
-        return HttpResponseBadRequest("Invalid id token: that's a no no")
+    try:
+        context = utils.get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
     return HttpResponse(template.render(context, request))
 
 
@@ -91,9 +96,10 @@ def profile(request):
 
     try:
         token = request.COOKIES['id_token']
-        idinfo = verify_id_token(token)
-        if not idinfo:
-            return HttpResponse("-1")
+        try:
+            idinfo = utils.verify_id_token(token)
+        except crypt.AppIdentityError as e:
+            return HttpResponseBadRequest(e)
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -101,7 +107,10 @@ def profile(request):
             return redirect('index')
     except KeyError:
         return redirect('index')
-    context = get_context(token)
+    try:
+        context = utils.get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
     context['user'] = user
     context['tones'] = user.get_avg_tone()
     return HttpResponse(template.render(context, request))
@@ -115,9 +124,10 @@ def result(request):
         return redirect('index')
 
     # If the id_token is invalid, return error
-    idinfo = verify_id_token(token)
-    if not idinfo:
-        return HttpResponseBadRequest("Invalid id token: that's a no no")
+    try:
+        idinfo = utils.verify_id_token(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
 
     # If the user doesn't exist in the database, return error
     users = User.objects.filter(email=idinfo['email'])
@@ -143,6 +153,11 @@ def result(request):
 
     # Populate context with sidebar data, transcript text and avg pace
     context = get_context(token)
+    try:
+        context = utils.get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
+
     transcript = "".join(rec.get_transcript_text())
     context['transcript'] = transcript
     context['pace'] = rec.get_avg_pace()
@@ -177,5 +192,8 @@ def userdocs(request):
         token = request.COOKIES['id_token']
     except KeyError:
         return HttpResponse(template.render({}, request))
-    context = get_context(token)
+    try:
+        context = utils.get_context(token)
+    except crypt.AppIdentityError as e:
+        return HttpResponseBadRequest(e)
     return HttpResponse(template.render(context, request))
