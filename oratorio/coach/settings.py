@@ -92,9 +92,3 @@ COACH_ROOT = os.path.join(BASE_DIR, 'coach')
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=coach.analyzer,coach.models,coach.views',
-    '--cover-html'
-]
