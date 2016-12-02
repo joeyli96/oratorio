@@ -8,7 +8,8 @@ from django.core.files import File
 from tempfile import TemporaryFile
 from .models import User, Speech, Recording
 from .analyzer import Analyzer
-import json
+import re
+from .utils import verify_id_token, get_context
 import utils
 from oauth2client import crypt
 
@@ -151,17 +152,34 @@ def result(request):
     rec = valid_recs[0]
 
     # Populate context with sidebar data, transcript text and avg pace
+    context = get_context(token)
     try:
         context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
-    context['transcript'] = rec.get_transcript_text()
+
+    transcript = "".join(rec.get_transcript_text())
+    context['transcript'] = transcript
     context['pace'] = rec.get_avg_pace()
     context['pauses'] = rec.pauses
 
-    most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
+    analyzed_sentences = []
+    tone_analysis = rec.get_analysis()
+    for analysis_segment in tone_analysis:
+        print analysis_segment
+        analyzed_sentences.append((" ".join(transcript.split()[analysis_segment[0]:analysis_segment[1]]),
+                                  analysis_segment[2]['Group11'].encode('utf-8'),
+                                  analysis_segment[2]['Composite1'].encode('utf-8'),
+                                  analysis_segment[2]['Composite2'].encode('utf-8')))
+    context['analyzed_sentences'] = analyzed_sentences
 
-    context['most_frequent_words'] = most_frequent_words
+    most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
+    most_frequent_words_escaped = []
+    for word in most_frequent_words:
+        most_frequent_words_escaped.append(word + (re.escape(word[0]),))
+
+    context['most_frequent_words'] = most_frequent_words_escaped
+
     context['recording'] = rec
 
     template = loader.get_template('coach/results.html')

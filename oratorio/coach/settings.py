@@ -27,6 +27,7 @@ except ImportError:
         SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
         TONE_ANALYZER_USER_NAME = os.environ["TONE_ANALYZER_USER_NAME"]
         TONE_ANALYZER_PASSWORD = os.environ["TONE_ANALYZER_PASSWORD"]
+        EMOTION_API_KEY = os.environ["EMOTION_API_KEY"]
     except KeyError:
         print("Please create a secret_settings.py file following instructions from secret_settings.py.template")
 

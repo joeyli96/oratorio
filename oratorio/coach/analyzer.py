@@ -1,8 +1,11 @@
 from watson_developer_cloud import SpeechToTextV1, ToneAnalyzerV3
-from settings import SPEECH_TO_TEXT_USER_NAME, SPEECH_TO_TEXT_PASSWORD, COACH_ROOT, TONE_ANALYZER_USER_NAME, TONE_ANALYZER_PASSWORD
+from settings import SPEECH_TO_TEXT_USER_NAME, SPEECH_TO_TEXT_PASSWORD, EMOTION_API_KEY, TONE_ANALYZER_USER_NAME, TONE_ANALYZER_PASSWORD
 from collections import Counter
 from sets import Set
+import requests
+import json
 import re
+import os
 
 # A pause is considered a pause if it is longer than (THREDSHOLD)s
 THRESHOLD = 1.5
@@ -116,4 +119,66 @@ class Analyzer:
                 pause_list.append(0)
 
         return (pause_list, pauses)
+
+    @staticmethod
+    def get_tone_analysis_json(audio_dir):
+        url = "https://token.beyondverbal.com/token"
+        headers = {"Content-Type" : "multipart/form-data"}
+        data = {"apiKey" : EMOTION_API_KEY,
+                "grant_type" : "client_credentials"}
+        response = requests.get(url, headers=headers, data=data)
+        access_token = response.json()['access_token']
+        authorization = "Bearer " + access_token
+
+        url = "https://apiv3.beyondverbal.com/v3/recording/start"
+        headers = {"Authorization" : authorization}
+
+        data = {"dataFormat" : {"type": "WAV"},
+                "metadata" : {},
+                "displayLang" : "en-us"}
+
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        if (response.status_code == 200):
+            url = "https://apiv3.beyondverbal.com/v3/recording/" + response.json()['recordingId']
+            audio_file = open(audio_dir, "rb")
+            headers = {"Authorization" : authorization,
+                       'content-type': 'application/json'}
+            # data = {"Sample Data" : bytearray(audio_file.read())}
+            response = requests.post(url, headers=headers, data=audio_file)
+            analysis = response.json()['result'].get('analysisSegments')
+            return analysis
+        return []
+
+    @staticmethod
+    def clean_tone_analysis(tone_analysis, transcript):
+        if not tone_analysis:
+            return []
+        start_end_times = []
+        tone_analysis_result = []
+
+        for list in [item[1] for item in transcript]:
+            for item in list:
+                start_end_times.append(item[1:]) # we only want start and end times
+
+        for x in tone_analysis:
+            tone_map = {}
+            tone_map["Group11"] = x['analysis']['Mood']['Group11']['Primary']['Phrase']
+            tone_map["Composite1"] = x['analysis']['Mood']['Composite']['Primary']['Phrase']
+            tone_map["Composite2"] = x['analysis']['Mood']['Composite']['Secondary']['Phrase']
+            tone_map["Arousal"] = x['analysis']['Arousal']['Value']
+            tone_map["Valence"] = x['analysis']['Valence']['Value']
+            tone_map["Temper"] = x['analysis']['Temper']['Value']
+
+            start = float(x['offset']) / 1000
+            end = (float(x['offset']) + float(x['duration'])) / 1000
+
+            start_word = 0
+            for i in range(len(start_end_times) - 1):
+                if start_end_times[i][0] <= start <= start_end_times[i + 1][0]:
+                    start_word = i
+                if start_end_times[i][0] <= end <= start_end_times[i+1][0] or i == len(start_end_times) - 2:
+                    tone_analysis_result.append((start_word, i, tone_map))
+                    break
+
+        return tone_analysis_result
 
