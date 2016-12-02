@@ -163,9 +163,11 @@ def result(request):
     context['pace'] = rec.get_avg_pace()
     context['pauses'] = rec.pauses
 
-    most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
+    most_frequent_words = Analyzer.get_word_frequency(
+        rec.get_transcript_text(), 5)
 
     context['most_frequent_words'] = most_frequent_words
+    context['file_name'] = rec.audio_dir[(rec.audio_dir.find('/media')):]
     context['recording'] = rec
 
     template = loader.get_template('coach/results.html')
