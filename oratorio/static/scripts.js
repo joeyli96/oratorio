@@ -517,17 +517,25 @@ function onSignIn(googleUser) {
 }
 
 function slide(item) {
-//    console.log("Slider", item.slider);
+    //Item is a json object {value: number, total: number, slider: element}
     point = item.slider.children[0];
     point.style.position = "relative";
     width = item.slider.offsetWidth - point.offsetWidth;
-//    console.log("width" + width);
-//    console.log("total" + item.total);
     if(item.value >= item.total) {
         translation = width;
     } else {
         translation = item.value * width/ item.total;
     }
-//    console.log("translation" + translation);
     point.style.left = point.style.left + translation + "px";
+    hue = 0;
+    if(item.slider.getAttribute('id') == 'paceSlider') {
+        if(item.value > 1/2 * item.total) {
+            item.value = item.total - item.value;
+        }
+        hue = item.value/(item.total/2) * 120;
+    } else {
+        hue = item.value/item.total * 120;
+
+    }
+    item.slider.style.backgroundColor = "hsl(" + Math.round(hue) + ", 50%, 50%)";
 }

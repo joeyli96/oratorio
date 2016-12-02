@@ -6,9 +6,9 @@
       <span id="UserName">{{ user.name }}<span>
 		</div>
 		<div id="stats">
-          <h2><span>Pace: {{ user.get_avg_pace }}</span> (words per minute)</h2>
+          <h2><span>Pace: {{ user.get_avg_pace }}</span> <i>(words per minute)</i></h2>
 	        <div class = "slider pace" id="paceSlider"><div></div></div>
-          <h2><span>Pauses: {{ user.get_avg_pauses }}</span> (per minute)</h2>
+          <h2><span>Pauses: {{ user.get_avg_pauses }}</span> <i>(>= 1.5 seconds)</i></h2>
 	        <div class = "slider hesitations" id="hesitationsSlider"><div></div></div>
 	        <h2><span>General Tone:</span></h2>
 	        <div class="tones">
