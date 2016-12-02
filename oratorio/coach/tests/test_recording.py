@@ -63,7 +63,7 @@ class RecordingTestCase(TestCase):
         self.assertEquals(audio_length, 9)
 
     def test_get_avg_pace(self):
-        """Tests the get avg_pace method"""
+        """Tests the get_avg_pace method"""
         self.setup()
         audio_dir = "dummy/dir"
         speech = Speech.objects.get(name="Speech1")
