@@ -533,6 +533,9 @@ function slide(item) {
             item.value = item.total - item.value;
         }
         hue = item.value/(item.total/2) * 120;
+    } else if(item.slider.getAttribute('id') == 'hesitationsSlider') {
+        item.value = item.total - item.value;
+        hue = item.value/(item.total) * 120;
     } else {
         hue = item.value/item.total * 120;
 
