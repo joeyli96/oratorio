@@ -138,8 +138,9 @@ class Recording(models.Model):
             tone_analysis = Analyzer.clean_tone_analysis(json_tone_analysis, transcript)
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,
-                  json_transcript=json.dumps(transcript),
-                  json_tone_analysis=json.dumps(tone_analysis))
+                  json_transcript=json.dumps(transcript))
+        if tone_analysis:
+            recording.json_tone_analysis = json.dumps(tone_analysis)
         transcript_text = recording.get_transcript_text()
         if transcript_text:
             tone_dictionary = Analyzer.get_emotion(transcript_text)
@@ -154,6 +155,8 @@ class Recording(models.Model):
         return recording
 
     def get_analysis(self):
+        if not self.json_tone_analysis:
+            return {}
         return json.loads(self.json_tone_analysis)
 
     def __str__(self):

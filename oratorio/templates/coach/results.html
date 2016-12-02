@@ -6,7 +6,15 @@
 
 {% block body_block %}
   <div id="transcript">
-    <p>{{ transcript }}</p>
+    <p>
+        {% if analyzed_sentences %}
+          {% for sentence in analyzed_sentences %}
+            <span title="Emotion: {{ sentence.1 }} Phrase: {{ sentence.2 }}, {{ sentence.3 }}">{{ sentence.0 }}</span>
+          {% endfor %}
+        {% else %}
+          <span title="Insufficient data for meaningful analysis."> {{ transcript }} </span>
+        {% endif %}
+    </p>
   </div>
   <a href="/">
     <div id="recordAnother">
@@ -49,7 +57,7 @@
       <h2><span>Frequently Used Words:</span></h2>
       <div class="words">
         {% for word in most_frequent_words %}
-        <a href="javascript:wordFrequency('{{ word.0 }}')">
+           <a href="javascript:wordFrequency('{{ word.2 }}')">
           {{ word.0 }} : {{ word.1 }}
         </a>
         {% endfor %}

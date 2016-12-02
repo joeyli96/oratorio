@@ -1,5 +1,5 @@
 from watson_developer_cloud import SpeechToTextV1, ToneAnalyzerV3
-from settings import SPEECH_TO_TEXT_USER_NAME, SPEECH_TO_TEXT_PASSWORD, COACH_ROOT, TONE_ANALYZER_USER_NAME, TONE_ANALYZER_PASSWORD
+from settings import SPEECH_TO_TEXT_USER_NAME, SPEECH_TO_TEXT_PASSWORD, EMOTION_API_KEY, TONE_ANALYZER_USER_NAME, TONE_ANALYZER_PASSWORD
 from collections import Counter
 from sets import Set
 import requests
@@ -109,10 +109,9 @@ class Analyzer:
     def get_tone_analysis_json(audio_dir):
         url = "https://token.beyondverbal.com/token"
         headers = {"Content-Type" : "multipart/form-data"}
-        data = {"apiKey" : "b7c489bd-2ffa-4215-af80-9ed1b8a14fcb",
+        data = {"apiKey" : EMOTION_API_KEY,
                 "grant_type" : "client_credentials"}
         response = requests.get(url, headers=headers, data=data)
-        print response.text
         access_token = response.json()['access_token']
         authorization = "Bearer " + access_token
 
@@ -124,7 +123,6 @@ class Analyzer:
                 "displayLang" : "en-us"}
 
         response = requests.post(url, headers=headers, data=json.dumps(data))
-        print response.text
         if (response.status_code == 200):
             url = "https://apiv3.beyondverbal.com/v3/recording/" + response.json()['recordingId']
             audio_file = open(audio_dir, "rb")
@@ -132,35 +130,14 @@ class Analyzer:
                        'content-type': 'application/json'}
             # data = {"Sample Data" : bytearray(audio_file.read())}
             response = requests.post(url, headers=headers, data=audio_file)
-            print response.json()['result']
             analysis = response.json()['result'].get('analysisSegments')
             return analysis
-            # if analysis:
-            #     for x in analysis:
-            #         # Time period of each analysis
-            #         print 'Time: %.2f ~ %.2f' % (float(x['offset']) / 1000, (float(x['offset'])
-            #                                                                  + float(x['duration'])) / 1000)
-            #         print x['duration']
-            #         print x['analysis']['Mood']['Group11']['Primary']['Phrase']
-            #         print x['analysis']['Mood']['Composite']['Primary']['Phrase']
-            #         print x['analysis']['Mood']['Composite']['Secondary']['Phrase']
-            #
-            #         # Referenced from beyondverbal developer website
-            #         # Arousal is an output that measures a speaker's degree of energy ranging from tranquil,
-            #         # bored or sleepy to excited and highly energetic.
-            #         print x['analysis']['Arousal']['Value']
-            #
-            #         # Valence is an output which measures speaker's level of negativity / positivity
-            #         # Higher is positive, lower is negative, medium is neutral
-            #         print x['analysis']['Valence']['Value']
-            #
-            #         # Temper reflects a speaker's temperament or emotional state ranging from gloomy or depressive
-            #         # at the low-end, embracive and friendly in the mid-range, and confrontational or aggressive
-            #         # at the high-end of the scale.
-            #         print x['analysis']['Temper']['Value']
+        return []
 
     @staticmethod
     def clean_tone_analysis(tone_analysis, transcript):
+        if not tone_analysis:
+            return []
         start_end_times = []
         tone_analysis_result = []
 
@@ -177,11 +154,8 @@ class Analyzer:
             tone_map["Valence"] = x['analysis']['Valence']['Value']
             tone_map["Temper"] = x['analysis']['Temper']['Value']
 
-            print start_end_times
             start = float(x['offset']) / 1000
             end = (float(x['offset']) + float(x['duration'])) / 1000
-            print start
-            print end
 
             start_word = 0
             for i in range(len(start_end_times) - 1):
@@ -191,5 +165,5 @@ class Analyzer:
                     tone_analysis_result.append((start_word, i, tone_map))
                     break
 
-        print tone_analysis_result
+        return tone_analysis_result
 

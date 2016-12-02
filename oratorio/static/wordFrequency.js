@@ -27,11 +27,13 @@ var savedText = "";
 function wordFrequency(word) {
   saveAndRestore();
   $$("#transcript p").forEach(function(p) {
+    var cleanTranscript = p.innerHTML;
     var line = "";
-    var re = /\b/;
-    p.innerHTML.split(re).forEach(function(transWord) {
-      if (transWord.toLowerCase() == word.toLowerCase()) {
-        line += "<span>" + transWord + "</span> ";
+    cleanTranscript = cleanTranscript.trim();
+    var re = /\s+/;
+    cleanTranscript.split(re).forEach(function(transWord) {
+      if (transWord.replace(".", "").toLowerCase() == word.replace("\\", "").toLowerCase()) {
+        line += "<span id=\"highlight\">" + transWord + "</span> ";
       } else {
         line += transWord + " " ;
       }
