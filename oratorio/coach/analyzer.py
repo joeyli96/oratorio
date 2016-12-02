@@ -106,7 +106,7 @@ class Analyzer:
         return (pause_list, pauses)
 
     @staticmethod
-    def get_tone(audio_dir):
+    def get_tone_analysis_json(audio_dir):
         url = "https://token.beyondverbal.com/token"
         headers = {"Content-Type" : "multipart/form-data"}
         data = {"apiKey" : "b7c489bd-2ffa-4215-af80-9ed1b8a14fcb",
@@ -134,22 +134,62 @@ class Analyzer:
             response = requests.post(url, headers=headers, data=audio_file)
             print response.json()['result']
             analysis = response.json()['result'].get('analysisSegments')
-            if analysis:
-                for x in analysis:
-                    print x['offset']
-                    print x['duration']
-                    print x['analysis']['Mood']['Group11']['Primary']['Phrase']
-                    print x['analysis']['Mood']['Composite']['Primary']['Phrase']
+            return analysis
+            # if analysis:
+            #     for x in analysis:
+            #         # Time period of each analysis
+            #         print 'Time: %.2f ~ %.2f' % (float(x['offset']) / 1000, (float(x['offset'])
+            #                                                                  + float(x['duration'])) / 1000)
+            #         print x['duration']
+            #         print x['analysis']['Mood']['Group11']['Primary']['Phrase']
+            #         print x['analysis']['Mood']['Composite']['Primary']['Phrase']
+            #         print x['analysis']['Mood']['Composite']['Secondary']['Phrase']
+            #
+            #         # Referenced from beyondverbal developer website
+            #         # Arousal is an output that measures a speaker's degree of energy ranging from tranquil,
+            #         # bored or sleepy to excited and highly energetic.
+            #         print x['analysis']['Arousal']['Value']
+            #
+            #         # Valence is an output which measures speaker's level of negativity / positivity
+            #         # Higher is positive, lower is negative, medium is neutral
+            #         print x['analysis']['Valence']['Value']
+            #
+            #         # Temper reflects a speaker's temperament or emotional state ranging from gloomy or depressive
+            #         # at the low-end, embracive and friendly in the mid-range, and confrontational or aggressive
+            #         # at the high-end of the scale.
+            #         print x['analysis']['Temper']['Value']
 
-                    # Referenced from beyondverbal developer website
-                    # Arousal is an output that measures a speaker’s degree of energy ranging from tranquil,
-                    # bored or sleepy to excited and highly energetic.
-                    print x['analysis']['Arousal']['Value']
+    @staticmethod
+    def clean_tone_analysis(tone_analysis, transcript):
+        start_end_times = []
+        tone_analysis_result = []
 
-                    #Valence is an output which measures speaker’s level of negativity / positivity.
-                    print x['analysis']['Valence']['Value']
+        for list in [item[1] for item in transcript]:
+            for item in list:
+                start_end_times.append(item[1:]) # we only want start and end times
 
-                    #Temper reflects a speaker’s temperament or emotional state ranging from gloomy or depressive
-                    # at the low-end, embracive and friendly in the mid-range, and confrontational or aggressive
-                    # at the high-end of the scale.
-                    print x['analysis']['Temper']['Value']
+        for x in tone_analysis:
+            tone_map = {}
+            tone_map["Group11"] = x['analysis']['Mood']['Group11']['Primary']['Phrase']
+            tone_map["Composite1"] = x['analysis']['Mood']['Composite']['Primary']['Phrase']
+            tone_map["Composite2"] = x['analysis']['Mood']['Composite']['Secondary']['Phrase']
+            tone_map["Arousal"] = x['analysis']['Arousal']['Value']
+            tone_map["Valence"] = x['analysis']['Valence']['Value']
+            tone_map["Temper"] = x['analysis']['Temper']['Value']
+
+            print start_end_times
+            start = float(x['offset']) / 1000
+            end = (float(x['offset']) + float(x['duration'])) / 1000
+            print start
+            print end
+
+            start_word = 0
+            for i in range(len(start_end_times) - 1):
+                if start_end_times[i][0] <= start <= start_end_times[i + 1][0]:
+                    start_word = i
+                if start_end_times[i][0] <= end <= start_end_times[i+1][0] or i == len(start_end_times) - 2:
+                    tone_analysis_result.append((start_word, i, tone_map))
+                    break
+
+        print tone_analysis_result
+

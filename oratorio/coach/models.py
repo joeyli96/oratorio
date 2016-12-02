@@ -118,6 +118,7 @@ class Recording(models.Model):
     audio_dir = models.CharField(max_length=255)
     audio_length = models.IntegerField(default=0)
     json_transcript = models.TextField()
+    json_tone_analysis = models.TextField()
     pauses = models.IntegerField(default=0)
     disgust = models.IntegerField(default=0)
     joy = models.IntegerField(default=0)
@@ -133,10 +134,12 @@ class Recording(models.Model):
         if transcript is None and audio_dir != "dummy/dir":
             json_transcript = Analyzer.get_transcript_json(audio_dir)
             transcript = Analyzer.clean_transcript(json_transcript)
-            Analyzer.get_tone(audio_dir)
+            json_tone_analysis = Analyzer.get_tone_analysis_json(audio_dir)
+            tone_analysis = Analyzer.clean_tone_analysis(json_tone_analysis, transcript)
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,
-                  json_transcript=json.dumps(transcript))
+                  json_transcript=json.dumps(transcript),
+                  json_tone_analysis=json.dumps(tone_analysis))
         transcript_text = recording.get_transcript_text()
         if transcript_text:
             tone_dictionary = Analyzer.get_emotion(transcript_text)
@@ -149,6 +152,9 @@ class Recording(models.Model):
         pause_list, recording.pauses = Analyzer.get_pauses(transcript)
         recording.save()
         return recording
+
+    def get_analysis(self):
+        return json.loads(self.json_tone_analysis)
 
     def __str__(self):
         return "Recording " + str(self.id) + " from speech " + self.speech.name
