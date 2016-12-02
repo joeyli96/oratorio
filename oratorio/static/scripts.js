@@ -527,18 +527,21 @@ function slide(item) {
         translation = item.value * width/ item.total;
     }
     point.style.left = point.style.left + translation + "px";
+    //Set Hue of slider somewhere between green and red depending on the value
     hue = 0;
     if(item.slider.getAttribute('id') == 'paceSlider') {
+        //Pace slider is green when value is half of the total
         if(item.value > 1/2 * item.total) {
             item.value = item.total - item.value;
         }
         hue = item.value/(item.total/2) * 120;
     } else if(item.slider.getAttribute('id') == 'hesitationsSlider') {
+        //Hesitation slider is green when the value is zero and red when the value is the total
         item.value = item.total - item.value;
         hue = item.value/(item.total) * 120;
     } else {
+        //The other sliders are red when the value is zero and green when the value is the total
         hue = item.value/item.total * 120;
-
     }
     item.slider.style.backgroundColor = "hsl(" + Math.round(hue) + ", 50%, 50%)";
 }
