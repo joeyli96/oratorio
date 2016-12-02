@@ -2,7 +2,6 @@ from oauth2client import client, crypt
 from .settings import SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
 from .models import Speech, Recording
 
-
 def get_context(token):
     """Throws crypt.AppIdentityError if token is not valid"""
     idinfo = verify_id_token(token)

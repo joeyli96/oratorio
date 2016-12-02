@@ -9,7 +9,7 @@ from tempfile import TemporaryFile
 from .models import User, Speech, Recording
 from .analyzer import Analyzer
 import json
-from .utils import verify_id_token, get_context
+import utils
 from oauth2client import crypt
 
 # This class contains view functions that take a Web request
@@ -23,7 +23,7 @@ def login(request):
 
     token = request.COOKIES['id_token']
     try:
-        idinfo = verify_id_token(token)
+        idinfo = utils.verify_id_token(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
 
@@ -51,7 +51,7 @@ def upload(request):
     try:
         token = request.COOKIES['id_token']
         try:
-            idinfo = verify_id_token(token)
+            idinfo = utils.verify_id_token(token)
         except crypt.AppIdentityError as e:
             return HttpResponseBadRequest(e)
         users = User.objects.filter(email=idinfo['email'])
@@ -84,11 +84,9 @@ def index(request):
     except KeyError:
         return HttpResponse(template.render({}, request))
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
-    if not context:
-        return HttpResponseBadRequest("Invalid id token: that's a no no")
     return HttpResponse(template.render(context, request))
 
 
@@ -98,11 +96,9 @@ def profile(request):
     try:
         token = request.COOKIES['id_token']
         try:
-            idinfo = verify_id_token(token)
+            idinfo = utils.verify_id_token(token)
         except crypt.AppIdentityError as e:
             return HttpResponseBadRequest(e)
-        if not idinfo:
-            return HttpResponse("-1")
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -111,7 +107,7 @@ def profile(request):
     except KeyError:
         return redirect('index')
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
     context['user'] = user
@@ -128,7 +124,7 @@ def result(request):
 
     # If the id_token is invalid, return error
     try:
-        idinfo = verify_id_token(token)
+        idinfo = utils.verify_id_token(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
 
@@ -156,7 +152,7 @@ def result(request):
 
     # Populate context with sidebar data, transcript text and avg pace
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
     context['transcript'] = rec.get_transcript_text()
@@ -179,7 +175,7 @@ def userdocs(request):
     except KeyError:
         return HttpResponse(template.render({}, request))
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
     return HttpResponse(template.render(context, request))
