@@ -48,6 +48,20 @@ class Analyzer:
             # Watson is set up so that this is always the first alternative
             final_sentence = sentence["alternatives"][0]
 
+            # Strip out the %HESITATION words from the data that Watson returns
+            found_hesitation = False
+            for word in final_sentence["timestamps"]:
+                if word[0].startswith("%"):
+                    final_sentence["timestamps"].remove(word)
+                    found_hesitation = True
+            # If a %HESITATION was found, rebuild the full sentence ignoring the %HESITATION
+            if found_hesitation:
+                sentence_transcript = ""
+                for word in final_sentence["timestamps"][:-1]:
+                    sentence_transcript += word[0] + " "
+                sentence += final_sentence["timestamps"][-1][0]
+                final_sentence["transcript"] = sentence_transcript
+
             transcript.append((final_sentence["transcript"], final_sentence["timestamps"],
                                final_sentence["confidence"]))
         return transcript

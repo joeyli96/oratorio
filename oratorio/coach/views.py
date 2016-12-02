@@ -69,10 +69,10 @@ def upload(request):
         recording = Recording.create(
             audio_dir=uploaded_file_url, speech=speech)
         recording.save()
-    except:
+    except Exception as e:
         # Delete empty speech if anything goes wrong
         speech.delete()
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest(e)
     return HttpResponse(str(recording.id))
 
 
