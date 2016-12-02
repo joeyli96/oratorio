@@ -463,9 +463,12 @@ input:checked + .mirrorSlider:before {
   color: orange;
   font-weight: bold;
 }
+#transcript span {
+    background-color: rgba(179, 179, 179, 0.2);
+}
 
 #transcript span:hover {
-  background-color: #e5ffcc;
+  background-color: rgba(179, 179, 179, 0.5);
 }
 
 #statsContainer {
