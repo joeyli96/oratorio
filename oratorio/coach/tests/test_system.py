@@ -27,7 +27,7 @@ class SystemTest(TestCase):
         # first check that the client can load the index page
         response = client.get('/', secure=True)
         self.assertEqual(response.status_code, 200)
-        self.assertRegexpMatches(response.content, '<\!doctype html>',
+        self.assertIn('<!doctype html>', response.content,
                                  'index does not contain an html doctype.')
         # assuming style/behavior is correct (as its hard to test from
         # django as the site may change content)
@@ -38,8 +38,8 @@ class SystemTest(TestCase):
         client = self.get_client_with_token()
         response = client.get('/', secure=True)
         self.assertEqual(response.status_code, 200)
-        self.assertRegexpMatches(response.content, '<\!doctype html>',
-                                 'index does not contain an html doctype.')
+        self.assertIn('<!doctype html>', response.content, 
+                'index does not contain an html doctype.')
 
     def test_login(self):
         """Test login procedure"""
@@ -103,7 +103,7 @@ class SystemTest(TestCase):
         """Test if profile works while logged in"""
         self.setup_mock()
         client = self.get_client_with_token()
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+        user = User(name='Temp Temp', email='tempt3699@gmail.com')
         user.save()
         response = client.get('/profile', secure=True, follow=True)
         user.delete()
@@ -111,7 +111,7 @@ class SystemTest(TestCase):
         self.assertIn('<div id="ProfilePanel">', response.content)
 
     def test_result_not_logged_in(self):
-        """Test if result page redirects when user is not logged in"""
+        """Test if result page redirects to index when user is not logged in"""
         client = Client()
         response = client.get('/result?rid=0', secure=True, follow=True)
         self.assertEqual(response.status_code, 200)
@@ -119,13 +119,13 @@ class SystemTest(TestCase):
         index_response = client.get('/', secure=True)
         self.assertEqual(response.content, index_response.content)
 
-    def test_result_user_not_exit(self):
+    def test_result_user_not_exist(self):
         """Test if user does not exist scenario is handled"""
         self.setup_mock()
         client = self.get_client_with_token()
         response = client.get('/result?rid=0', secure=True)
         self.assertEqual(response.status_code, 400)
-        self.assertRegexpMatches(response.content,
+        self.assertEqual(response.content,
                                  'User does not exist: how did you get here?',
                                  'Did not display error message')
 
@@ -133,11 +133,11 @@ class SystemTest(TestCase):
         """Test if rid not provided scenario is handled"""
         self.setup_mock()
         client = self.get_client_with_token()
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+        user = User(name='Temp Temp', email='tempt3699@gmail.com')
         user.save()
         response = client.get('/result', secure=True)
         self.assertEqual(response.status_code, 400)
-        self.assertRegexpMatches(response.content,
+        self.assertEqual(response.content,
                                  'No ID was provided',
                                  'Did not display error message')
         user.delete()
@@ -146,11 +146,11 @@ class SystemTest(TestCase):
         """Test if user is not allowed to access other person's recording"""
         self.setup_mock()
         client = self.get_client_with_token()
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+        user = User(name='Temp Temp', email='tempt3699@gmail.com')
         user.save()
         response = client.get('/result?rid=100000', secure=True)
         self.assertEqual(response.status_code, 400)
-        self.assertRegexpMatches(response.content,
+        self.assertEqual(response.content,
                                  'Permission denied: how did you get here?',
                                  'Did not display error message')
         user.delete()
@@ -159,7 +159,7 @@ class SystemTest(TestCase):
         """Test if user can access one's own recording"""
         self.setup_mock()
         client = self.get_client_with_token()
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+        user = User(name='Temp Temp', email='tempt3699@gmail.com')
         user.save()
         speech = Speech(user=user, name="Speech1")
         speech.save()
@@ -171,20 +171,22 @@ class SystemTest(TestCase):
         id = recording.id
         response = client.get('/result?rid=' + str(id), secure=True)
         self.assertEqual(response.status_code, 200)
-        self.assertRegexpMatches(response.content, '<\!doctype html>',
+        self.assertIn('<!doctype html>', response.content,
                                 'result does not contain an html doctype.')
         user.delete()
 
     def test_userdocs_not_logged_in(self):
+        """Test if user can access userdocs even if not logged in"""
         client = Client()
         response = client.get("/userdocs", secure=True)
         self.assertEqual(response.status_code, 200)
         self.assertIn('Oratorio is a web-based speech coach. Practise your speech or presentation while recording with Oratorio, and it will provide you powerful feedback by analyzing your speech!', response.content)
 
     def test_userdocs_logged_in(self):
+        """Test if user can access userdocs when logged in, and that sidebar loads past speeches"""
         self.setup_mock()
         client = self.get_client_with_token()
-        user = User(name="Temp Temp", email="tempt3699@gmail.com")
+        user = User(name='Temp Temp', email='tempt3699@gmail.com')
         user.save()
         speech = Speech(user=user, name="Speech1")
         speech.save()
@@ -197,3 +199,4 @@ class SystemTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('<div class="menuItem">', response.content)
         self.assertIn('Oratorio is a web-based speech coach. Practise your speech or presentation while recording with Oratorio, and it will provide you powerful feedback by analyzing your speech!', response.content)
+        user.delete()
