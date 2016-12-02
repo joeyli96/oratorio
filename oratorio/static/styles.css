@@ -464,6 +464,10 @@ input:checked + .mirrorSlider:before {
   font-weight: bold;
 }
 
+span:hover {
+  background-color: #e5ffcc;
+}
+
 #statsContainer {
   display: inline-block;
   position: absolute;
