@@ -517,16 +517,17 @@ function onSignIn(googleUser) {
 }
 
 function slide(item) {
+//    console.log("Slider", item.slider);
     point = item.slider.children[0];
     point.style.position = "relative";
     width = item.slider.offsetWidth - point.offsetWidth;
-    console.log("width" + width);
-    console.log("total" + item.total);
+//    console.log("width" + width);
+//    console.log("total" + item.total);
     if(item.value >= item.total) {
         translation = width;
     } else {
         translation = item.value * width/ item.total;
     }
-    console.log("translation" + translation);
+//    console.log("translation" + translation);
     point.style.left = point.style.left + translation + "px";
 }

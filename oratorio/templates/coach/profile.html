@@ -40,7 +40,7 @@
 			<script>
 			sliders = [
 				{"value" : {{ user.get_avg_pace }}, "total" : 300, "slider" : document.getElementById("paceSlider")},
-				{"value" : {{ user.get_avg_pauses }}, "total" : 100, "slider" : document.getElementById("hesitationsSlider")},
+				{"value" : {{ user.get_avg_pauses }}, "total" : 10, "slider" : document.getElementById("hesitationsSlider")},
 				{"value" : {{ tones.joy }}, "total" : 100, "slider" : document.getElementById("joySlider")},
 				{"value" : {{ tones.sadness }}, "total" : 100, "slider" : document.getElementById("sadnessSlider")},
 				{"value" : {{ tones.fear }}, "total" : 100, "slider" : document.getElementById("fearSlider")},

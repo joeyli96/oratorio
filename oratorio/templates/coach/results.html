@@ -16,34 +16,35 @@
 
   <div id="statsContainer">
     <div id="stats">
-      <h2><span>Pace:</span> <i>(words per minute)</i> </br></br><b>{{ pace }}</b></h2>
-      <!--<div class = "slider pace"><div></div></div>-->
-      <h2><span>Pauses:</span> <i>(>= 1.5 seconds)</i> </br></br><b>{{ pauses }}</b></h2>
+      <h2><span>Pace: {{ pace }}</span> <i>(words per minute)</i></h2>
+      <div class = "slider pace" id="paceSlider"><div></div></div>
+      <h2><span>Pauses: {{ pauses }}</span> <i>(>= 1.5 seconds)</i></h2>
+      <div class = "slider hesitations" id="hesitationsSlider"><div></div></div>
       <h2><span>General Tone:</span></h2>
       <div class="tones">
         <div>
-          <h3>Joy</h3>
-          <b>{{ recording.joy }}%</b>
+          <h3>Joy: {{ recording.joy }}%</h3>
+          <div class = "slider" id="joySlider"><div></div></div>
         </div>
         <div>
-          <h3>Sadness</h3>
-          <b>{{ recording.sadness }}%</b>
+          <h3>Sadness: {{ recording.sadness }}%</h3>
+          <div class = "slider" id="sadnessSlider"><div></div></div>
         </div>
         <div>
-          <h3>Fear</h3>
-          <b>{{ recording.fear }}%</b>
+          <h3>Fear: {{ recording.fear }}%</h3>
+          <div class = "slider" id="fearSlider"><div></div></div>
         </div>
         <div>
-          <h3>Anger</h3>
-          <b>{{ recording.anger }}%</b>
+          <h3>Anger: {{ recording.anger }}%</h3>
+          <div class = "slider" id="angerSlider"><div></div></div>
         </div>
         <div>
-          <h3>Disgust</h3>
-          <b>{{ recording.disgust }}%</b>
+          <h3>Disgust: {{ recording.disgust }}%</h3>
+          <div class = "slider" id="disgustSlider"><div></div></div>
         </div>
         <div>
-          <h3>Confidence</h3>
-          <b>{{ recording.confident }}%</b>
+          <h3>Confidence: {{ recording.confident }}%</h3>
+          <div class = "slider" id="confidenceSlider"><div></div></div>
         </div>
       </div>
       <h2><span>Frequently Used Words:</span></h2>
@@ -55,5 +56,18 @@
         {% endfor %}
       </div>
     </div>
+    <script>
+	  sliders = [
+        {"value" : {{ pace }}, "total" : 300, "slider" : document.getElementById("paceSlider")},
+        {"value" : {{ pauses }}, "total" : 10, "slider" : document.getElementById("hesitationsSlider")},
+        {"value" : {{ recording.joy }}, "total" : 100, "slider" : document.getElementById("joySlider")},
+        {"value" : {{ recording.sadness }}, "total" : 100, "slider" : document.getElementById("sadnessSlider")},
+        {"value" : {{ recording.fear }}, "total" : 100, "slider" : document.getElementById("fearSlider")},
+        {"value" : {{ recording.anger }}, "total" : 100, "slider" : document.getElementById("angerSlider")},
+        {"value" : {{ recording.disgust }}, "total" : 100, "slider" : document.getElementById("disgustSlider")},
+        {"value" : {{ recording.confident }}, "total" : 100, "slider" : document.getElementById("confidenceSlider")}
+	  ];
+	  sliders.forEach(slide)
+	</script>
   </div>
 {% endblock %}
