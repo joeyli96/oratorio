@@ -131,6 +131,7 @@ class Recording(models.Model):
     @staticmethod
     def create(speech, audio_dir, transcript=None):
         # Optional transcript used for testing
+        tone_analysis = None
         if transcript is None and audio_dir != "dummy/dir":
             audio_file = open(audio_dir, "rb")
             json_transcript = Analyzer.get_transcript_json(audio_file)
