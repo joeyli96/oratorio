@@ -16,7 +16,7 @@ class AnalyzerTestCase(TestCase):
         self.assertEquals(Analyzer.get_transcript_json("dumy-file", mock_stt), "mock result")
 
     def test_clean_transcript(self):
-        """Test the clean_trabscript method"""
+        """Test the clean_transcript method"""
         test_transcript = [
             {
                 'alternatives': [
@@ -65,6 +65,63 @@ class AnalyzerTestCase(TestCase):
             ('this is', [['this', 0, 1], ['is', 1, 2]], 0.664),
             ('a test', [['a', 2, 3], ['test', 3, 4]], 0.664)
         ])
+
+    def test_clean_hesitations(self):
+        """Test the clean_transcript method"""
+        test_transcript = [
+            {
+                'alternatives': [
+                    {
+                        'timestamps': [
+                            [
+                                'this',
+                                0,
+                                1
+                            ],
+                            [
+                                'is',
+                                1,
+                                2
+                            ]
+                        ],
+                        'confidence': 0.664,
+                        'transcript': 'this is'
+                    }
+                ],
+                'final': True
+            },
+            {
+                'alternatives': [
+                    {
+                        'timestamps': [
+                            [
+                                '%HESITATION',
+                                2,
+                                3
+                            ],
+                            [
+                                'a',
+                                3,
+                                4
+                            ],
+                            [
+                                'test',
+                                4,
+                                5
+                            ]
+                        ],
+                        'confidence': 0.664,
+                        'transcript': '%HESITATION a test'
+                    }
+                ],
+                'final': True
+            }
+        ]
+        self.assertEquals(Analyzer.clean_transcript(test_transcript), [
+            ('this is', [['this', 0, 1], ['is', 1, 2]], 0.664),
+            ('a test', [['a', 3, 4], ['test', 4, 5]], 0.664)
+        ])
+
 
     def setup(self):
         """Sets up the database for the analyzer"""
@@ -210,3 +267,4 @@ class AnalyzerTestCase(TestCase):
         self.assertEqual(tone_dictionary['joy'], 40)
         self.assertEqual(tone_dictionary['sadness'], 50)
         self.assertEqual(tone_dictionary['confident'], 60)
+

@@ -59,7 +59,7 @@ class Analyzer:
                 sentence_transcript = ""
                 for word in final_sentence["timestamps"][:-1]:
                     sentence_transcript += word[0] + " "
-                sentence += final_sentence["timestamps"][-1][0]
+                sentence_transcript += final_sentence["timestamps"][-1][0]
                 final_sentence["transcript"] = sentence_transcript
 
             transcript.append((final_sentence["transcript"], final_sentence["timestamps"],
