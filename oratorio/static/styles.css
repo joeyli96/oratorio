@@ -464,7 +464,7 @@ input:checked + .mirrorSlider:before {
   font-weight: bold;
 }
 
-span:hover {
+#transcript span:hover {
   background-color: #e5ffcc;
 }
 
