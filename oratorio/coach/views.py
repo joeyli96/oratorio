@@ -87,8 +87,6 @@ def index(request):
         context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
-    if not context:
-        return HttpResponseBadRequest("Invalid id token: that's a no no")
     return HttpResponse(template.render(context, request))
 
 
@@ -101,8 +99,6 @@ def profile(request):
             idinfo = utils.verify_id_token(token)
         except crypt.AppIdentityError as e:
             return HttpResponseBadRequest(e)
-        if not idinfo:
-            return HttpResponse("-1")
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
