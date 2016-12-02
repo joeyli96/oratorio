@@ -53,20 +53,20 @@ window.addEventListener("load", function(){
  * @param {string} name the Name of the cookie
  * @return The value associated with name
  */
-function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+/*function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
-        return cookieValue;
     }
+    return cookieValue;
+}*/
 
 /**
  * uploads audio/wav data and spins until returned, displaying results
@@ -77,7 +77,7 @@ function upload(blob){
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'upload', true);
         //xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        var id_token = getCookie("id_token")
+        // var id_token = getCookie("id_token")
 
         xhr.onload = function () {
             if (xhr.status == 200) {
