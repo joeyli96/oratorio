@@ -48,13 +48,15 @@ Firstly, set up your secret_settings.py:
 
 Each field in secret_settings.py is explained in the following table:
 
+| Field                              | Explanation                                                                                                                 |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
 | `SECRET_KEY`                       | Django uses this key for cryptographic signing. To test locally, set to any unique, unpredictable value.                    |
-| `ALLOWED_HOSTS`                    | List of IP addresses where this code can be hosted. This field is optional when testing locally. |
-| `SPEECH_TO_TEXT_USER_NAME`         | Username for IBM Watson Speech to Text App.                                                                                 |
+| `ALLOWED_HOSTS`                    | Used to create a list of IP addresses / domains where this code can be hosted. This field is optional when testing locally. |
+| `SPEECH_TO_TEXT_USER_NAME`         | Username for IBM Watson Sppech to Text App.                                                                                 |
 | `SPEECH_TO_TEXT_PASSWORD`          | Password for IBM Watson Speech to Text App.                                                                                 |
 | `TONE_ANALYZER_USER_NAME`          | Username for IBM Watson Sppech to Tone Analyzer App.                                                                        |
 | `TONE_ANALYZER_PASSWORD`           | Password for IBM Watson Speech to Tone Analyzer App.                                                                        |
-| `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET` | Key used for Google login.                                                                      |
+| `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET` | Key used for Google login, contact us for credentials.                                                                      |
 
 Then, set up your database with
 
