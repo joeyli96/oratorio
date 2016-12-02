@@ -57,6 +57,7 @@ Each field in secret_settings.py is explained in the following table:
 | `TONE_ANALYZER_USER_NAME`          | Username for IBM Watson Sppech to Tone Analyzer App.                                                                        |
 | `TONE_ANALYZER_PASSWORD`           | Password for IBM Watson Speech to Tone Analyzer App.                                                                        |
 | `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET` | Key used for Google login, contact us for credentials.                                                                      |
+| `EMOTION_API_KEY`                  | Key used for Beyond Verbal analysis API                                                                                     |
 
 Then, set up your database with
 
