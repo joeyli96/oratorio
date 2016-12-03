@@ -56,8 +56,12 @@ function mainButtons() {
 
 function mirror() {
     var container = {};
+    var video = document.createElement("video");
+    video.id = "videoElement";
+    container.video = video;
     var mirror = document.createElement("div");
     mirror.id = "mirrorContainer";
+    mirror.appendChild(video);
     container.mirror = mirror;
     var swit = document.createElement("div");
     swit.classList.add("switch");
@@ -354,4 +358,115 @@ QUnit.test("hideButtons hides button", function(assert) {
     assert.ok(left.classList.contains("hide"));
     assert.ok(right.classList.contains("hide"));
     c.cleanUp();
+});
+
+QUnit.test("spinner makes a spinner", function(assert) {
+    clearAll("#spinner");
+    var s = createSpinner();
+    var t = document.getElementById("spinner");
+    assert.equal(t.id, "spinner");
+    assert.equal(t, s);
+    t.parentNode.removeChild(t);
+});
+
+QUnit.test("enableMirror ok", function(assert) {
+    var m = mirror();
+
+    var key = "" + Math.random();
+
+    window.URL.createObjectURL = function(obj) {
+        return key;
+    }
+
+    navigator.getUserMedia = function(type, resolve, refuse) {
+        assert.ok(type.video);
+        assert.notOk(type.audio);
+        var stream = {};
+
+        resolve(stream);
+        assert.ok(m.video.src.includes(key));
+    }
+
+    enableMirror();
+    m.cleanUp();
+});
+
+QUnit.test("enableMirror notOkay", function(assert) {
+    var m = mirror();
+
+    assert.expect(4);
+
+    showToast = function(msg) {
+        assert.ok("Showed error");
+    }
+
+    disableMirror = function() {
+        assert.ok("Disabled mirror!");
+    }
+
+    navigator.getUserMedia = function(type, resolve, refuse) {
+        assert.ok(type.video);
+        assert.notOk(type.audio);
+        refuse(null);
+    }
+
+    enableMirror();
+    m.cleanUp();
+});
+
+
+QUnit.test("disableMirror", function(assert) {
+    clearAll(".switch input");
+    var m = mirror();
+
+    m.mirror.style.display = "" + Math.random();
+
+    m.swh.checked = true;
+
+    assert.expect(3);
+
+    resize = function() {
+        assert.ok("resized");
+    }
+
+    localStream = {};
+
+    localStream.stop = function() {
+        assert.ok("stream stopped.");
+    }
+
+    disableMirror();
+
+    assert.equal(m.mirror.style.display, "none");
+
+    m.cleanUp();
+});
+
+QUnit.test("click Mirror Toggle", function(assert) {
+    clearAll(".switch input");
+    var m = mirror();
+
+    var toggle = $(".switch input");
+    toggle.checked = false;
+
+    var verify = "";
+
+    assert.expect(3);
+
+    disableMirror = function() {
+        assert.ok("disabled");
+        verify += "d";
+    }
+
+    enableMirror = function() {
+        assert.ok("enabled.");
+        verify += "e";
+    }
+
+    onClickMirrorToggle();
+    toggle.checked = true;
+    onClickMirrorToggle();
+    assert.equal(verify, "de");
+
+    m.cleanUp();
 });
