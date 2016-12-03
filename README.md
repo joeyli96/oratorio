@@ -38,45 +38,53 @@ Download the latest release version of oratorio from Releases.
 
 Or clone this repository to obtain the latest development version of oratorio.
 
+### Setup
+
+Firstly, set up your secret_settings.py:
+
+- Go to oratorio/coach/ and locate file named "secret_settings.py.template"
+- Create a copy of it named "secret_settings.py"
+- Fill in the fields in the template
+
+Each field in secret_settings.py is explained in the following table:
+
+| Field                              | Explanation                                                                                                                 |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `SECRET_KEY`                       | Django uses this key for cryptographic signing. To test locally, set to any unique, unpredictable value.                    |
+| `ALLOWED_HOSTS`                    | Used to create a list of IP addresses / domains where this code can be hosted. This field is optional when testing locally. |
+| `SPEECH_TO_TEXT_USER_NAME`         | Username for IBM Watson Sppech to Text App.                                                                                 |
+| `SPEECH_TO_TEXT_PASSWORD`          | Password for IBM Watson Speech to Text App.                                                                                 |
+| `TONE_ANALYZER_USER_NAME`          | Username for IBM Watson Sppech to Tone Analyzer App.                                                                        |
+| `TONE_ANALYZER_PASSWORD`           | Password for IBM Watson Speech to Tone Analyzer App.                                                                        |
+| `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET` | Key used for Google login, contact us for credentials.                                                                      |
+| `EMOTION_API_KEY`                  | Key used for Beyond Verbal analysis API                                                                                     |
+
+Then, set up your database with
+
+`python manage.py makemigrations coach && python manage.py migrate coach`
+
 ### Usage
 
-Firstly, set up your database with
-
-`python manage.py makemigrations && python manage.py migrate`
-
-You will also need to set up secret_settings.py to test locally:
-*Go to oratorio/coach/ and locate file named "secret_settings.py.template"
-*Rename file to "secret_settings.py"
-*Fill in the fields
-
-SECRET_KEY: Django uses this key for crpytographic signing. To test locally, set to any unique, unpredictable value.
-
-ALLOWED_HOSTS: Used to create a list of IP addresses / domains where this code can be hosted. This field is optional when testing locally.
-
-(Used for speech-to-text API, please contact us for credential or to create your own -
- - Create a Bluemix server by signing up for bluemix
- - When logged in to Bluemix add Watson Speech to Text Application
- - When logged in to Bluemix add Watson Tone Analyzer)
-SPEECH_TO_TEXT_USER_NAME: Username for IBM Watson Sppech to Text App
-SPEECH_TO_TEXT_PASSWORD: Password for IBM Watson Speech to Text App
-
-TONE_ANALYZER_USER_NAME: Username for IBM Watson Sppech to Tone Analyzer App
-TONE_ANALYZER_PASSWORD: Password for IBM Watson Speech to Tone Analyzer App
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: Key used for Google login, contact us for credentials
-
-Then you can run a development server on 127.0.0.1:8000 with
+You can run a development server on localhost on port 8000 with
 
 `python manage.py runserver`
 
-You can also run the test suite with
+You can also run the test suite and get a coverage report with
 
-`python manage.py test`
+```
+coverage run --source=coach.models,coach.analyzer,coach.views ./manage.py test
+coverage report
+``` 
 
+Client side tests and coverage can be accessed while the django server is running at
+[localhost:8000/static/client-tests.html](http://localhost:8000/static/client-tests.html?coverage)
 
-### Deploy to production
-
-Detailed instructions forthcoming.
+Additionally, [grunt](http://gruntjs.com/) can be used in the oratorio/ directory, running
+the same test suite. Grunt can be installed by
+```
+# in the oratorio/ directory
+npm install
+```
 
 ### Directory structure
 
@@ -110,25 +118,6 @@ Set up Travis CI by following [this](https://travis-ci.org/getting_started)
 starter's guide. We set up Travis to run our test suite every time a commit is
 pushed, and to notify team members via email and Slack when a test fails.
 
-### Coverage testing
-
-Django will automatically run coverage tests when you run its built in test suite:
-~~~
-# in the oratorio/ directory
-python manage.py test
-~~~
-Client side tests and coverage can be accessed while the django server is running at
-[localhost:8000/static/client-tests.html](http://localhost:8000/static/client-tests.html?coverage)
-
-Additionally, [grunt](http://gruntjs.com/) can be used in the oratorio/ directory, running
-the same test suite. Grunt can be installed by
-```
-# in the oratorio/ directory
-npm install
-```
-
-Current coverage rates are 48% backend, 31% frontend.
-
 ### Adding a new release version
 
 To release a new version, package the code in a tar file and create a new
@@ -152,6 +141,7 @@ Controller - The controller is our website interface. The user can interact with
 
 
 Null Object Pattern: This pattern is used to convey the absence of an object by using an object that doesn't do anything. An example of this would be the empty list.
+
 
 We use this pattern when we use IBM Watson to get the transcript of an audio in oratorio/coach/analyzer.py. If the person does not say anything, instead of passing None, we pass an empty list as the transcript. This prevents any exceptions from being thrown.
 

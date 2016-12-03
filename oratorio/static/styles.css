@@ -459,9 +459,16 @@ input:checked + .mirrorSlider:before {
   overflow-y: scroll;
 }
 
-#transcript span {
+#transcript #highlight {
   color: orange;
   font-weight: bold;
+}
+#transcript span {
+    background-color: rgba(179, 179, 179, 0.2);
+}
+
+#transcript span:hover {
+  background-color: rgba(179, 179, 179, 0.5);
 }
 
 #statsContainer {

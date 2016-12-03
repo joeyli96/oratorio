@@ -12,8 +12,9 @@ script:
   - npm install
   - python manage.py makemigrations coach
   - python manage.py migrate coach
-  - python manage.py test
   - grunt test --verbose --force
+  - coverage run --source=coach.models,coach.analyzer,coach.views ./manage.py test
+  - coverage report
 
 notifications:
   slack:

@@ -5,3 +5,4 @@ oratorio/coach/migrations
 oratorio/coach/secret_settings.py
 oratorio/node_modules
 oratorio/.coverage
+oratorio/cover

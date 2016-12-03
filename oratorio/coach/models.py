@@ -16,6 +16,47 @@ class User(models.Model):
     def __str__(self):
        return "User " + self.name + ", email " + self.email
 
+    def get_avg_pace(self):
+        "Return the average pace of all the speeches this user owns"
+        res = 0.0
+        speeches = Speech.objects.filter(user=self)
+        if speeches:
+            for speech in speeches:
+                res += speech.get_avg_pace()
+            res = round(res / len(speeches), 2)
+        return res
+    
+    def get_avg_tone(self):
+        "Return a dict where keys are types of emotions and values are the \
+        average values of those emotions for the user"
+        speeches = Speech.objects.filter(user=self)
+        res = { 'joy': 0.0, 'sadness': 0.0, 'anger': 0.0,
+                'fear': 0.0, 'disgust': 0.0, 'confident': 0.0 }
+        if speeches:
+            for speech in speeches:
+                avg_tone = speech.get_avg_tone()
+                res['joy'] += avg_tone['joy']
+                res['sadness'] += avg_tone['sadness']
+                res['anger'] += avg_tone['anger']
+                res['fear'] += avg_tone['fear']
+                res['disgust'] += avg_tone['disgust']
+                res['confident'] += avg_tone['confident']
+            res['joy'] = round(res['joy'] / len(speeches), 2)
+            res['sadness'] = round(res['sadness'] / len(speeches), 2)
+            res['anger'] = round(res['anger'] / len(speeches), 2)
+            res['fear'] = round(res['fear'] / len(speeches), 2)
+            res['disgust'] = round(res['disgust'] / len(speeches), 2)
+            res['confident'] = round(res['confident'] / len(speeches), 2)
+        return res
+
+    def get_avg_pauses(self):
+        speeches = Speech.objects.filter(user=self)
+        res = 0.0
+        if speeches:
+            for speech in speeches:
+                res += speech.get_avg_pauses()
+            res = round(res / len(speeches), 2)
+        return res
 
 class Speech(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -24,6 +65,47 @@ class Speech(models.Model):
     def __str__(self):
         return "Speech " + self.name + " by user " + self.user.name
 
+    def get_avg_pace(self):
+        "Return the average pace of all the recordings in this speech"
+        res = 0.0
+        recs = Recording.objects.filter(speech=self)
+        if recs:
+            for rec in recs:
+                res += rec.get_avg_pace()
+            res = round(res / len(recs), 2)
+        return res
+
+    def get_avg_tone(self):
+        "Return a dict where keys are types of emotions and values are the \
+        average values of those emotions for the speech"
+        recs = Recording.objects.filter(speech=self)
+        res = { 'joy': 0.0, 'sadness': 0.0, 'anger': 0.0,
+                'fear': 0.0, 'disgust': 0.0, 'confident': 0.0 }
+        if recs:
+            for rec in recs:
+                res['joy'] += rec.joy
+                res['sadness'] += rec.sadness
+                res['anger'] += rec.anger
+                res['fear'] += rec.fear
+                res['disgust'] += rec.disgust
+                res['confident'] += rec.confident
+            res['joy'] = round(res['joy'] / len(recs), 2)
+            res['sadness'] = round(res['sadness'] / len(recs), 2)
+            res['anger'] = round(res['anger'] / len(recs), 2)
+            res['fear'] = round(res['fear'] / len(recs), 2)
+            res['disgust'] = round(res['disgust'] / len(recs), 2)
+            res['confident'] = round(res['confident'] / len(recs), 2)
+        return res
+
+    def get_avg_pauses(self):
+        recs = Recording.objects.filter(speech=self)
+        res = 0.0
+        if recs:
+            for rec in recs:
+                res += rec.pauses
+            res = round(res / len(recs), 2)
+        return res
+        
 
 class Recording(models.Model):
     """The Transcript class represents the transcript of a speech. It also records the start and end time for each word
@@ -36,7 +118,8 @@ class Recording(models.Model):
     audio_dir = models.CharField(max_length=255)
     audio_length = models.IntegerField(default=0)
     json_transcript = models.TextField()
-    hesitations = models.IntegerField(default=0)
+    json_tone_analysis = models.TextField()
+    pauses = models.IntegerField(default=0)
     disgust = models.IntegerField(default=0)
     joy = models.IntegerField(default=0)
     sadness = models.IntegerField(default=0)
@@ -48,12 +131,18 @@ class Recording(models.Model):
     @staticmethod
     def create(speech, audio_dir, transcript=None):
         # Optional transcript used for testing
+        tone_analysis = None
         if transcript is None and audio_dir != "dummy/dir":
-            json_transcript = Analyzer.get_transcript_json(audio_dir)
+            audio_file = open(audio_dir, "rb")
+            json_transcript = Analyzer.get_transcript_json(audio_file)
             transcript = Analyzer.clean_transcript(json_transcript)
+            json_tone_analysis = Analyzer.get_tone_analysis_json(audio_dir)
+            tone_analysis = Analyzer.clean_tone_analysis(json_tone_analysis, transcript)
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,
                   json_transcript=json.dumps(transcript))
+        if tone_analysis:
+            recording.json_tone_analysis = json.dumps(tone_analysis)
         transcript_text = recording.get_transcript_text()
         if transcript_text:
             tone_dictionary = Analyzer.get_emotion(transcript_text)
@@ -63,9 +152,14 @@ class Recording(models.Model):
             recording.anger = tone_dictionary["anger"]
             recording.fear = tone_dictionary["fear"]
             recording.confident = tone_dictionary["confident"]
-
+        pause_list, recording.pauses = Analyzer.get_pauses(transcript)
         recording.save()
         return recording
+
+    def get_analysis(self):
+        if not self.json_tone_analysis:
+            return {}
+        return json.loads(self.json_tone_analysis)
 
     def __str__(self):
         return "Recording " + str(self.id) + " from speech " + self.speech.name
@@ -104,6 +198,7 @@ class Recording(models.Model):
         return last_word_end_timestamps - first_sentence_start_timestamp
     
     def get_avg_pace(self):
+        """Gets the average pace of the speech words/min"""
         rec_len = self.get_recording_length()
         if rec_len != 0:
             res = 60 * self.get_word_count() / rec_len
@@ -112,11 +207,14 @@ class Recording(models.Model):
         return round(res, 2)
 
     def get_tone(self):
+        """Gets the dominant tone ie the tone with the highest value"""
         tones = {
             'joy': self.joy,
             'sadness': self.sadness,
             'anger': self.anger,
             'fear': self.fear,
+            'disgust' : self.disgust,
+            'confident' : self.confident
         }
         maxVal = float('-inf')
         res = None
@@ -127,4 +225,5 @@ class Recording(models.Model):
         return res
     
     def get_transcript(self):
+        """Returns the json transcript stored in the database as a dictionary"""
         return json.loads(self.json_transcript)

@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -28,6 +27,7 @@ except ImportError:
         SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
         TONE_ANALYZER_USER_NAME = os.environ["TONE_ANALYZER_USER_NAME"]
         TONE_ANALYZER_PASSWORD = os.environ["TONE_ANALYZER_PASSWORD"]
+        EMOTION_API_KEY = os.environ["EMOTION_API_KEY"]
     except KeyError:
         print("Please create a secret_settings.py file following instructions from secret_settings.py.template")
 
@@ -48,11 +48,11 @@ DEBUG = True
 ROOT_URLCONF = 'coach.urls'
 
 INSTALLED_APPS = [
+    'django_nose',
     'coach.apps.CoachConfig',
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django_nose',
     #'social.apps.django_app.default',
     #'django.contrib.contenttypes.models.ContentType',
 ]
@@ -93,8 +93,3 @@ COACH_ROOT = os.path.join(BASE_DIR, 'coach')
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=coach',
-]
