@@ -74,7 +74,10 @@ You can also run the test suite and get a coverage report with
 ```
 coverage run --source=coach.models,coach.analyzer,coach.views ./manage.py test
 coverage report
-``` 
+```
+
+Client side tests and coverage can be accessed while the django server is running at
+[localhost:8000/static/client-tests.html](http://localhost:8000/static/client-tests.html?coverage)
 
 ### Directory structure
 
@@ -92,7 +95,7 @@ oratorio/ - Project directory
     coach/
       devdocs.html - HTML code for the developer docs
       index.html - HTML code for the landing page with record button
-      profile.html  
+      profile.html
       results.html - HTML code to display transcript and analysis
   static/ - Images, css and other static files for the whole project
     scripts.js - Contains javascript for record button
@@ -130,7 +133,8 @@ View - The HTML pages located in oratorio/templates/coach/ as this is what is ac
 Controller - The controller is our website interface. The user can interact with the record button which sends data to the model to transcribe and analyze.
 
 
-Null Object Pattern: This pattern is used to convey the absence of an object by using an object that doesn't do anything. An example of this would be the empty list. 
+Null Object Pattern: This pattern is used to convey the absence of an object by using an object that doesn't do anything. An example of this would be the empty list.
+
 
 We use this pattern when we use IBM Watson to get the transcript of an audio in oratorio/coach/analyzer.py. If the person does not say anything, instead of passing None, we pass an empty list as the transcript. This prevents any exceptions from being thrown.
 
