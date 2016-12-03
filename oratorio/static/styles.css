@@ -592,3 +592,12 @@ input:checked + .mirrorSlider:before {
     vertical-align: center;
     margin: auto;
 }
+
+audio {
+    background-color: #cbcbcb;
+    margin-left: calc(50% - 275pt);
+    width: 350px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+}

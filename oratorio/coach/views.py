@@ -168,18 +168,22 @@ def result(request):
     for analysis_segment in tone_analysis:
         print analysis_segment
         analyzed_sentences.append((" ".join(transcript.split()[analysis_segment[0]:analysis_segment[1]]),
-                                  analysis_segment[2]['Group11'].encode('utf-8'),
-                                  analysis_segment[2]['Composite1'].encode('utf-8'),
-                                  analysis_segment[2]['Composite2'].encode('utf-8')))
+                                   analysis_segment[2][
+                                       'Group11'].encode('utf-8'),
+                                   analysis_segment[2][
+                                       'Composite1'].encode('utf-8'),
+                                   analysis_segment[2]['Composite2'].encode('utf-8')))
     context['analyzed_sentences'] = analyzed_sentences
 
-    most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
+    most_frequent_words = Analyzer.get_word_frequency(
+        rec.get_transcript_text(), 5)
     most_frequent_words_escaped = []
     for word in most_frequent_words:
         most_frequent_words_escaped.append(word + (re.escape(word[0]),))
 
     context['most_frequent_words'] = most_frequent_words_escaped
 
+    context['file_name'] = rec.audio_dir[(rec.audio_dir.find('media') - 1):]
     context['recording'] = rec
 
     template = loader.get_template('coach/results.html')
