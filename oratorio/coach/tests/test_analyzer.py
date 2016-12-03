@@ -299,3 +299,15 @@ class AnalyzerTestCase(TestCase):
 
     def test_clean_tone_analysis_empty(self):
         self.assertEquals(Analyzer.clean_tone_analysis([], "test transcript"), [])
+
+    def test_clean_tone_analysis(self):
+        test_result = [(0, 2, {'Group11': 'Sadness, Sorrow', 'Composite2': 'Dreams and fear of unfulfilled aspirations.', 'Arousal': '57.76', 'Composite1':'Fear under control. Possibly hidden despair.', 'Valence': '35.83', 'Temper': '22.81'})]
+        test_param = [{'duration': 13080, 'analysis': {'Mood': {'Group11': {'Primary': {'Phrase': 'Sadness, Sorrow'
+        }}, 'Composite': {'Primary': {'Phrase': 'Fear under control. Possibly hidden despair.'},
+                         'Secondary': {'Phrase': 'Dreams and fear of unfulfilled aspirations.'}}},
+                         'Arousal': {'Group': 'neutral', 'Value': '57.76'}, 'Valence': {'Group': 'neutral', 'Value': '35.83'}, 'Temper': {'Group': 'low', 'Value': '22.81',
+                         }}, 'offset': 786}]
+        transcript = [('this is a', [['this', 0, 2], ['is', 4, 6], ['a', 7, 10], ['test', 10, 13]], 0.664)]
+        result = Analyzer.clean_tone_analysis(test_param,transcript)
+        print result
+        self.assertEquals(result, test_result)
