@@ -2,7 +2,7 @@ from django.test import TestCase
 from ..models import Recording, User, Speech
 
 class RecordingTestCase(TestCase):
-    """Tests for the Recording class in model.py"""
+    """Tests for the Recording class in models.py"""
 
     def setup(self):
         """Sets up the database for the with a user and speech to which the recording is added"""
@@ -63,7 +63,7 @@ class RecordingTestCase(TestCase):
         self.assertEquals(audio_length, 9)
 
     def test_get_avg_pace(self):
-        """Tests the get avg_pace method"""
+        """Tests the get_avg_pace method"""
         self.setup()
         audio_dir = "dummy/dir"
         speech = Speech.objects.get(name="Speech1")
