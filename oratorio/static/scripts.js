@@ -79,23 +79,23 @@ function upload(blob){
         //xhr.setRequestHeader("X-CSRFToken", csrftoken);
         // var id_token = getCookie("id_token")
 
-        xhr.onload = function () {
+        xhr.addEventListener("load", function (e) {
+            var xhr = e.target;
             if (xhr.status == 200) {
               rec_id = parseInt(xhr.response);
               window.location = "result?rid=" + rec_id;
             } else {
               // An error occurred, return to index for now
-              // TODO: display error in some way to the user
-              window.location = "";
+              showToast("Failed to send recording.");
+              setTimeout( function() {window.location = "";}, 5000);
             }
-        };
+        });
 
         xhr.send(blob);
 
         //Displays the spinner and rotates
         hideButtons();
         var spinner = createSpinner();
-        rotate(spinner, 1, 1);
 }
 
 /**
@@ -183,15 +183,18 @@ function disableMirror() {
 /**
  * Shows a toast message defined in this page's html for 3 seconds.
  */
-function showToast() {
+function showToast(msg) {
     // Get the snackbar DIV
-    var x = document.getElementById("snackbar");
+    var toast = document.getElementById("snackbar");
+
+    if (msg && msg != "") 
+        toast.innerHTML = msg;
 
     // Add the "show" class to DIV
-    x.className = "show";
+    toast.classList.add("show");
 
     // After 3 seconds, remove the show class from DIV
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    setTimeout(function(){ toast.classList.remove("show") }, 3000);
 }
 
 /**
@@ -215,7 +218,7 @@ function onClickMirrorToggle() {
  * @param {number} speed the refresh rate of the spinner
  * @param {number} degrees the number of degrees to rotate the spinner
  */
-function rotate(elem, speed, degrees)
+/* function rotate(elem, speed, degrees)
 {
 	if(elem == null) {
 	    return;
@@ -236,7 +239,7 @@ function rotate(elem, speed, degrees)
 		degrees = 0;
 	}
 	looper = setTimeout(function() { rotate(elem, speed, degrees); },speed);
-}
+}/*
 
 // temporary
 var timeInterval = 60 * 60 * 1000;
