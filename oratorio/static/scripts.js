@@ -169,6 +169,8 @@ function hideButtons() {
     // mainButton.style.display = 'none';
     // leftButton.style.display = 'none';
     // rightButton.style.display = 'none';
+    var timer_display = document.getElementById("timer");
+    timer_display.style.display = 'none';
 }
 
 /**
