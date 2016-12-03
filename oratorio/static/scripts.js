@@ -412,9 +412,11 @@ function newRecorder() {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function(mediaStream) {
 		var r = new MediaStreamRecorder(mediaStream);
 		r.mimeType = 'audio/wav';
-		r.addEventListener("dataavailable", function(blob) {
+        // setting the recorder to upload on data, which only is called on stop.
+        // cannot use addEventListener, not supported.
+		r.ondataavailable = function(blob) {
 		    upload(blob);
-		});
+		};
 		resolve(r);
 		}).catch(function(err) {
 		reject(err);
@@ -427,7 +429,8 @@ function newRecorder() {
  */
 function resize(e) {
     var w = window.innerWidth;
-    if ($(".switch input").checked == true) {
+    var toggle = $(".switch input");
+    if (toggle && toggle.checked) {
         w /= 4;
     }
     var h = window.innerHeight;
@@ -447,7 +450,7 @@ function resize(e) {
         var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
         var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
         button.style.top = Math.round(heightMargin) + "px";
-        if ($(".switch input").checked == true) {
+        if (toggle && toggle.checked) {
             button.style.left = mirrorLeftMargin + "px";
         }
         else {
@@ -467,7 +470,7 @@ function resize(e) {
         var leftButton = $(".SideButton.left");
         var rightButton = $(".SideButton.right");
         var circleOffset = 0;
-        if ($(".switch input").checked == true) {
+        if (toggle && toggle.checked) {
             leftButton.style.left = mirrorLeftMargin - smallButtonScale + circleOffset + "px";
             rightButton.style.left = mirrorLeftMargin + buttonScale - circleOffset + "px";
         }
@@ -505,11 +508,13 @@ function onSignIn(googleUser) {
     xhr.open('POST', 'login', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    document.cookie = "id_token=" + id_token;
-    xhr.send();
-
-    if (id_token == -1) {
+    if (document.cookie.indexOf('id_token') == -1) {
+        document.cookie = "id_token=" + id_token;
+        xhr.send();
         location.reload();
+    } else {
+        document.cookie = "id_token=" + id_token;
+        xhr.send();
     }
 
     // This code is sends the user's token to our backend.
