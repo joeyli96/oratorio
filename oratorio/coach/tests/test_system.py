@@ -67,7 +67,7 @@ class SystemTest(TestCase):
                                  'we all look great. the end of the Republic has never looked better.',
                                  'Did not transcribe the audio correctly')
         user.delete()
-        
+
     def test_upload_not_logged_in(self):
         """Test uploading an audio and get transcript back"""
         client = Client()

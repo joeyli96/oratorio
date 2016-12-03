@@ -136,7 +136,7 @@ class Recording(models.Model):
             audio_file = open(audio_dir, "rb")
             json_transcript = Analyzer.get_transcript_json(audio_file)
             transcript = Analyzer.clean_transcript(json_transcript)
-            json_tone_analysis = Analyzer.get_tone_analysis_json(audio_dir)
+            json_tone_analysis = Analyzer.get_tone_analysis_json(audio_file)
             tone_analysis = Analyzer.clean_tone_analysis(json_tone_analysis, transcript)
         recording = Recording(speech=speech,
                   audio_dir=audio_dir,

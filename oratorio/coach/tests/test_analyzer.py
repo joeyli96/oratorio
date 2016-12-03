@@ -2,7 +2,8 @@ from ..models import Speech, Recording, User
 from .. import analyzer
 from ..analyzer import Analyzer
 from django.test import TestCase
-from mock import Mock
+from mock import Mock, MagicMock
+import requests
 
 class AnalyzerTestCase(TestCase):
     """Tests for the Analyzer class in analyzer.py"""
@@ -268,3 +269,33 @@ class AnalyzerTestCase(TestCase):
         self.assertEqual(tone_dictionary['sadness'], 50)
         self.assertEqual(tone_dictionary['confident'], 60)
 
+    def test_get_tone_analysis_json(self):
+        """Tests get_tone_analysis_json"""
+        mock_response = Mock()
+        mock_response.json = Mock(return_value={
+            "access_token" : "abc123",
+            "recordingId" : "123",
+            "result" : {"analysisSegments" : "test result"}
+        })
+        mock_response.status_code = 200
+        requests.post = MagicMock(return_value=mock_response)
+
+        result = Analyzer.get_tone_analysis_json("dummy-dir", mock_response)
+        self.assertEquals(result, "test result")
+
+    def test_get_tone_analysis_json_empty(self):
+        """Tests get_tone_analysis_json"""
+        mock_response = Mock()
+        mock_response.json = Mock(return_value={
+            "access_token": "abc123",
+            "recordingId": "123",
+            "result": {"analysisSegments": "test result"}
+        })
+        mock_response.status_code = 400
+        requests.post = MagicMock(return_value=mock_response)
+
+        result = Analyzer.get_tone_analysis_json("dummy-dir", mock_response)
+        self.assertEquals(result, [])
+
+    def test_clean_tone_analysis_empty(self):
+        self.assertEquals(Analyzer.clean_tone_analysis([], "test transcript"), [])
