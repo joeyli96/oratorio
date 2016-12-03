@@ -45,7 +45,7 @@ li a:hover {
 
 a[target="_blank"]:after {
     /*
-    Add a link to the "external" icon. Example below using the Wikipedia one (blue).    
+    Add a link to the "external" icon. Example below using the Wikipedia one (blue).
     content:url(http://upload.wikimedia.org/wikipedia/commons/6/64/Icon_External_Link.png); */
 }
 
@@ -320,7 +320,7 @@ input:checked + .mirrorSlider:before {
 #snackbar.show {
   visibility: visible; /* Show the snackbar */
 
-  /* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
   However, delay the fade out process for 2.5 seconds */
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -328,7 +328,7 @@ input:checked + .mirrorSlider:before {
 
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;} 
+  from {bottom: 0; opacity: 0;}
   to {bottom: 30px; opacity: 1;}
 }
 
@@ -338,7 +338,7 @@ input:checked + .mirrorSlider:before {
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;} 
+  from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
 
@@ -579,4 +579,16 @@ input:checked + .mirrorSlider:before {
     height: 30px;
     top: calc(50% - 15px);
     left: calc(50% - 15px);
+}
+
+#timer {
+    display:none;
+    width:190px;
+    height:50px;
+    line-height:50px;
+    font-size:50px;
+    font-family: 'Roboto Condensed';
+    text-align:center;
+    vertical-align: center;
+    margin: auto;
 }

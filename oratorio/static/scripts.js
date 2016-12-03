@@ -22,6 +22,11 @@ function $$(ele) {
 var recorder;
 /** The google profile of the user signed in */
 var profile;
+/** The timer object */
+var timer;
+
+/** a second in milliseconds */
+var SECOND = 1000;
 
 /**
  * The main function
@@ -45,6 +50,50 @@ window.addEventListener("load", function(){
     window.addEventListener("resize", resize);
     resize();
 });
+
+/**
+ * Creates a countup timer that can start, stop and reset
+ */
+function timer() {
+	var time = 0;
+	var running = false;
+	var interval_id;
+	// start the timer
+	this.start = function() {
+		// interval is 1 second
+		if(!running) {
+			running = true;
+			interval_id = setInterval(function() {
+				time++;
+				convertTime();
+			}, SECOND);
+		}
+	}
+	// stop/pause the timer
+	this.stop =  function() {
+		if(running) {
+			running = false;
+			clearInterval(interval_id);
+		}
+	}
+	// reset the timer
+	this.reset =  function() {
+		time = 0;
+		convertTime(time);
+	}
+	// convert seconds to time in hour/minute/second
+	function convertTime() {
+		var second = time % 60;
+		var minute = Math.floor(time / 60) % 60;
+		var hour = Math.floor(time / 3600) % 60;
+		second = (second < 10) ? '0'+second : second;
+		minute = (minute < 10) ? '0'+minute : minute;
+		hour = (hour < 10) ? '0'+hour : hour;
+		var display = hour + ':' + minute + ':' + second;
+		var timer_display = $("#timer");
+                timer_display.innerHTML = display;
+	}
+}
 
 /**
  * returns the value for the cookie named name
@@ -106,6 +155,8 @@ function hideButtons() {
     leftButton.style.display = 'none';
     var rightButton = document.getElementById("RightButton");
     rightButton.style.display = 'none';
+    var timer_display = document.getElementById("timer");
+    timer_display.style.display = 'none';
 }
 
 /**
@@ -135,11 +186,11 @@ function enableMirror() {
     var toggle = $(".switch input");
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-     
-    if (navigator.getUserMedia) {       
+
+    if (navigator.getUserMedia) {
         navigator.getUserMedia({video: true}, handleVideo, videoError);
     }
-     
+
     function handleVideo(stream) {
         // Successfully got the camera stream -- play it in a video on the page!
         video.src = window.URL.createObjectURL(stream);
@@ -151,7 +202,7 @@ function enableMirror() {
         mirrorEnabled = true;
         resize();
     }
-     
+
     function videoError(e) {
         // Usually occurs because the user denied camera permissions.
         showToast();
@@ -289,7 +340,7 @@ function onStop(button, left, right) {
 	left.classList.add("hide");
 	right.classList.add("hide");
 	// window.location = "result";
-    disableMirror(); 
+    disableMirror();
 }
 
 /**
@@ -312,23 +363,31 @@ function buttonToggle(e) {
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
 	var right = $(".SideButton.right");
+	var timer_display = $("#timer");
 	if (recorder == null) {
+		timer_display.style.display = 'block';
+		timer = new timer();
 		newRecorder().then(function(record) {
 		recorder = record;
+		timer.start();
 		recorder.start(timeInterval);
 		onStart(button, right);
 		});
 	} else {
 		switch (button.innerHTML) {
 			case "RECORD":
+				timer_display.style.display = 'block';
+				timer.start();
 				recorder.start(timeInterval);
 				onStart(button, right);
 				break;
 			case "STOP":
+				timer.stop()
 				recorder.stop();
 				onStop(button, left, right);
 				break;
 			case "RESUME":
+				timer.start()
 				recorder.resume();
 				onResume(button, left, right);
 				break;
@@ -343,8 +402,12 @@ function leftToggle(e) {
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
 	var right = $(".SideButton.right");
+        var timer_display = $("#timer");
 	if (recorder != null) {
 		newRecorder().then(function(record) {
+			timer.stop();
+			timer.reset();
+			timer_display.style.display = 'none';
 			recorder.stop();
 			recorder = record;
 		});
@@ -363,11 +426,13 @@ function rightToggle(e) {
 		switch (right.innerHTML) {
 			case "PAUSE":
 				recorder.pause();
+				timer.stop();
 				onPause(button, left, right);
 				break;
 			case "STOP":
 				recorder.resume();
 				recorder.stop();
+				timer.stop();
 				onStop(button, left, right);
 				break;
 		}
@@ -441,7 +506,7 @@ function resize(e) {
             button.style.left = mirrorLeftMargin + "px";
         }
         else {
-            button.style.left = Math.round(widthMargin) + "px";    
+            button.style.left = Math.round(widthMargin) + "px";
         }
 
         // secondary buttons
@@ -467,7 +532,7 @@ function resize(e) {
             rightButton.style.left = Math.round(
                 widthMargin  + buttonScale - circleOffset) + "px";
         }
-    }   
+    }
 }
 })();
 
