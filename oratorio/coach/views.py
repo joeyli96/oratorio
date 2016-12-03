@@ -167,7 +167,7 @@ def result(request):
         rec.get_transcript_text(), 5)
 
     context['most_frequent_words'] = most_frequent_words
-    context['file_name'] = rec.audio_dir[(rec.audio_dir.find('/media')):]
+    context['file_name'] = rec.audio_dir[(rec.audio_dir.find('media') - 1):]
     context['recording'] = rec
 
     template = loader.get_template('coach/results.html')
