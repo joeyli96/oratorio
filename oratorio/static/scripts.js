@@ -211,7 +211,7 @@ function showToast(msg) {
 function onClickMirrorToggle() {
     var toggle = $(".switch input");
 
-    if (toggle.checked == true) {
+    if (toggle.checked) {
         enableMirror();
     }
     else {
