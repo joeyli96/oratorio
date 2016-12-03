@@ -146,11 +146,11 @@ function enableMirror() {
     var toggle = $(".switch input");
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-     
-    if (navigator.getUserMedia) {       
+
+    if (navigator.getUserMedia) {
         navigator.getUserMedia({video: true}, handleVideo, videoError);
     }
-     
+
     function handleVideo(stream) {
         // Successfully got the camera stream -- play it in a video on the page!
         video.src = window.URL.createObjectURL(stream);
@@ -160,7 +160,7 @@ function enableMirror() {
 
         resize();
     }
-     
+
     function videoError(e) {
         // Usually occurs because the user denied camera permissions.
         showToast("You need to allow camera access to use the mirror.");
@@ -192,7 +192,7 @@ function showToast(msg) {
     // Get the snackbar DIV
     var toast = $("#snackbar");
 
-    if (msg && msg != "") 
+    if (msg && msg != "")
         toast.innerHTML = msg;
 
     // Add the "show" class to DIV
@@ -299,7 +299,7 @@ function onStop(button, left, right) {
 	left.classList.add("hide");
 	right.classList.add("hide");
 	// window.location = "result";
-    disableMirror(); 
+    disableMirror();
 }
 
 /**
@@ -451,7 +451,7 @@ function resize(e) {
             button.style.left = mirrorLeftMargin + "px";
         }
         else {
-            button.style.left = Math.round(widthMargin) + "px";    
+            button.style.left = Math.round(widthMargin) + "px";
         }
 
         // secondary buttons
@@ -477,7 +477,7 @@ function resize(e) {
             rightButton.style.left = Math.round(
                 widthMargin  + buttonScale - circleOffset) + "px";
         }
-    }   
+    }
 }
 })();
 
@@ -507,7 +507,10 @@ function onSignIn(googleUser) {
 
     document.cookie = "id_token=" + id_token;
     xhr.send();
-    location.reload();
+
+    if (id_token == -1) {
+        location.reload();
+    }
 
     // This code is sends the user's token to our backend.
     /*
