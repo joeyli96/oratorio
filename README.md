@@ -74,7 +74,7 @@ You can also run the test suite and get a coverage report with
 ```
 coverage run --source=coach.models,coach.analyzer,coach.views ./manage.py test
 coverage report
-``` 
+```
 
 Client side tests and coverage can be accessed while the django server is running at
 [localhost:8000/static/client-tests.html](http://localhost:8000/static/client-tests.html?coverage)

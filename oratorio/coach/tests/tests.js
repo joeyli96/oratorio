@@ -28,6 +28,8 @@ QUnit.test("recorder", function(assert) {
 });
 */
 
+// creates the elements necessary for some tests.
+
 function mainButtons() {
     var container = {};
     var main = document.createElement("div");
@@ -70,6 +72,12 @@ function mirror() {
         swit.parentNode.removeChild(swit);
     }
     return container;
+}
+
+function clearAll(ele) {
+    document.querySelectorAll(ele).forEach(function(ele) {
+        ele.parentNode.removeChild(ele);
+    });
 }
 
 /** EVENT TESTS */
@@ -170,7 +178,7 @@ QUnit.test("Main Button Toggle", function(assert) {
     var disableMirrorSave = disableMirror;
     disableMirror = function() {};
     assert.expect(4);
-    verify = "";
+    var verify = "";
     recorder.start = function() {
         assert.ok(true, "recorder started.");
         verify += "s";
@@ -206,6 +214,7 @@ QUnit.test("Sidebar resize", function(assert) {
 });
 
 QUnit.test("word frequency save", function(assert) {
+    clearAll("#transcript");
     var trans = document.createElement("div");
     trans.id = "transcript";
     document.body.appendChild(trans);
@@ -219,6 +228,7 @@ QUnit.test("word frequency save", function(assert) {
 });
 
 QUnit.test("word frequency isolates words", function(assert) {
+    clearAll("#transcript");
     var trans = document.createElement("div");
     trans.id = "transcript";
     var par = document.createElement("p");
@@ -227,7 +237,121 @@ QUnit.test("word frequency isolates words", function(assert) {
     document.body.appendChild(trans);
     $$ = function() {return [par]};
     wordFrequency("Batman");
-    re = /<span>batman<\/span>/;
+    var re = /\<span id\="highlight"\> ?batman ?\<\/span\>/;
     assert.ok(re.test(par.innerHTML), "Did not isolate and corner Batman.");
     trans.parentNode.removeChild(trans);
+});
+
+QUnit.test("upload hides button", function(assert) {
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
+    left.classList.remove("hide");
+    right.classList.remove("hide");
+
+    XMLHttpRequest = function() {
+        this.open = function(a, b, c) {
+        }
+        this.addEventListener = function(e, c) {
+        }
+        this.send = function(b) {
+        }
+    };
+
+    showToast = function(err) {
+        // do nothing.
+    }
+
+    upload(null);
+    assert.ok(main.classList.contains("hide"));
+    assert.ok(left.classList.contains("hide"));
+    assert.ok(right.classList.contains("hide"));
+    c.cleanUp();
+    var spinner = document.getElementById("spinner");
+    spinner.parentNode.removeChild(spinner);
+});
+
+QUnit.test("upload creates spinner", function(assert) {
+    var c = mainButtons();
+
+    showToast = function(err) {
+        // do nothing.
+    }
+
+    var spinner = document.getElementById("spinner");
+
+    assert.equal(spinner, null);
+
+
+    XMLHttpRequest = function() {
+        this.open = function(a, b, c) {
+        }
+        this.addEventListener = function(e, c) {
+        }
+        this.send = function(b) {
+        }
+    };
+
+    upload(null);
+
+
+
+    spinner = document.getElementById("spinner");
+
+    assert.notEqual(spinner, null);
+
+    spinner.parentNode.removeChild(spinner);
+    c.cleanUp();
+});
+
+QUnit.test("upload uploads", function(assert) {
+    var key = "" + Math.random();
+
+    showToast = function(err) {
+        // do nothing.
+    }
+
+    XMLHttpRequest = function() {
+        this.open = function(Param, url, async) {
+            assert.equal(Param, "POST");
+            assert.equal(url, "upload");
+            assert.equal(async, true);
+        }
+        this.addEventListener = function(event, callback) {
+            assert.equal(event.toLowerCase(), "load");
+        }
+        this.send = function(blob) {
+            assert.equal(blob, key);
+        }
+    }
+
+    var c = mainButtons();
+
+    upload(key);
+
+    var spinner = document.getElementById("spinner");
+    spinner.parentNode.removeChild(spinner);
+    c.cleanUp();
+});
+
+
+QUnit.test("hideButtons hides button", function(assert) {
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
+    left.classList.remove("hide");
+    right.classList.remove("hide");
+
+    showToast = function(err) {
+        // do nothing.
+    }
+
+    hideButtons();
+
+    assert.ok(main.classList.contains("hide"));
+    assert.ok(left.classList.contains("hide"));
+    assert.ok(right.classList.contains("hide"));
+    c.cleanUp();
 });
