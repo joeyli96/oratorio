@@ -8,8 +8,9 @@ from django.core.files import File
 from tempfile import TemporaryFile
 from .models import User, Speech, Recording
 from .analyzer import Analyzer
-import json
+import re
 from .utils import verify_id_token, get_context
+import utils
 from oauth2client import crypt
 
 # This class contains view functions that take a Web request
@@ -23,7 +24,7 @@ def login(request):
 
     token = request.COOKIES['id_token']
     try:
-        idinfo = verify_id_token(token)
+        idinfo = utils.verify_id_token(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
 
@@ -51,7 +52,7 @@ def upload(request):
     try:
         token = request.COOKIES['id_token']
         try:
-            idinfo = verify_id_token(token)
+            idinfo = utils.verify_id_token(token)
         except crypt.AppIdentityError as e:
             return HttpResponseBadRequest(e)
         users = User.objects.filter(email=idinfo['email'])
@@ -69,10 +70,10 @@ def upload(request):
         recording = Recording.create(
             audio_dir=uploaded_file_url, speech=speech)
         recording.save()
-    except:
+    except Exception as e:
         # Delete empty speech if anything goes wrong
         speech.delete()
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest(e)
     return HttpResponse(str(recording.id))
 
 
@@ -84,11 +85,9 @@ def index(request):
     except KeyError:
         return HttpResponse(template.render({}, request))
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
-    if not context:
-        return HttpResponseBadRequest("Invalid id token: that's a no no")
     return HttpResponse(template.render(context, request))
 
 
@@ -98,11 +97,9 @@ def profile(request):
     try:
         token = request.COOKIES['id_token']
         try:
-            idinfo = verify_id_token(token)
+            idinfo = utils.verify_id_token(token)
         except crypt.AppIdentityError as e:
             return HttpResponseBadRequest(e)
-        if not idinfo:
-            return HttpResponse("-1")
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -111,7 +108,7 @@ def profile(request):
     except KeyError:
         return redirect('index')
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
     context['user'] = user
@@ -128,7 +125,7 @@ def result(request):
 
     # If the id_token is invalid, return error
     try:
-        idinfo = verify_id_token(token)
+        idinfo = utils.verify_id_token(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
 
@@ -155,17 +152,38 @@ def result(request):
     rec = valid_recs[0]
 
     # Populate context with sidebar data, transcript text and avg pace
+    context = get_context(token)
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
-    context['transcript'] = rec.get_transcript_text()
+
+    transcript = "".join(rec.get_transcript_text())
+    context['transcript'] = transcript
     context['pace'] = rec.get_avg_pace()
     context['pauses'] = rec.pauses
 
-    most_frequent_words = Analyzer.get_word_frequency(rec.get_transcript_text(), 5)
+    analyzed_sentences = []
+    tone_analysis = rec.get_analysis()
+    for analysis_segment in tone_analysis:
+        print analysis_segment
+        analyzed_sentences.append((" ".join(transcript.split()[analysis_segment[0]:analysis_segment[1]]),
+                                   analysis_segment[2][
+                                       'Group11'].encode('utf-8'),
+                                   analysis_segment[2][
+                                       'Composite1'].encode('utf-8'),
+                                   analysis_segment[2]['Composite2'].encode('utf-8')))
+    context['analyzed_sentences'] = analyzed_sentences
 
-    context['most_frequent_words'] = most_frequent_words
+    most_frequent_words = Analyzer.get_word_frequency(
+        rec.get_transcript_text(), 5)
+    most_frequent_words_escaped = []
+    for word in most_frequent_words:
+        most_frequent_words_escaped.append(word + (re.escape(word[0]),))
+
+    context['most_frequent_words'] = most_frequent_words_escaped
+
+    context['file_name'] = rec.audio_dir[(rec.audio_dir.find('media') - 1):]
     context['recording'] = rec
 
     template = loader.get_template('coach/results.html')
@@ -179,7 +197,7 @@ def userdocs(request):
     except KeyError:
         return HttpResponse(template.render({}, request))
     try:
-        context = get_context(token)
+        context = utils.get_context(token)
     except crypt.AppIdentityError as e:
         return HttpResponseBadRequest(e)
     return HttpResponse(template.render(context, request))

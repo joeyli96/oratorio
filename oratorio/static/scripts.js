@@ -24,6 +24,11 @@ function $$(ele) {
 var recorder;
 /** The google profile of the user signed in */
 var profile;
+/** The timer object */
+var timer;
+
+/** a second in milliseconds */
+var SECOND = 1000;
 
 /** a second in milliseconds */
 var SECOND = 1000;
@@ -52,6 +57,50 @@ window.addEventListener("load", function(){
     window.addEventListener("resize", resize);
     resize();
 });
+
+/**
+ * Creates a countup timer that can start, stop and reset
+ */
+function timer() {
+	var time = 0;
+	var running = false;
+	var interval_id;
+	// start the timer
+	this.start = function() {
+		// interval is 1 second
+		if(!running) {
+			running = true;
+			interval_id = setInterval(function() {
+				time++;
+				convertTime();
+			}, SECOND);
+		}
+	}
+	// stop/pause the timer
+	this.stop =  function() {
+		if(running) {
+			running = false;
+			clearInterval(interval_id);
+		}
+	}
+	// reset the timer
+	this.reset =  function() {
+		time = 0;
+		convertTime(time);
+	}
+	// convert seconds to time in hour/minute/second
+	function convertTime() {
+		var second = time % 60;
+		var minute = Math.floor(time / 60) % 60;
+		var hour = Math.floor(time / 3600) % 60;
+		second = (second < 10) ? '0'+second : second;
+		minute = (minute < 10) ? '0'+minute : minute;
+		hour = (hour < 10) ? '0'+hour : hour;
+		var display = hour + ':' + minute + ':' + second;
+		var timer_display = $("#timer");
+                timer_display.innerHTML = display;
+	}
+}
 
 /**
  * returns the value for the cookie named name
@@ -118,6 +167,8 @@ function hideButtons() {
     // mainButton.style.display = 'none';
     // leftButton.style.display = 'none';
     // rightButton.style.display = 'none';
+    var timer_display = document.getElementById("timer");
+    timer_display.style.display = 'none';
 }
 
 /**
@@ -322,23 +373,31 @@ function buttonToggle(e) {
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
 	var right = $(".SideButton.right");
+	var timer_display = $("#timer");
 	if (recorder == null) {
+		timer_display.style.display = 'block';
+		timer = new timer();
 		newRecorder().then(function(record) {
 		recorder = record;
+		timer.start();
 		recorder.start(HOUR);
 		onStart(button, right);
 		});
 	} else {
 		switch (button.innerHTML) {
 			case "RECORD":
+				timer_display.style.display = 'block';
+				timer.start();
 				recorder.start(HOUR);
 				onStart(button, right);
 				break;
 			case "STOP":
+				timer.stop()
 				recorder.stop();
 				onStop(button, left, right);
 				break;
 			case "RESUME":
+				timer.start()
 				recorder.resume();
 				onResume(button, left, right);
 				break;
@@ -353,8 +412,12 @@ function leftToggle(e) {
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
 	var right = $(".SideButton.right");
+        var timer_display = $("#timer");
 	if (recorder != null) {
 		newRecorder().then(function(record) {
+			timer.stop();
+			timer.reset();
+			timer_display.style.display = 'none';
 			recorder.stop();
 			recorder = record;
 		});
@@ -373,11 +436,13 @@ function rightToggle(e) {
 		switch (right.innerHTML) {
 			case "PAUSE":
 				recorder.pause();
+				timer.stop();
 				onPause(button, left, right);
 				break;
 			case "STOP":
 				recorder.resume();
 				recorder.stop();
+				timer.stop();
 				onStop(button, left, right);
 				break;
 		}
@@ -490,9 +555,9 @@ function resize(e) {
 function onSignIn(googleUser) {
     profile = googleUser.getBasicProfile();
     //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
+//    console.log('Name: ' + profile.getName());
     //console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
+//    console.log('Email: ' + profile.getEmail());
     var id_token = googleUser.getAuthResponse().id_token;
     //console.log('ID Token: ' + id_token);
 
@@ -527,4 +592,34 @@ function onSignIn(googleUser) {
         };
     xhr.send('idtoken=' + id_token);
     */
+}
+
+function slide(item) {
+    //Item is a json object {value: number, total: number, slider: element}
+    point = item.slider.children[0];
+    point.style.position = "relative";
+    width = item.slider.offsetWidth - point.offsetWidth;
+    if(item.value >= item.total) {
+        translation = width;
+    } else {
+        translation = item.value * width/ item.total;
+    }
+    point.style.left = point.style.left + translation + "px";
+    //Set Hue of slider somewhere between green and red depending on the value
+    hue = 0;
+    if(item.slider.getAttribute('id') == 'paceSlider') {
+        //Pace slider is green when value is half of the total
+        if(item.value > 1/2 * item.total) {
+            item.value = item.total - item.value;
+        }
+        hue = item.value/(item.total/2) * 120;
+    } else if(item.slider.getAttribute('id') == 'hesitationsSlider') {
+        //Hesitation slider is green when the value is zero and red when the value is the total
+        item.value = item.total - item.value;
+        hue = item.value/(item.total) * 120;
+    } else {
+        //The other sliders are red when the value is zero and green when the value is the total
+        hue = item.value/item.total * 120;
+    }
+    item.slider.style.backgroundColor = "hsl(" + Math.round(hue) + ", 50%, 50%)";
 }
