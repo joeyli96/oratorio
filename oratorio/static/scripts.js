@@ -412,9 +412,9 @@ function newRecorder() {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function(mediaStream) {
 		var r = new MediaStreamRecorder(mediaStream);
 		r.mimeType = 'audio/wav';
-		r.ondataavailable = function(blob) {
+		r.addEventListener("dataavailable", function(blob) {
 		    upload(blob);
-		};
+		});
 		resolve(r);
 		}).catch(function(err) {
 		reject(err);
@@ -499,20 +499,15 @@ function onSignIn(googleUser) {
     var buttonLogout = $(".LogoutButton");
     buttonLogout.style.display = "block";
 
-    var userName = document.getElementById("UserName");
+    // var userName = $("#UserName");
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'login', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    if (document.cookie.indexOf('id_token') == -1) {
-        document.cookie = "id_token=" + id_token;
-        xhr.send();
-        location.reload();
-    } else {
-        document.cookie = "id_token=" + id_token;
-        xhr.send();
-    }
+    document.cookie = "id_token=" + id_token;
+    xhr.send();
+    location.reload();
 
     // This code is sends the user's token to our backend.
     /*
