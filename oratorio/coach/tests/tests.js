@@ -206,6 +206,79 @@ QUnit.test("Main Button Toggle", function(assert) {
     assert.equal(verify, "srx", "Didn't activate the functions in the desired order.");
 });
 
+QUnit.test("Left button toggle", function(assert) {
+    // spoof some elements
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
+
+    assert.expect(1);
+
+    onRestart = function(a, b, c) {
+        assert.ok("restart called.");
+    }
+
+    newRecorder = function() {
+        return new Promise(function(resolve, reject) {
+            reject();
+        });
+    }
+
+    leftToggle();
+
+    c.cleanUp();
+});
+
+QUnit.test("Right button toggle", function(assert) {
+    // spoof some elements
+    var c = mainButtons();
+    var main = c.main;
+    var left = c.left;
+    var right = c.right;
+
+    assert.expect(5);
+
+    var verify = "";
+
+    recorder = new function() {
+        this.pause = function() {
+            assert.ok("paused.");
+            verify += "p";
+        };
+        this.resume = function() {};
+        this.stop = function() {
+            assert.ok("stopped.");
+            verify += "s";
+        };
+    }
+
+    onPause = function(a, b, c) {
+        assert.ok("pause event.");
+        verify += "p";
+    }
+
+    onStop = function(a, b, c) {
+        assert.ok("stop event.");
+        verify += "s";
+    }
+
+    right.innerHTML = "PAUSE";
+
+    rightToggle();
+
+    right.innerHTML = "STOP";
+
+    rightToggle();
+
+    assert.equal(verify, "ppss");
+
+
+    recorder = null;
+
+    c.cleanUp();
+});
+
 QUnit.test("Sidebar resize", function(assert) {
     var sidebar = document.createElement("div");
     sidebar.id = "Sidebar";
@@ -416,10 +489,12 @@ QUnit.test("enableMirror notOkay", function(assert) {
 
 
 QUnit.test("disableMirror", function(assert) {
-    clearAll(".switch input");
+    clearAll(".switch");
     var m = mirror();
 
-    m.mirror.style.display = "" + Math.random();
+    var key = "" + Math.random();
+
+    m.mirror.style.display = key;
 
     m.swh.checked = true;
 
@@ -437,7 +512,7 @@ QUnit.test("disableMirror", function(assert) {
 
     disableMirror();
 
-    assert.equal(m.mirror.style.display, "none");
+    assert.notEqual(m.mirror.style.display, key);
 
     m.cleanUp();
 });
@@ -470,3 +545,22 @@ QUnit.test("click Mirror Toggle", function(assert) {
 
     m.cleanUp();
 });
+
+QUnit.test("showToast", function(assert) {
+    var toast = $("#snackbar");
+
+    toast.innerHTML = "";
+
+    var key = "" + Math.random();
+
+    showToast(key);
+
+    assert.equal(toast.innerHTML, key);
+    assert.ok(toast.classList.contains("show"));
+
+    setTimeout(function() {
+        assert.notOk(toast.classList.contains("show"));
+    }, 5500);
+
+});
+
