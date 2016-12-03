@@ -79,13 +79,6 @@ coverage report
 Client side tests and coverage can be accessed while the django server is running at
 [localhost:8000/static/client-tests.html](http://localhost:8000/static/client-tests.html?coverage)
 
-Additionally, [grunt](http://gruntjs.com/) can be used in the oratorio/ directory, running
-the same test suite. Grunt can be installed by
-```
-# in the oratorio/ directory
-npm install
-```
-
 ### Directory structure
 
 ~~~
