@@ -25,6 +25,9 @@ var profile;
 /** The timer object */
 var timer;
 
+/** a second in milliseconds */
+var SECOND = 1000;
+
 /**
  * The main function
  */
@@ -53,24 +56,23 @@ window.addEventListener("load", function(){
  */
 function timer() {
 	var time = 0;
-	var running = 0;
+	var running = false;
 	var interval_id;
 	// start the timer
 	this.start = function() {
 		// interval is 1 second
-		interval = 1000;
-		if(running == 0) {
-			running = 1;
+		if(!running) {
+			running = true;
 			interval_id = setInterval(function() {
 				time++;
 				convertTime();
-			}, interval);
+			}, SECOND);
 		}
 	}
 	// stop/pause the timer
 	this.stop =  function() {
-		if(running == 1) {
-			running = 0;
+		if(running) {
+			running = false;
 			clearInterval(interval_id);
 		}
 	}
