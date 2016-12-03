@@ -564,3 +564,23 @@ QUnit.test("showToast", function(assert) {
 
 });
 
+// logout cannot be easily tested.
+
+QUnit.test("newRecorder resolve", function(assert) {
+    var key = "" + Math.random();
+    var key2 = "" + Math.random();
+    assert.expect(0); // a real hacky way to get this to not complain.
+    navigator.mediaDevices.getUserMedia = function(blob) {
+        return new Promise(function(resolve, error) {
+            resolve(key);
+        });
+    };
+    MediaStreamRecorder = function(blob) {
+        assert.equal(blob, key);
+        this.key2 = key2;
+    };
+
+    newRecorder().then(function(test) {
+        assert.equal(test.key2, key2);
+    });
+});
