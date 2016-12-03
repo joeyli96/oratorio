@@ -25,6 +25,11 @@ var recorder;
 /** The google profile of the user signed in */
 var profile;
 
+/** a second in milliseconds */
+var SECOND = 1000;
+/** an hour in milliseconds */
+var HOUR = 60 * 60 * SECOND;
+
 /**
  * The main function
  */
@@ -87,7 +92,9 @@ function upload(blob){
             } else {
               // An error occurred, return to index for now
               showToast("Failed to send recording.");
-              setTimeout( function() {window.location = "";}, 5000);
+              setTimeout( function() {
+                  window.location = "";
+                }, 5 * SECOND);
             }
         });
 
@@ -102,12 +109,15 @@ function upload(blob){
  * hides the main 3 ui buttons
  */
 function hideButtons() {
-    var mainButton = document.getElementById("MainButton");
-    mainButton.style.display = 'none';
-    var leftButton = document.getElementById("LeftButton");
-    leftButton.style.display = 'none';
-    var rightButton = document.getElementById("RightButton");
-    rightButton.style.display = 'none';
+    var mainButton = $("#MainButton");
+    var leftButton = $(".SideButton.left");
+    var rightButton = $(".SideButton.right");
+    mainButton.classList.add("hide");
+    leftButton.classList.add("hide");
+    rightButton.classList.add("hide");
+    // mainButton.style.display = 'none';
+    // leftButton.style.display = 'none';
+    // rightButton.style.display = 'none';
 }
 
 /**
@@ -124,7 +134,6 @@ function createSpinner() {
 
 /* Keeps track of the stream object to stop webcam streaming. */
 var localStream;
-var mirrorEnabled = false;
 
 /**
  * Requests the user's permission to use camera, if not already attemptd,
@@ -132,8 +141,8 @@ var mirrorEnabled = false;
  * screen.
  */
 function enableMirror() {
-    var video = document.querySelector("#videoElement");
-    var mirror = document.getElementById("mirrorContainer");
+    var video = $("#videoElement");
+    var mirror = $("#mirrorContainer");
     var toggle = $(".switch input");
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
@@ -149,14 +158,12 @@ function enableMirror() {
         mirror.style.display = 'block';
         toggle.checked = true;
 
-        // Adjust the position and size of the "Record" button.
-        mirrorEnabled = true;
         resize();
     }
      
     function videoError(e) {
         // Usually occurs because the user denied camera permissions.
-        showToast();
+        showToast("You need to allow camera access to use the mirror.");
         disableMirror();
     }
 }
@@ -166,7 +173,7 @@ function enableMirror() {
  * the container for the mirror.
  */
 function disableMirror() {
-    var mirror = document.getElementById("mirrorContainer");
+    var mirror = $("#mirrorContainer");
     var toggle = $(".switch input");
 
     if (localStream != null)
@@ -175,8 +182,6 @@ function disableMirror() {
     mirror.style.display = 'none';
     toggle.checked = false;
 
-    // Adjust the position and size of the "Record" button.
-    mirrorEnabled = false;
     resize();
 }
 
@@ -185,7 +190,7 @@ function disableMirror() {
  */
 function showToast(msg) {
     // Get the snackbar DIV
-    var toast = document.getElementById("snackbar");
+    var toast = $("#snackbar");
 
     if (msg && msg != "") 
         toast.innerHTML = msg;
@@ -194,7 +199,9 @@ function showToast(msg) {
     toast.classList.add("show");
 
     // After 3 seconds, remove the show class from DIV
-    setTimeout(function(){ toast.classList.remove("show") }, 3000);
+    setTimeout(function() {
+        toast.classList.remove("show");
+    }, 3 * SECOND);
 }
 
 /**
@@ -239,10 +246,8 @@ function onClickMirrorToggle() {
 		degrees = 0;
 	}
 	looper = setTimeout(function() { rotate(elem, speed, degrees); },speed);
-}/*
+}*/
 
-// temporary
-var timeInterval = 60 * 60 * 1000;
 
 /**
  * event function for UI to start recording
@@ -320,13 +325,13 @@ function buttonToggle(e) {
 	if (recorder == null) {
 		newRecorder().then(function(record) {
 		recorder = record;
-		recorder.start(timeInterval);
+		recorder.start(HOUR);
 		onStart(button, right);
 		});
 	} else {
 		switch (button.innerHTML) {
 			case "RECORD":
-				recorder.start(timeInterval);
+				recorder.start(HOUR);
 				onStart(button, right);
 				break;
 			case "STOP":
@@ -422,7 +427,7 @@ function newRecorder() {
  */
 function resize(e) {
     var w = window.innerWidth;
-    if (mirrorEnabled == true) {
+    if ($(".switch input").checked == true) {
         w /= 4;
     }
     var h = window.innerHeight;
@@ -442,7 +447,7 @@ function resize(e) {
         var heightMargin = (h - buttonScale ) * (1 / 2 - 0.03);
         var widthMargin = (w - buttonScale ) * (1 / 2 - 0.03);
         button.style.top = Math.round(heightMargin) + "px";
-        if (mirrorEnabled == true) {
+        if ($(".switch input").checked == true) {
             button.style.left = mirrorLeftMargin + "px";
         }
         else {
@@ -462,7 +467,7 @@ function resize(e) {
         var leftButton = $(".SideButton.left");
         var rightButton = $(".SideButton.right");
         var circleOffset = 0;
-        if (mirrorEnabled == true) {
+        if ($(".switch input").checked == true) {
             leftButton.style.left = mirrorLeftMargin - smallButtonScale + circleOffset + "px";
             rightButton.style.left = mirrorLeftMargin + buttonScale - circleOffset + "px";
         }
