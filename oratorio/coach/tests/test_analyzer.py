@@ -2,7 +2,8 @@ from ..models import Speech, Recording, User
 from .. import analyzer
 from ..analyzer import Analyzer
 from django.test import TestCase
-from mock import Mock
+from mock import Mock, MagicMock
+import requests
 
 class AnalyzerTestCase(TestCase):
     """Tests for the Analyzer class in analyzer.py"""
@@ -268,3 +269,45 @@ class AnalyzerTestCase(TestCase):
         self.assertEqual(tone_dictionary['sadness'], 50)
         self.assertEqual(tone_dictionary['confident'], 60)
 
+    def test_get_tone_analysis_json(self):
+        """Tests get_tone_analysis_json"""
+        mock_response = Mock()
+        mock_response.json = Mock(return_value={
+            "access_token" : "abc123",
+            "recordingId" : "123",
+            "result" : {"analysisSegments" : "test result"}
+        })
+        mock_response.status_code = 200
+        requests.post = MagicMock(return_value=mock_response)
+
+        result = Analyzer.get_tone_analysis_json("dummy-dir", mock_response)
+        self.assertEquals(result, "test result")
+
+    def test_get_tone_analysis_json_empty(self):
+        """Tests get_tone_analysis_json"""
+        mock_response = Mock()
+        mock_response.json = Mock(return_value={
+            "access_token": "abc123",
+            "recordingId": "123",
+            "result": {"analysisSegments": "test result"}
+        })
+        mock_response.status_code = 400
+        requests.post = MagicMock(return_value=mock_response)
+
+        result = Analyzer.get_tone_analysis_json("dummy-dir", mock_response)
+        self.assertEquals(result, [])
+
+    def test_clean_tone_analysis_empty(self):
+        self.assertEquals(Analyzer.clean_tone_analysis([], "test transcript"), [])
+
+    def test_clean_tone_analysis(self):
+        test_result = [(0, 2, {'Group11': 'Sadness, Sorrow', 'Composite2': 'Dreams and fear of unfulfilled aspirations.', 'Arousal': '57.76', 'Composite1':'Fear under control. Possibly hidden despair.', 'Valence': '35.83', 'Temper': '22.81'})]
+        test_param = [{'duration': 13080, 'analysis': {'Mood': {'Group11': {'Primary': {'Phrase': 'Sadness, Sorrow'
+        }}, 'Composite': {'Primary': {'Phrase': 'Fear under control. Possibly hidden despair.'},
+                         'Secondary': {'Phrase': 'Dreams and fear of unfulfilled aspirations.'}}},
+                         'Arousal': {'Group': 'neutral', 'Value': '57.76'}, 'Valence': {'Group': 'neutral', 'Value': '35.83'}, 'Temper': {'Group': 'low', 'Value': '22.81',
+                         }}, 'offset': 786}]
+        transcript = [('this is a', [['this', 0, 2], ['is', 4, 6], ['a', 7, 10], ['test', 10, 13]], 0.664)]
+        result = Analyzer.clean_tone_analysis(test_param,transcript)
+        print result
+        self.assertEquals(result, test_result)
