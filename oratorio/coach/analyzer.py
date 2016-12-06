@@ -5,7 +5,7 @@ from sets import Set
 import requests
 import json
 import re
-import os
+import sys
 
 # A pause is considered a pause if it is longer than (THREDSHOLD)s
 THRESHOLD = 1.5
@@ -121,12 +121,13 @@ class Analyzer:
         return (pause_list, pauses)
 
     @staticmethod
-    def get_tone_analysis_json(audio_dir):
+    def get_tone_analysis_json(audio_file, response=None):
         url = "https://token.beyondverbal.com/token"
         headers = {"Content-Type" : "multipart/form-data"}
         data = {"apiKey" : EMOTION_API_KEY,
                 "grant_type" : "client_credentials"}
-        response = requests.get(url, headers=headers, data=data)
+        if response is None:
+            response = requests.get(url, headers=headers, data=data)
         access_token = response.json()['access_token']
         authorization = "Bearer " + access_token
 
@@ -140,7 +141,6 @@ class Analyzer:
         response = requests.post(url, headers=headers, data=json.dumps(data))
         if (response.status_code == 200):
             url = "https://apiv3.beyondverbal.com/v3/recording/" + response.json()['recordingId']
-            audio_file = open(audio_dir, "rb")
             headers = {"Authorization" : authorization,
                        'content-type': 'application/json'}
             # data = {"Sample Data" : bytearray(audio_file.read())}
@@ -151,6 +151,7 @@ class Analyzer:
 
     @staticmethod
     def clean_tone_analysis(tone_analysis, transcript):
+        print tone_analysis
         if not tone_analysis:
             return []
         start_end_times = []
@@ -179,6 +180,6 @@ class Analyzer:
                 if start_end_times[i][0] <= end <= start_end_times[i+1][0] or i == len(start_end_times) - 2:
                     tone_analysis_result.append((start_word, i, tone_map))
                     break
-
+        print tone_analysis_result
         return tone_analysis_result
 

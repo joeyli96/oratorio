@@ -1,0 +1,33 @@
+{
+  "name": "oratorio",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~1.0.0",
+    "grunt-contrib-qunit": "~1.2.0"
+  },
+  "description": "Webapp speech coach",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt-contrib-qunit": "^1.2.0"
+  },
+  "scripts": {
+    "test": "grunt test --verbose --force"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PotatoTank/oratorio.git"
+  },
+  "keywords": [
+    "oratorio",
+    "orator.io",
+    "speechcoach",
+    "speech",
+    "webapp"
+  ],
+  "author": "Team Gucci",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PotatoTank/oratorio/issues"
+  },
+  "homepage": "https://github.com/PotatoTank/oratorio#readme"
+}
