@@ -30,9 +30,6 @@ var interval = setInterval(update_token, 30000);
 
 /** a second in milliseconds */
 var SECOND = 1000;
-
-/** a second in milliseconds */
-var SECOND = 1000;
 /** an hour in milliseconds */
 var HOUR = 60 * 60 * SECOND;
 
