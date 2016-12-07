@@ -458,7 +458,7 @@ input:checked + .mirrorSlider:before {
   display: inline-block;
   color: black;
   font-size: 16pt;
-  width: calc(100% - 300pt);
+  width: calc(100% - 320pt);
   top: var(--sidebar-title-height);
   padding-left: 1em;
   padding-right: 1em;
