@@ -217,6 +217,10 @@ function enableMirror() {
         localStream = stream;
         mirror.style.display = 'block';
         toggle.checked = true;
+        
+        var label = $("#mirrorLabel");
+        // Change the color of the mirror label.
+        label.style.color = "#C63D0F";
 
         resize();
     }
@@ -242,6 +246,10 @@ function disableMirror() {
     mirror.style.display = 'none';
     toggle.checked = false;
 
+    var label = $("#mirrorLabel");
+    // Change the color of the mirror label.
+    label.style.color = "#ccc";
+    
     resize();
 }
 
