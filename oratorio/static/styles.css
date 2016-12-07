@@ -245,7 +245,7 @@ a[target="_blank"]:after {
 .switch {
   position: absolute;
   left: 50%;
-  margin-left: -45px;
+  margin-left: -20px;
   display: inline-block;
   width: 60px;
   height: 34px;
@@ -259,7 +259,10 @@ a[target="_blank"]:after {
 #mirrorLabel {
     text-align: center;
     position:relative;
-    top: -1.5em;
+    left: -75px;
+    top: -22px;
+    font-size: 25px;
+    color: #ccc;;
 }
 .mirrorSlider {
   position: absolute;

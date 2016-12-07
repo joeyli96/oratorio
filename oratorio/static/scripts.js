@@ -379,6 +379,11 @@ function onRestart(button, left, right) {
  * event function for when the main center button is clicked
  */
 function buttonToggle(e) {
+    if (profile == null) {
+        // User is not logged in.
+        showToast("You must log in first.");
+        return;
+    }
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
 	var right = $(".SideButton.right");
