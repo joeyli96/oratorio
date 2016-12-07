@@ -476,7 +476,7 @@ function logOut() {
     var buttonLogout = $(".LogoutButton");
     buttonLogout.style.display = "none";
 
-    
+
 
     document.cookie = "id_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;"
     location.reload();
@@ -559,8 +559,8 @@ function resize(e) {
             rightButton.style.left = Math.round(
                 widthMargin  + buttonScale - circleOffset) + "px";
         }
+        button.style.display = "inline-block";
     }
-    button.style.display = "inline-block";
 }
 
 /**
