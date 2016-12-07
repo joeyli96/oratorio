@@ -26,7 +26,7 @@ def login(request):
     try:
         idinfo = utils.verify_id_token(token)
     except crypt.AppIdentityError as e:
-        return HttpResponseBadRequest(e)
+        return redirect('error')
 
     user = User.objects.filter(email=idinfo["email"])
     if not user:
@@ -54,7 +54,7 @@ def upload(request):
         try:
             idinfo = utils.verify_id_token(token)
         except crypt.AppIdentityError as e:
-            return HttpResponseBadRequest(e)
+            return redirect('error')
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -73,7 +73,7 @@ def upload(request):
     except Exception as e:
         # Delete empty speech if anything goes wrong
         speech.delete()
-        return HttpResponseBadRequest(e)
+        return redirect('error')
     return HttpResponse(str(recording.id))
 
 
@@ -87,8 +87,13 @@ def index(request):
     try:
         context = utils.get_context(token)
     except crypt.AppIdentityError as e:
-        return HttpResponseBadRequest(e)
+        return redirect('error')
     return HttpResponse(template.render(context, request))
+
+
+def error(request):
+    template = loader.get_template('coach/error.html')
+    return HttpResponse(template.render({}, request))
 
 
 def profile(request):
@@ -99,7 +104,7 @@ def profile(request):
         try:
             idinfo = utils.verify_id_token(token)
         except crypt.AppIdentityError as e:
-            return HttpResponseBadRequest(e)
+            return redirect('error')
         users = User.objects.filter(email=idinfo['email'])
         if users:
             user = users[0]
@@ -110,7 +115,7 @@ def profile(request):
     try:
         context = utils.get_context(token)
     except crypt.AppIdentityError as e:
-        return HttpResponseBadRequest(e)
+        return redirect('error')
     context['user'] = user
     context['tones'] = user.get_avg_tone()
     return HttpResponse(template.render(context, request))
@@ -127,28 +132,28 @@ def result(request):
     try:
         idinfo = utils.verify_id_token(token)
     except crypt.AppIdentityError as e:
-        return HttpResponseBadRequest(e)
+        return redirect('error')
 
     # If the user doesn't exist in the database, return error
     users = User.objects.filter(email=idinfo['email'])
     if users:
         user = users[0]
     else:
-        return HttpResponseBadRequest("User does not exist: how did you get here?")
+        return redirect('error')
 
     # If no recording id was provided as url parameter, return error
     rec_id = request.GET.get('rid', '')
     if not rec_id:
-        return HttpResponseBadRequest("No ID was provided")
+        return redirect('error')
 
     if rec_id == "-1":
-        return HttpResponseBadRequest("An error has occurred")
+        return redirect('error')
 
     # Check that current user has access to the requested recording, and that
     # the recording exists. Otherwise return error.
     valid_recs = Recording.objects.filter(speech__user=user, id=rec_id)
     if not valid_recs:
-        return HttpResponseBadRequest("Permission denied: how did you get here?")
+        return redirect('error')
     rec = valid_recs[0]
 
     # Populate context with sidebar data, transcript text and avg pace
@@ -156,7 +161,7 @@ def result(request):
     try:
         context = utils.get_context(token)
     except crypt.AppIdentityError as e:
-        return HttpResponseBadRequest(e)
+        return redirect('error')
 
     transcript = "".join(rec.get_transcript_text())
     context['transcript'] = transcript
@@ -199,5 +204,5 @@ def userdocs(request):
     try:
         context = utils.get_context(token)
     except crypt.AppIdentityError as e:
-        return HttpResponseBadRequest(e)
+        return redirect('error')
     return HttpResponse(template.render(context, request))

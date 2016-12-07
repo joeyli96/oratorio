@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>400 Bad Request</title>
+</head>
+
+<body onload='deleteToken()'>
+<script>
+    function deleteToken() {
+        document.cookie = "id_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;"
+    }
+</script>
+<h1>400 Bad Request</h1>
+<p>Please try again!</p>
+<a href='/'>index</a>
+</body>
+</html>
