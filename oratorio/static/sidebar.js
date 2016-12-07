@@ -27,7 +27,7 @@ window.addEventListener("load", function(e) {
  */
 function resizeSideBar(e) {
   var w = window.innerWidth;
-  var h = window.innerHeight;
+  var h = window.innerHeight - parseInt(window.getComputedStyle($("ul")).height);
   var s = (w > h ? h : w);
   // side bar height
   $("#Sidebar").style.height = h + "px";
