@@ -4,7 +4,7 @@
     var drawTimeout = null;
 
     window.addEventListener("load", function(e) {
-        easterEgg();
+        // easterEgg();
         loadImages();
         window.addEventListener("resize", resize);
         resize();
