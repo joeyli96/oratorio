@@ -201,7 +201,7 @@ a[target="_blank"]:after {
   top: 10%;
   width: var(--profile-panel-width);
   height: 85%;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 #ProfileTitle {
@@ -494,7 +494,7 @@ input:checked + .mirrorSlider:before {
   background: var(--sidebar-fg-color);
   width: 280pt;
   top: calc(var(--sidebar-title-height) + 30pt);
-  height: calc(100% - var(--sidebar-title-height) + 20pt);
+  height: calc(85% - var(--sidebar-title-height));
   border-radius: 10pt;
   border: 3pt solid var(--sidebar-bg-color);
   margin: 10pt;
