@@ -61,7 +61,7 @@ class SystemTest(TestCase):
         user.save()
         response = client.post('/upload', data=blob,
                                content_type="audio/wav", secure=True)
-        self.assertEqual(response.status_code, 200, response)
+        self.assertEqual(response.status_code, 200)
         recording = Recording.objects.filter(id=response.content)[0]
         self.assertRegexpMatches(recording.get_transcript_text(),
                                  'we all look great. the end of the Republic has never looked better.',
