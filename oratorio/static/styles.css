@@ -445,7 +445,7 @@ input:checked + .mirrorSlider:before {
   background-color: var(--hover-color);
 }
 
-.ProflieButton{
+.ProfileButton{
   cursor: pointer;
 }
 
