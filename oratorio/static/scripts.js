@@ -43,6 +43,10 @@ window.addEventListener("load", function(){
     var left = $(".SideButton.left");
     var right = $(".SideButton.right");
     var toggle = $(".switch input");
+    var profile = $(".ProfileButton");
+    if (profile) {
+        profile.addEventListener("click", onProfile);
+    }
     // if we're on the main index page with the buttons
     if (button) {
         button.addEventListener("click", buttonToggle);
@@ -466,6 +470,8 @@ function logOut() {
     var buttonLogout = $(".LogoutButton");
     buttonLogout.style.display = "none";
 
+    
+
     document.cookie = "id_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;"
     location.reload();
 }
@@ -548,6 +554,7 @@ function resize(e) {
                 widthMargin  + buttonScale - circleOffset) + "px";
         }
     }
+    button.style.display = "inline-block";
 }
 
 /**
@@ -593,6 +600,15 @@ function onSignIn(googleUser) {
         };
     xhr.send('idtoken=' + id_token);
     */
+}
+
+function onProfile() {
+    if (profile == null) {
+        showToast("You must log in first.");
+    }
+    else {
+        window.location.href = "profile";
+    }
 }
 
 function slide(item) {

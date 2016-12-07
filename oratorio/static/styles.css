@@ -354,7 +354,6 @@ input:checked + .mirrorSlider:before {
   border-radius: 50%;
   background-color: #C63D0F;
   position: absolute;
-  display: inline-block;
   top: 0;
   text-align: center;
   vertical-align: center;
@@ -363,6 +362,7 @@ input:checked + .mirrorSlider:before {
   color: #F6F6F6;
   font-family: 'Roboto Condensed';
   cursor: pointer;
+  display: none;
 }
 .SideButton {
   border-width: 5px;
@@ -443,6 +443,10 @@ input:checked + .mirrorSlider:before {
 }
 .button:hover {
   background-color: var(--hover-color);
+}
+
+.ProflieButton{
+  cursor: pointer;
 }
 
 #transcript {
