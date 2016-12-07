@@ -390,9 +390,10 @@ input:checked + .mirrorSlider:before {
   color: rgb(153, 47, 35);
   background-color: rgb(198, 61, 45);
 }
+
 .hide {
   opacity: 0;
-  cursor: default;
+  cursor: default !important;
 }
 
 .g-signin2 {
@@ -485,8 +486,8 @@ input:checked + .mirrorSlider:before {
   right: 0;
   background: var(--sidebar-fg-color);
   width: 280pt;
-  top: calc(var(--sidebar-title-height) - 10pt);
-  height: calc(100% - var(--sidebar-title-height) - 20pt);
+  top: calc(var(--sidebar-title-height) + 30pt);
+  height: calc(100% - var(--sidebar-title-height) + 20pt);
   border-radius: 10pt;
   border: 3pt solid var(--sidebar-bg-color);
   margin: 10pt;
