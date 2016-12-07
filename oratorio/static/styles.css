@@ -253,6 +253,11 @@ a[target="_blank"]:after {
 .switch input {display:none;}
 
 /* Slider to toggle mirror */
+#mirrorLabel {
+    text-align: center;
+    position:relative;
+    top: -1.5em;
+}
 .mirrorSlider {
   position: absolute;
   cursor: pointer;

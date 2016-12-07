@@ -167,12 +167,11 @@ function hideButtons() {
     var mainButton = $("#MainButton");
     var leftButton = $(".SideButton.left");
     var rightButton = $(".SideButton.right");
+    var mirrorSwitch = $(".switch")
     mainButton.classList.add("hide");
     leftButton.classList.add("hide");
     rightButton.classList.add("hide");
-    // mainButton.style.display = 'none';
-    // leftButton.style.display = 'none';
-    // rightButton.style.display = 'none';
+    mirrorSwitch.classList.add("hide");
     var timer_display = document.getElementById("timer");
     timer_display.style.display = 'none';
 }
