@@ -26,7 +26,7 @@ var profile;
 /** The timer object */
 var timer;
 /** Set interval to refresh google user id_token */
-var interval = setInterval(update_token, 30000);
+var interval = setInterval(update_token, 300000);
 
 /** a second in milliseconds */
 var SECOND = 1000;
