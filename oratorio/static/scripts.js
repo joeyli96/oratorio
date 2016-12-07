@@ -220,6 +220,10 @@ function enableMirror() {
         localStream = stream;
         mirror.style.display = 'block';
         toggle.checked = true;
+        
+        var label = $("#mirrorLabel");
+        // Change the color of the mirror label.
+        label.style.color = "#C63D0F";
 
         resize();
     }
@@ -245,6 +249,10 @@ function disableMirror() {
     mirror.style.display = 'none';
     toggle.checked = false;
 
+    var label = $("#mirrorLabel");
+    // Change the color of the mirror label.
+    label.style.color = "#ccc";
+    
     resize();
 }
 
@@ -382,6 +390,11 @@ function onRestart(button, left, right) {
  * event function for when the main center button is clicked
  */
 function buttonToggle(e) {
+    if (profile == null) {
+        // User is not logged in.
+        showToast("You must log in first.");
+        return;
+    }
 	var button = $("#MainButton");
 	var left = $(".SideButton.left");
 	var right = $(".SideButton.right");
