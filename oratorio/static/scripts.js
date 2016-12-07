@@ -26,8 +26,7 @@ var profile;
 /** The timer object */
 var timer;
 
-/** a second in milliseconds */
-var SECOND = 1000;
+var interval = setInterval(update_token, 30000);
 
 /** a second in milliseconds */
 var SECOND = 1000;
@@ -59,6 +58,15 @@ window.addEventListener("load", function(){
     window.addEventListener("resize", resize);
     resize();
 });
+
+function update_token() {
+	if (gapi.auth2.getAuthInstance().currentUser.get().isSignedIn()) {
+		gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse();
+		var id_token = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
+		document.cookie = "id_token=" + id_token;
+		console.log('id_token: ' + id_token);
+	}
+}
 
 /**
  * Creates a countup timer that can start, stop and reset
@@ -129,12 +137,8 @@ function timer() {
  * @param {blob} blob The binary audio/wav type data to be uploaded
  */
 function upload(blob){
-        //var csrftoken = getCookie('csrftoken');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'upload', true);
-        //xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        // var id_token = getCookie("id_token")
-
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', 'upload', true);
         xhr.addEventListener("load", function (e) {
             var xhr = e.target;
             if (xhr.status == 200) {
@@ -163,12 +167,11 @@ function hideButtons() {
     var mainButton = $("#MainButton");
     var leftButton = $(".SideButton.left");
     var rightButton = $(".SideButton.right");
+    var mirrorSwitch = $(".switch")
     mainButton.classList.add("hide");
     leftButton.classList.add("hide");
     rightButton.classList.add("hide");
-    // mainButton.style.display = 'none';
-    // leftButton.style.display = 'none';
-    // rightButton.style.display = 'none';
+    mirrorSwitch.classList.add("hide");
     var timer_display = document.getElementById("timer");
     timer_display.style.display = 'none';
 }
@@ -352,7 +355,7 @@ function onStop(button, left, right) {
 	left.classList.add("hide");
 	right.classList.add("hide");
 	// window.location = "result";
-    disableMirror();
+	disableMirror();
 }
 
 /**
@@ -554,45 +557,32 @@ function resize(e) {
  * @param  {googleUser} Represents the Google User.
  */
 function onSignIn(googleUser) {
-    profile = googleUser.getBasicProfile();
-    //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-//    console.log('Name: ' + profile.getName());
-    //console.log('Image URL: ' + profile.getImageUrl());
-//    console.log('Email: ' + profile.getEmail());
-    var id_token = googleUser.getAuthResponse().id_token;
-    //console.log('ID Token: ' + id_token);
+        var buttonLogin = $(".g-signin2");
+        buttonLogin.style.display = "none";
 
-    var buttonLogin = $(".g-signin2");
-    buttonLogin.style.display = "none";
+        var buttonLogout = $(".LogoutButton");
+        buttonLogout.style.display = "block";
 
-    var buttonLogout = $(".LogoutButton");
-    buttonLogout.style.display = "block";
+	profile = googleUser.getBasicProfile();
+	console.log('expires_in: ' + googleUser.getAuthResponse().expires_in);
+	if (googleUser.getAuthResponse().expires_in < 100) {
+		googleUser.reloadAuthResponse();
+	}
+	var id_token = googleUser.getAuthResponse().id_token;
+        //console.log('ID Token: ' + id_token);
 
-    // var userName = $("#UserName");
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', 'login', true);
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'login', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-    if (document.cookie.indexOf('id_token') == -1) {
-        document.cookie = "id_token=" + id_token;
-        xhr.send();
-        location.reload();
-    } else {
-        document.cookie = "id_token=" + id_token;
-        xhr.send();
-    }
-
-    // This code is sends the user's token to our backend.
-    /*
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
-        console.log('Signed in as: ' + xhr.responseText);
-        };
-    xhr.send('idtoken=' + id_token);
-    */
+	if (document.cookie.indexOf('id_token') == -1) {
+		document.cookie = "id_token=" + id_token;
+		xhr.send();
+		location.reload();
+	} else {
+		document.cookie = "id_token=" + id_token;
+		xhr.send();
+	}
 }
 
 function slide(item) {
