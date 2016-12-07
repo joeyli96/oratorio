@@ -22,8 +22,8 @@ except ImportError:
     try:
         SECRET_KEY = os.environ["SECRET_KEY"]
         ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split()
-        SPEECH_TO_TEXT_USER_NAME = os.environ["WATSON_USER_NAME"]
-        SPEECH_TO_TEXT_PASSWORD = os.environ["WATSON_PASSWORD"]
+        SPEECH_TO_TEXT_USER_NAME = os.environ["SPEECH_TO_TEXT_USER_NAME"]
+        SPEECH_TO_TEXT_PASSWORD = os.environ["SPEECH_TO_TEXT_PASSWORD"]
         SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
         TONE_ANALYZER_USER_NAME = os.environ["TONE_ANALYZER_USER_NAME"]
         TONE_ANALYZER_PASSWORD = os.environ["TONE_ANALYZER_PASSWORD"]
