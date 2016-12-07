@@ -8,10 +8,11 @@ from mock import MagicMock
 
 
 class SystemTest(TestCase):
+
     def setup_mock(self):
         """Mock out verify_id_token in utils.py to return a dummy result"""
         idinfo_mock = {'name': 'Temp Temp', 'email': 'tempt3699@gmail.com', }
-        utils.verify_id_token = MagicMock(return_value = idinfo_mock)
+        utils.verify_id_token = MagicMock(return_value=idinfo_mock)
 
     def get_client_with_token(self):
         """Return a client that holds a cookie with a dummy token for User Temp Temp with email tempt3699@gmail.com"""
@@ -28,7 +29,7 @@ class SystemTest(TestCase):
         response = client.get('/', secure=True)
         self.assertEqual(response.status_code, 200)
         self.assertIn('<!doctype html>', response.content,
-                                 'index does not contain an html doctype.')
+                      'index does not contain an html doctype.')
         # assuming style/behavior is correct (as its hard to test from
         # django as the site may change content)
 
@@ -38,8 +39,8 @@ class SystemTest(TestCase):
         client = self.get_client_with_token()
         response = client.get('/', secure=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('<!doctype html>', response.content, 
-                'index does not contain an html doctype.')
+        self.assertIn('<!doctype html>', response.content,
+                      'index does not contain an html doctype.')
 
     def test_login(self):
         """Test login procedure"""
@@ -124,10 +125,8 @@ class SystemTest(TestCase):
         self.setup_mock()
         client = self.get_client_with_token()
         response = client.get('/result?rid=0', secure=True)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.content,
-                                 'User does not exist: how did you get here?',
-                                 'Did not display error message')
+        self.assertEqual(response.status_code, 302,
+                         'User not existing does not redirect')
 
     def test_result_no_rid_provided(self):
         """Test if rid not provided scenario is handled"""
@@ -136,10 +135,8 @@ class SystemTest(TestCase):
         user = User(name='Temp Temp', email='tempt3699@gmail.com')
         user.save()
         response = client.get('/result', secure=True)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.content,
-                                 'No ID was provided',
-                                 'Did not display error message')
+        self.assertEqual(response.status_code, 302,
+                         'Not providing rid does not redirect')
         user.delete()
 
     def test_result_access_others_recording(self):
@@ -149,10 +146,8 @@ class SystemTest(TestCase):
         user = User(name='Temp Temp', email='tempt3699@gmail.com')
         user.save()
         response = client.get('/result?rid=100000', secure=True)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.content,
-                                 'Permission denied: how did you get here?',
-                                 'Did not display error message')
+        self.assertEqual(response.status_code, 302,
+                         'Accessing others recording does not redirect')
         user.delete()
 
     def test_result_access_recording_success(self):
@@ -172,7 +167,7 @@ class SystemTest(TestCase):
         response = client.get('/result?rid=' + str(id), secure=True)
         self.assertEqual(response.status_code, 200)
         self.assertIn('<!doctype html>', response.content,
-                                'result does not contain an html doctype.')
+                      'result does not contain an html doctype.')
         user.delete()
 
     def test_userdocs_not_logged_in(self):

@@ -25,8 +25,8 @@ var recorder;
 var profile;
 /** The timer object */
 var timer;
-
-var interval = setInterval(update_token, 30000);
+/** Set interval to refresh google user id_token */
+var interval = setInterval(update_token, 300000);
 
 /** a second in milliseconds */
 var SECOND = 1000;
@@ -63,6 +63,9 @@ window.addEventListener("load", function(){
     resize();
 });
 
+/**
+ * Updates the google user id_token in the cookie
+ */
 function update_token() {
 	if (gapi.auth2.getAuthInstance().currentUser.get().isSignedIn()) {
 		gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse();

@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^upload$', views.upload, name='upload'),
     url(r'^userdocs$', views.userdocs, name='userdocs'),
     url(r'^login$', views.login, name='login'),
+    url(r'^error$', views.error, name='error'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
